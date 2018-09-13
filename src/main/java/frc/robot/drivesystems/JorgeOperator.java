@@ -1,20 +1,18 @@
-package drivesystems;
+package frc.robot.drivesystems;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.Hand.kLeft;
-import edu.wpi.first.wpilibj.Hand.kRight;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class JorgeOperator implements Operator {
 
-    private ControlSet ControlSet;
+    private ControlSet controlSet;
 
     public JorgeOperator(ControlSet controlSet) {
         this.controlSet = controlSet;
     }
 
     public double getLiftSpeed() {
-        double leftTrigger = controlSet.getOperatorController.getTriggerAxis(Hand.kLeft);
-        double rightTrigger = controlSet.getOperatorController.getTriggerAxis(Hand.kRight);
+        double leftTrigger = controlSet.getOperatorController().getTriggerAxis(Hand.kLeft);
+        double rightTrigger = controlSet.getOperatorController().getTriggerAxis(Hand.kRight);
         if (leftTrigger > rightTrigger) {
             return leftTrigger;
         } else if (rightTrigger > leftTrigger) {
@@ -25,8 +23,8 @@ public class JorgeOperator implements Operator {
     }
 
     public double getIntakeSpeed() {
-        boolean input = controlSet.getOperatorController.getXButton();
-        boolean output = controlSet.getOperatorController.getAButton();
+        boolean input = controlSet.getOperatorController().getXButton();
+        boolean output = controlSet.getOperatorController().getAButton();
         if (input && !output) {
             return -1;
         } else if (output && !input) {

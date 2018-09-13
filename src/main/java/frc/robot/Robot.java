@@ -17,6 +17,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.drivesystems.ControlSet;
 
 
 /**
@@ -33,9 +34,11 @@ public class Robot extends TimedRobot {
   public static final Talon leftBack = new Talon(1);
   public static final Talon rightFront = new Talon(2);
   public static final Talon rightBack = new Talon(3);
+  public static final XboxController driverController = new XboxController(0);
+  public static final XboxController operatorController = new XboxController(1);
   public static final SpeedControllerGroup leftDriveTrain = new SpeedControllerGroup(leftFront, leftBack);
   public static final SpeedControllerGroup rightDriveTrain = new SpeedControllerGroup(rightFront, rightBack);
-  public static final ControlSet controlSet = new ControlSet(XboxController(/*port*/), XboxController(/*port*/));
+  public static final ControlSet controlSet = new ControlSet(driverController, operatorController);
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();

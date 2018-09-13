@@ -1,8 +1,6 @@
-package drivesystems;
+package frc.robot.drivesystems;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.Hand.kLeft;
-import edu.wpi.first.wpilibj.Hand.kRight;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 public class JorgeDriver implements ArcadeDriver {
 
@@ -13,11 +11,11 @@ public class JorgeDriver implements ArcadeDriver {
     }
 
     public double getSpeed() {
-        return controlSet.getDriverController.getY(Hand.kLeft);
+        return controlSet.getDriverController().getY(Hand.kLeft);
     }
 
     public double getRotation() {
-        return controlSet.getDriverController.getX(Hand.kRight);
+        return controlSet.getDriverController().getX(Hand.kRight);
     }
 
     public boolean getUseSquares() {

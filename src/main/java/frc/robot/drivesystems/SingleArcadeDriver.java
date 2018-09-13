@@ -1,4 +1,4 @@
-package drivesystems;
+package frc.robot.drivesystems;
 
 public interface SingleArcadeDriver {
     public double getSpeed();

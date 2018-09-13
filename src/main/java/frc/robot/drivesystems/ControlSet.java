@@ -1,22 +1,22 @@
-package drivesystems;
+package frc.robot.drivesystems;
 
 import edu.wpi.first.wpilibj.XboxController;
 
 public class ControlSet {
 
-    private XBoxController driverController;
-    private XBoxController operatorController;
+    private XboxController driverController;
+    private XboxController operatorController;
     
-    public ControlSet(XBoxController driverController, XBoxController operatorController) {
+    public ControlSet(XboxController driverController, XboxController operatorController) {
         this.driverController = driverController;
         this.operatorController = operatorController;
     }
 
-    public XBoxController getDriverController() {
+    public XboxController getDriverController() {
         return driverController;
     }
 
-    public XBoxController getOperatorController() {
+    public XboxController getOperatorController() {
         return operatorController;
     }
 
