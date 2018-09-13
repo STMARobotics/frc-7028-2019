@@ -14,6 +14,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.XboxController;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,6 +29,13 @@ import frc.robot.subsystems.ExampleSubsystem;
 public class Robot extends TimedRobot {
   public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
+  public static final Talon leftFront = new Talon(0);
+  public static final Talon leftBack = new Talon(1);
+  public static final Talon rightFront = new Talon(2);
+  public static final Talon rightBack = new Talon(3);
+  public static final SpeedControllerGroup leftDriveTrain = new SpeedControllerGroup(leftFront, leftBack);
+  public static final SpeedControllerGroup rightDriveTrain = new SpeedControllerGroup(rightFront, rightBack);
+  public static final ControlSet controlSet = new ControlSet(XboxController(/*port*/), XboxController(/*port*/));
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
