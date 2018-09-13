@@ -8,15 +8,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * An example command.  You can replace me with your own command.
  */
 public class ExampleCommand extends Command {
-  public ExampleCommand() {
+  public ExampleCommand(Subsystem subsystem) {
     // Use requires() here to declare subsystem dependencies
-    requires(Robot.m_subsystem);
+    requires(subsystem);
   }
 
   // Called just before this Command runs the first time

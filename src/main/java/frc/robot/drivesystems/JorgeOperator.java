@@ -1,6 +1,7 @@
 package frc.robot.drivesystems;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.Robot;
 
 public class JorgeOperator implements Operator {
 
@@ -10,7 +11,12 @@ public class JorgeOperator implements Operator {
         this.controlSet = controlSet;
     }
 
-    public double getLiftSpeed() {
+    public void operate(Manipulators manipulators) {
+        manipulators.setLiftSpeed(getLiftSpeed());
+        manipulators.setIntakeSpeed(getIntakeSpeed());
+    }
+
+    private double getLiftSpeed() {
         double leftTrigger = controlSet.getOperatorController().getTriggerAxis(Hand.kLeft);
         double rightTrigger = controlSet.getOperatorController().getTriggerAxis(Hand.kRight);
         if (leftTrigger > rightTrigger) {
@@ -22,7 +28,7 @@ public class JorgeOperator implements Operator {
         }
     }
 
-    public double getIntakeSpeed() {
+    private double getIntakeSpeed() {
         boolean input = controlSet.getOperatorController().getXButton();
         boolean output = controlSet.getOperatorController().getAButton();
         if (input && !output) {
@@ -32,10 +38,6 @@ public class JorgeOperator implements Operator {
         } else {
             return 0.0;
         }
-    }
-
-    public void run() {
-        
     }
 
 }

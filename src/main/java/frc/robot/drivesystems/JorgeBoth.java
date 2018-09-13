@@ -2,7 +2,7 @@ package frc.robot.drivesystems;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 
-public class JorgeBoth implements SingleArcadeDriver {
+public class JorgeBoth {
 
     private ControlSet controlSet;
 

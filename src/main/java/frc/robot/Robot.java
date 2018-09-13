@@ -10,14 +10,21 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.drivesystems.ControlSet;
+import frc.robot.drivesystems.Driver;
+import frc.robot.drivesystems.JorgeDriver;
+import frc.robot.drivesystems.JorgeOperator;
+import frc.robot.drivesystems.Manipulators;
+import frc.robot.drivesystems.Operator;
 
 
 /**
@@ -28,20 +35,27 @@ import frc.robot.drivesystems.ControlSet;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
-  public static OI m_oi;
-  public static final Talon leftFront = new Talon(0);
-  public static final Talon leftBack = new Talon(1);
-  public static final Talon rightFront = new Talon(2);
-  public static final Talon rightBack = new Talon(3);
-  public static final XboxController driverController = new XboxController(0);
-  public static final XboxController operatorController = new XboxController(1);
-  public static final SpeedControllerGroup leftDriveTrain = new SpeedControllerGroup(leftFront, leftBack);
-  public static final SpeedControllerGroup rightDriveTrain = new SpeedControllerGroup(rightFront, rightBack);
-  public static final ControlSet controlSet = new ControlSet(driverController, operatorController);
+  private static ExampleSubsystem m_subsystem = new ExampleSubsystem();
+  private static OI m_oi;
 
-  Command m_autonomousCommand;
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private static final Talon leftFront = new Talon(0);
+  private static final Talon leftBack = new Talon(1);
+  private static final Talon rightFront = new Talon(2);
+  private static final Talon rightBack = new Talon(3);
+  private static final Spark lift = new Spark(0);
+  private static final Spark intake = new Spark(1);
+  private static final XboxController driverController = new XboxController(0);
+  private static final XboxController operatorController = new XboxController(1);
+  private static final SpeedControllerGroup leftDriveTrain = new SpeedControllerGroup(leftFront, leftBack);
+  private static final SpeedControllerGroup rightDriveTrain = new SpeedControllerGroup(rightFront, rightBack);
+  private static final DifferentialDrive driveTrain = new DifferentialDrive(leftDriveTrain, rightDriveTrain);
+  private static final ControlSet controlSet = new ControlSet(driverController, operatorController);
+  private static final Manipulators manipulators = new Manipulators(lift, intake);
+
+  private Command m_autonomousCommand;
+  private SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private SendableChooser<Driver> driverChooser = new SendableChooser<>();
+  private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -50,9 +64,15 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
-    m_chooser.addDefault("Default Auto", new ExampleCommand());
+    m_chooser.addDefault("Default Auto", new ExampleCommand(m_subsystem));
     // chooser.addObject("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+
+    operatorChooser.addDefault("Jorge", new JorgeOperator(controlSet));
+    SmartDashboard.putData("Operator", operatorChooser);
+
+    driverChooser.addDefault("Jorge", new JorgeDriver(controlSet));
+    SmartDashboard.putData("Driver", driverChooser);
   }
 
   /**
@@ -133,6 +153,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    Operator operator = operatorChooser.getSelected();
+    operator.operate(manipulators);
+
+    Driver driver = driverChooser.getSelected();
+    driver.drive(driveTrain);
+    
     Scheduler.getInstance().run();
   }
 
