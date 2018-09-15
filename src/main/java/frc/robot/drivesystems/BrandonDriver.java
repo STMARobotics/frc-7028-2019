@@ -1,19 +1,14 @@
 package frc.robot.drivesystems;
 
-import frc.robot.Robot;
-
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class BrandonDriver implements Driver {
 
-    private Robot robot = new Robot();
+    private ControlSet controlSet;
 
-    private XboxController controller;
-
-    public BrandonDriver() {
-        this.controller = getController();
+    public BrandonDriver(ControlSet controlSet) {
+        this.controlSet = controlSet;
     }
 
     public void drive(DifferentialDrive differentialDrive) {
@@ -21,15 +16,11 @@ public class BrandonDriver implements Driver {
     }
 
     private double getSpeed() {
-        return controller.getY(Hand.kLeft);
+        return controlSet.getDriverController().getY(Hand.kLeft);
     }
 
     private double getRotation() {
-        return controller.getX(Hand.kRight);
-    }
-
-    private XboxController getController() {
-        return robot.getDriverController();
+        return controlSet.getDriverController().getX(Hand.kRight);
     }
 
 }

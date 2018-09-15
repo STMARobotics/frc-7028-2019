@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+
+import javax.xml.xpath.XPathVariableResolver;
+
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
@@ -40,26 +43,26 @@ public class Robot extends TimedRobot {
   private static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   private static OI m_oi;
 
-  private static final Talon leftFront = new Talon(0);
-  private static final Talon leftBack = new Talon(1);
-  private static final Talon rightFront = new Talon(2);
-  private static final Talon rightBack = new Talon(3);
-  private static final Spark lift = new Spark(0);
-  private static final Spark intake = new Spark(1);
-  private static final XboxController controllerOne = new XboxController(0);
-  private static final XboxController controllerTwo = new XboxController(1);
-  private static final SpeedControllerGroup leftDriveTrain = new SpeedControllerGroup(leftFront, leftBack);
-  private static final SpeedControllerGroup rightDriveTrain = new SpeedControllerGroup(rightFront, rightBack);
-  private static final DifferentialDrive driveTrain = new DifferentialDrive(leftDriveTrain, rightDriveTrain);
-  private static final ControlSet controlSet = new ControlSet(controllerOne, controllerTwo);
-  private static final Manipulators manipulators = new Manipulators(lift, intake);
-
-  private Command m_autonomousCommand;
   private SendableChooser<Command> m_chooser = new SendableChooser<>();
   private SendableChooser<Driver> driverChooser = new SendableChooser<>();
   private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
-  private SendableChooser<Integer> driverControllerChooser = new SendableChooser<>();
-  private SendableChooser<Integer> operatorControllerChooser = new SendableChooser<>();
+  private SendableChooser<XboxController> driverControllerChooser = new SendableChooser<>();
+  private SendableChooser<XboxController> operatorControllerChooser = new SendableChooser<>();
+  private final Talon leftFront = new Talon(0);
+  private final Talon leftBack = new Talon(1);
+  private final Talon rightFront = new Talon(2);
+  private final Talon rightBack = new Talon(3);
+  private final Spark lift = new Spark(0);
+  private final Spark intake = new Spark(1);
+  private final XboxController controllerOne = new XboxController(0);
+  private final XboxController controllerTwo = new XboxController(1);
+  private final SpeedControllerGroup leftDriveTrain = new SpeedControllerGroup(leftFront, leftBack);
+  private final SpeedControllerGroup rightDriveTrain = new SpeedControllerGroup(rightFront, rightBack);
+  private final DifferentialDrive driveTrain = new DifferentialDrive(leftDriveTrain, rightDriveTrain);
+  private final ControlSet controlSet = new ControlSet(driverControllerChooser, operatorControllerChooser);
+  private final Manipulators manipulators = new Manipulators(lift, intake);
+
+  private Command m_autonomousCommand;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -72,20 +75,20 @@ public class Robot extends TimedRobot {
     // chooser.addObject("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
 
-    driverChooser.addDefault("Jorge", new JorgeDriver());
-    driverChooser.addObject("Brandon", new BrandonDriver());
+    driverChooser.addDefault("Jorge", new JorgeDriver(controlSet));
+    driverChooser.addObject("Brandon", new BrandonDriver(controlSet));
     SmartDashboard.putData("Driver", driverChooser);
 
-    driverControllerChooser.addDefault("1", 1);
-    driverControllerChooser.addObject("2", 2);
+    driverControllerChooser.addDefault("1", controllerOne);
+    driverControllerChooser.addObject("2", controllerTwo);
     SmartDashboard.putData("Driver Controller", driverControllerChooser);
 
-    operatorChooser.addDefault("Jorge", new JorgeOperator());
-    operatorChooser.addObject("Brandon", new BrandonOperator());
+    operatorChooser.addDefault("Jorge", new JorgeOperator(controlSet));
+    operatorChooser.addObject("Brandon", new BrandonOperator(controlSet));
     SmartDashboard.putData("Operator", operatorChooser);
 
-    operatorControllerChooser.addObject("1", 1);
-    operatorControllerChooser.addDefault("2", 2);
+    operatorControllerChooser.addObject("1", controllerOne);
+    operatorControllerChooser.addDefault("2", controllerTwo);
     SmartDashboard.putData("Operator Controller", operatorControllerChooser);
   }
 
@@ -183,21 +186,4 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  public XboxController getOperatorController() {
-    int controller = operatorControllerChooser.getSelected();
-    if (controller == 1) {
-      return controllerOne;
-    } else {
-      return controllerTwo;
-    }
-  }
-
-  public XboxController getDriverController() {
-    int controller = driverControllerChooser.getSelected();
-    if (controller == 1) {
-      return controllerOne;
-    } else {
-      return controllerTwo;
-    }
-  }
 }

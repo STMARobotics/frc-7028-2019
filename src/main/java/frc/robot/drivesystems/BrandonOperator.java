@@ -1,17 +1,13 @@
 package frc.robot.drivesystems;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import frc.robot.Robot;
 
 public class BrandonOperator implements Operator {
 
-    private Robot robot = new Robot();
+    private ControlSet controlSet;
 
-    private XboxController controller;
-
-    public BrandonOperator() {
-        this.controller = getController();
+    public BrandonOperator(ControlSet controlSet) {
+        this.controlSet = controlSet;
     }
 
     public void operate(Manipulators manipulators) {
@@ -20,8 +16,8 @@ public class BrandonOperator implements Operator {
     }
 
     private double getLiftSpeed() {
-        boolean leftBumper = controller.getBumper(Hand.kLeft);
-        boolean rightBumper = controller.getBumper(Hand.kRight);
+        boolean leftBumper = controlSet.getOperatorController().getBumper(Hand.kLeft);
+        boolean rightBumper = controlSet.getOperatorController().getBumper(Hand.kRight);
         if (leftBumper && !rightBumper) {
             return -1.0;
         } else if (rightBumper && !leftBumper) {
@@ -32,8 +28,8 @@ public class BrandonOperator implements Operator {
     }
 
     private double getIntakeSpeed() {
-        double leftTrigger = controller.getTriggerAxis(Hand.kLeft);
-        double rightTrigger = controller.getTriggerAxis(Hand.kRight);
+        double leftTrigger = controlSet.getOperatorController().getTriggerAxis(Hand.kLeft);
+        double rightTrigger = controlSet.getOperatorController().getTriggerAxis(Hand.kRight);
         if (leftTrigger == 1 && rightTrigger != 1) {
             return -1.0;
         } else if (rightTrigger == 1 && leftTrigger != 1) {
@@ -41,10 +37,6 @@ public class BrandonOperator implements Operator {
         } else {
             return 0.0;
         }
-    }
-
-    private XboxController getController() {
-        return robot.getOperatorController();
     }
 
 }

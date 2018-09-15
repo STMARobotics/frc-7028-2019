@@ -1,18 +1,14 @@
 package frc.robot.drivesystems;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.Robot;
 
 public class JorgeDriver implements Driver {
 
-    private Robot robot = new Robot();
+    private ControlSet controlSet;
 
-    private XboxController controller;
-
-    public JorgeDriver() {
-        this.controller = getController();
+    public JorgeDriver(ControlSet controlSet) {
+        this.controlSet = controlSet;
     }
 
     @Override
@@ -21,15 +17,11 @@ public class JorgeDriver implements Driver {
     }
 
     private double getSpeed() {
-        return controller.getY(Hand.kLeft);
+        return controlSet.getDriverController().getY(Hand.kLeft);
     }
 
     private double getRotation() {
-        return controller.getX(Hand.kRight);
-    }
-
-    private XboxController getController() {
-        return robot.getDriverController();
+        return controlSet.getDriverController().getX(Hand.kRight);
     }
 
 }

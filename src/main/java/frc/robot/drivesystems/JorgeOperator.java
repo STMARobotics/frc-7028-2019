@@ -1,17 +1,13 @@
 package frc.robot.drivesystems;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import frc.robot.Robot;
 
 public class JorgeOperator implements Operator {
 
-    private Robot robot = new Robot();
+    private ControlSet controlSet;
 
-    private XboxController controller;
-
-    public JorgeOperator() {
-        this.controller = getController();
+    public JorgeOperator(ControlSet controlSet) {
+        this.controlSet = controlSet;
     }
 
     public void operate(Manipulators manipulators) {
@@ -20,8 +16,8 @@ public class JorgeOperator implements Operator {
     }
 
     private double getLiftSpeed() {
-        double leftTrigger = controller.getTriggerAxis(Hand.kLeft);
-        double rightTrigger = controller.getTriggerAxis(Hand.kRight);
+        double leftTrigger = controlSet.getOperatorController().getTriggerAxis(Hand.kLeft);
+        double rightTrigger = controlSet.getOperatorController().getTriggerAxis(Hand.kRight);
         if (leftTrigger > rightTrigger) {
             return leftTrigger;
         } else if (rightTrigger > leftTrigger) {
@@ -32,8 +28,8 @@ public class JorgeOperator implements Operator {
     }
 
     private double getIntakeSpeed() {
-        boolean input = controller.getXButton();
-        boolean output = controller.getAButton();
+        boolean input = controlSet.getOperatorController().getXButton();
+        boolean output = controlSet.getOperatorController().getAButton();
         if (input && !output) {
             return -1;
         } else if (output && !input) {
@@ -41,10 +37,6 @@ public class JorgeOperator implements Operator {
         } else {
             return 0.0;
         }
-    }
-
-    private XboxController getController() {
-        return robot.getOperatorController();
     }
 
 }

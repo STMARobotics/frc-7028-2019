@@ -1,23 +1,24 @@
 package frc.robot.drivesystems;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class ControlSet {
 
-    private XboxController controllerOne;
-    private XboxController controllerTwo;
+    private SendableChooser<XboxController> driverChooser;
+    private SendableChooser<XboxController> operatorChooser;
     
-    public ControlSet(XboxController controllerOne, XboxController controllerTwo) {
-        this.controllerOne = controllerOne;
-        this.controllerTwo = controllerTwo;
+    public ControlSet(SendableChooser<XboxController> driverChooser, SendableChooser<XboxController> operatorChooser) {
+        this.driverChooser = driverChooser;
+        this.operatorChooser = operatorChooser;
     }
 
-    public XboxController getControllerOne() {
-        return controllerOne;
+    public XboxController getOperatorController() {
+        return operatorChooser.getSelected();
     }
 
-    public XboxController getControllerTwo() {
-        return controllerTwo;
+    public XboxController getDriverController() {
+        return driverChooser.getSelected();
     }
 
 }
