@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.drivesystems.BrandonDriver;
+import frc.robot.drivesystems.BrandonOperator;
 import frc.robot.drivesystems.ControlSet;
 import frc.robot.drivesystems.Driver;
 import frc.robot.drivesystems.JorgeDriver;
@@ -44,18 +46,20 @@ public class Robot extends TimedRobot {
   private static final Talon rightBack = new Talon(3);
   private static final Spark lift = new Spark(0);
   private static final Spark intake = new Spark(1);
-  private static final XboxController driverController = new XboxController(0);
-  private static final XboxController operatorController = new XboxController(1);
+  private static final XboxController controllerOne = new XboxController(0);
+  private static final XboxController controllerTwo = new XboxController(1);
   private static final SpeedControllerGroup leftDriveTrain = new SpeedControllerGroup(leftFront, leftBack);
   private static final SpeedControllerGroup rightDriveTrain = new SpeedControllerGroup(rightFront, rightBack);
   private static final DifferentialDrive driveTrain = new DifferentialDrive(leftDriveTrain, rightDriveTrain);
-  private static final ControlSet controlSet = new ControlSet(driverController, operatorController);
+  private static final ControlSet controlSet = new ControlSet(controllerOne, controllerTwo);
   private static final Manipulators manipulators = new Manipulators(lift, intake);
 
   private Command m_autonomousCommand;
   private SendableChooser<Command> m_chooser = new SendableChooser<>();
   private SendableChooser<Driver> driverChooser = new SendableChooser<>();
   private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
+  private SendableChooser<Integer> driverControllerChooser = new SendableChooser<>();
+  private SendableChooser<Integer> operatorControllerChooser = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -68,11 +72,21 @@ public class Robot extends TimedRobot {
     // chooser.addObject("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
 
-    operatorChooser.addDefault("Jorge", new JorgeOperator(controlSet));
+    driverChooser.addDefault("Jorge", new JorgeDriver());
+    driverChooser.addObject("Brandon", new BrandonDriver());
+    SmartDashboard.putData("Driver", driverChooser);
+
+    driverControllerChooser.addDefault("1", 1);
+    driverControllerChooser.addObject("2", 2);
+    SmartDashboard.putData("Driver Controller", driverControllerChooser);
+
+    operatorChooser.addDefault("Jorge", new JorgeOperator());
+    operatorChooser.addObject("Brandon", new BrandonOperator());
     SmartDashboard.putData("Operator", operatorChooser);
 
-    driverChooser.addDefault("Jorge", new JorgeDriver(controlSet));
-    SmartDashboard.putData("Driver", driverChooser);
+    operatorControllerChooser.addObject("1", 1);
+    operatorControllerChooser.addDefault("2", 2);
+    SmartDashboard.putData("Operator Controller", operatorControllerChooser);
   }
 
   /**
@@ -167,5 +181,23 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+
+  public XboxController getOperatorController() {
+    int controller = operatorControllerChooser.getSelected();
+    if (controller == 1) {
+      return controllerOne;
+    } else {
+      return controllerTwo;
+    }
+  }
+
+  public XboxController getDriverController() {
+    int controller = driverControllerChooser.getSelected();
+    if (controller == 1) {
+      return controllerOne;
+    } else {
+      return controllerTwo;
+    }
   }
 }

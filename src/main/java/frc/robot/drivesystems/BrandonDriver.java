@@ -1,21 +1,21 @@
 package frc.robot.drivesystems;
 
+import frc.robot.Robot;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.Robot;
 
-public class JorgeDriver implements Driver {
+public class BrandonDriver implements Driver {
 
     private Robot robot = new Robot();
 
     private XboxController controller;
 
-    public JorgeDriver() {
+    public BrandonDriver() {
         this.controller = getController();
     }
 
-    @Override
     public void drive(DifferentialDrive differentialDrive) {
         differentialDrive.arcadeDrive(getSpeed(), getRotation(), true);
     }

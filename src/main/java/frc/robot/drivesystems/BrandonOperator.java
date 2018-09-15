@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.Robot;
 
-public class JorgeOperator implements Operator {
+public class BrandonOperator implements Operator {
 
     private Robot robot = new Robot();
 
     private XboxController controller;
 
-    public JorgeOperator() {
+    public BrandonOperator() {
         this.controller = getController();
     }
 
@@ -20,24 +20,24 @@ public class JorgeOperator implements Operator {
     }
 
     private double getLiftSpeed() {
-        double leftTrigger = controller.getTriggerAxis(Hand.kLeft);
-        double rightTrigger = controller.getTriggerAxis(Hand.kRight);
-        if (leftTrigger > rightTrigger) {
-            return leftTrigger;
-        } else if (rightTrigger > leftTrigger) {
-            return rightTrigger;
+        boolean leftBumper = controller.getBumper(Hand.kLeft);
+        boolean rightBumper = controller.getBumper(Hand.kRight);
+        if (leftBumper && !rightBumper) {
+            return -1.0;
+        } else if (rightBumper && !leftBumper) {
+            return 1.0;
         } else {
             return 0.0;
         }
     }
 
     private double getIntakeSpeed() {
-        boolean input = controller.getXButton();
-        boolean output = controller.getAButton();
-        if (input && !output) {
-            return -1;
-        } else if (output && !input) {
-            return 1;
+        double leftTrigger = controller.getTriggerAxis(Hand.kLeft);
+        double rightTrigger = controller.getTriggerAxis(Hand.kRight);
+        if (leftTrigger == 1 && rightTrigger != 1) {
+            return -1.0;
+        } else if (rightTrigger == 1 && leftTrigger != 1) {
+            return 1.0;
         } else {
             return 0.0;
         }

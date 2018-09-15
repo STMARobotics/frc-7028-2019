@@ -4,20 +4,20 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class ControlSet {
 
-    private XboxController driverController;
-    private XboxController operatorController;
+    private XboxController controllerOne;
+    private XboxController controllerTwo;
     
-    public ControlSet(XboxController driverController, XboxController operatorController) {
-        this.driverController = driverController;
-        this.operatorController = operatorController;
+    public ControlSet(XboxController controllerOne, XboxController controllerTwo) {
+        this.controllerOne = controllerOne;
+        this.controllerTwo = controllerTwo;
     }
 
-    public XboxController getDriverController() {
-        return driverController;
+    public XboxController getControllerOne() {
+        return controllerOne;
     }
 
-    public XboxController getOperatorController() {
-        return operatorController;
+    public XboxController getControllerTwo() {
+        return controllerTwo;
     }
 
 }
