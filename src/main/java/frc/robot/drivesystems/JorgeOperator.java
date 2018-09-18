@@ -1,6 +1,7 @@
 package frc.robot.drivesystems;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.subsystems.ManipulatorsSubsystem;
 
 public class JorgeOperator implements Operator {
 
@@ -10,9 +11,9 @@ public class JorgeOperator implements Operator {
         this.controlSet = controlSet;
     }
 
-    public void operate(Manipulators manipulators) {
-        manipulators.setLiftSpeed(getLiftSpeed());
-        manipulators.setIntakeSpeed(getIntakeSpeed());
+    public void operate(ManipulatorsSubsystem manipulatorsSubsystem) {
+        manipulatorsSubsystem.setLiftSpeed(getLiftSpeed());
+        manipulatorsSubsystem.setIntakeSpeed(getIntakeSpeed());
     }
 
     private double getLiftSpeed() {

@@ -1,5 +1,7 @@
 package frc.robot.drivesystems;
 
+import frc.robot.subsystems.ManipulatorsSubsystem;
+
 public interface Operator {
-    public void operate(Manipulators manipulators);
+    public void operate(ManipulatorsSubsystem manipulatorsSubsystem);
 }
