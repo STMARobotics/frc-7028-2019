@@ -10,11 +10,16 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveForward;
+import frc.robot.commands.DriveToSwitchLeft;
+import frc.robot.commands.DriveToSwitchRight;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.ManipulatorsSubsystem;
 
 import javax.xml.xpath.XPathVariableResolver;
 
@@ -28,7 +33,6 @@ import frc.robot.drivesystems.ControlSet;
 import frc.robot.drivesystems.Driver;
 import frc.robot.drivesystems.JorgeDriver;
 import frc.robot.drivesystems.JorgeOperator;
-import frc.robot.drivesystems.Manipulators;
 import frc.robot.drivesystems.Operator;
 
 
@@ -40,29 +44,22 @@ import frc.robot.drivesystems.Operator;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static ExampleSubsystem m_subsystem = new ExampleSubsystem();
+  private static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
   private static OI m_oi;
 
-  private SendableChooser<Command> m_chooser = new SendableChooser<>();
-  private SendableChooser<Driver> driverChooser = new SendableChooser<>();
-  private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
-  private SendableChooser<XboxController> driverControllerChooser = new SendableChooser<>();
-  private SendableChooser<XboxController> operatorControllerChooser = new SendableChooser<>();
-  private final Talon leftFront = new Talon(0);
-  private final Talon leftBack = new Talon(1);
-  private final Talon rightFront = new Talon(2);
-  private final Talon rightBack = new Talon(3);
-  private final Spark lift = new Spark(0);
-  private final Spark intake = new Spark(1);
+  private static SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private static SendableChooser<Driver> driverChooser = new SendableChooser<>();
+  private static SendableChooser<Operator> operatorChooser = new SendableChooser<>();
+  private static SendableChooser<XboxController> driverControllerChooser = new SendableChooser<>();
+  private static SendableChooser<XboxController> operatorControllerChooser = new SendableChooser<>();
+  private static SendableChooser<Command> autoChooser = new SendableChooser<>();
+  
   private final XboxController controllerOne = new XboxController(0);
   private final XboxController controllerTwo = new XboxController(1);
-  private final SpeedControllerGroup leftDriveTrain = new SpeedControllerGroup(leftFront, leftBack);
-  private final SpeedControllerGroup rightDriveTrain = new SpeedControllerGroup(rightFront, rightBack);
-  private final DifferentialDrive driveTrain = new DifferentialDrive(leftDriveTrain, rightDriveTrain);
   private final ControlSet controlSet = new ControlSet(driverControllerChooser, operatorControllerChooser);
-  private final Manipulators manipulators = new Manipulators(lift, intake);
 
   private Command m_autonomousCommand;
+  private Command driveCommand;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -71,7 +68,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
-    m_chooser.addDefault("Default Auto", new ExampleCommand(m_subsystem));
+    driveCommand = new DriveCommand(driveTrainSubsystem);
     // chooser.addObject("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
 
@@ -111,6 +108,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    driveCommand.cancel();
   }
 
   @Override
@@ -144,6 +142,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.start();
     }
+
+    autoChooser.getSelected().start();
   }
 
   /**
@@ -163,6 +163,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    driveCommand.start();
   }
 
   /**
@@ -171,12 +172,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Operator operator = operatorChooser.getSelected();
-    operator.operate(manipulators);
-
-    Driver driver = driverChooser.getSelected();
-    driver.drive(driveTrain);
+    operator.operate(manipulatorsSubsystem);
     
     Scheduler.getInstance().run();
+  }
+
+  @Override
+  public void testInit() {
+    teleopInit();
   }
 
   /**
@@ -184,6 +187,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    teleopPeriodic();
+  }
+
+  public static SendableChooser<Driver> getDriverChooser() {
+    return driverChooser;
   }
 
 }
