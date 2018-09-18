@@ -13,14 +13,15 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+//import frc.robot.commands.ExampleCommand;
+//import frc.robot.subsystems.ExampleSubsystem;
 
 import javax.xml.xpath.XPathVariableResolver;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.drivesystems.BrandonDriver;
 import frc.robot.drivesystems.BrandonOperator;
@@ -40,7 +41,7 @@ import frc.robot.drivesystems.Operator;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static ExampleSubsystem m_subsystem = new ExampleSubsystem();
+  //private static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   private static OI m_oi;
 
   private SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -48,12 +49,14 @@ public class Robot extends TimedRobot {
   private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
   private SendableChooser<XboxController> driverControllerChooser = new SendableChooser<>();
   private SendableChooser<XboxController> operatorControllerChooser = new SendableChooser<>();
-  private final Talon leftFront = new Talon(0);
-  private final Talon leftBack = new Talon(1);
-  private final Talon rightFront = new Talon(2);
-  private final Talon rightBack = new Talon(3);
+  private final WPI_TalonSRX leftFront = new WPI_TalonSRX(1);
+  private final WPI_TalonSRX leftBack = new WPI_TalonSRX(0);
+  private final WPI_TalonSRX rightFront = new WPI_TalonSRX(3);
+  private final WPI_TalonSRX rightBack = new WPI_TalonSRX(2);
   private final Spark lift = new Spark(0);
-  private final Spark intake = new Spark(1);
+  private final Spark leftIntake = new Spark(1);
+  private final Spark rightIntake = new Spark(2);
+  private final SpeedControllerGroup intake = new SpeedControllerGroup(leftIntake, rightIntake);
   private final XboxController controllerOne = new XboxController(0);
   private final XboxController controllerTwo = new XboxController(1);
   private final SpeedControllerGroup leftDriveTrain = new SpeedControllerGroup(leftFront, leftBack);
@@ -71,25 +74,27 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
-    m_chooser.addDefault("Default Auto", new ExampleCommand(m_subsystem));
+    //m_chooser.addDefault("Default Auto", new ExampleCommand(m_subsystem));
     // chooser.addObject("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
 
-    driverChooser.addDefault("Jorge", new JorgeDriver(controlSet));
-    driverChooser.addObject("Brandon", new BrandonDriver(controlSet));
+    driverChooser.addDefault("Jorge Driver", new JorgeDriver(controlSet));
+    driverChooser.addObject("Brandon Driver", new BrandonDriver(controlSet));
     SmartDashboard.putData("Driver", driverChooser);
 
-    driverControllerChooser.addDefault("1", controllerOne);
-    driverControllerChooser.addObject("2", controllerTwo);
+    driverControllerChooser.addDefault("Driver Controller: 1", controllerOne);
+    driverControllerChooser.addObject("Driver Controller: 2", controllerTwo);
     SmartDashboard.putData("Driver Controller", driverControllerChooser);
 
-    operatorChooser.addDefault("Jorge", new JorgeOperator(controlSet));
-    operatorChooser.addObject("Brandon", new BrandonOperator(controlSet));
+    operatorChooser.addDefault("Jorge Operator", new JorgeOperator(controlSet));
+    operatorChooser.addObject("Brandon Operator", new BrandonOperator(controlSet));
     SmartDashboard.putData("Operator", operatorChooser);
 
-    operatorControllerChooser.addObject("1", controllerOne);
-    operatorControllerChooser.addDefault("2", controllerTwo);
+    operatorControllerChooser.addObject("Operator Controller: 1", controllerOne);
+    operatorControllerChooser.addDefault("Operator Controller: 2", controllerTwo);
     SmartDashboard.putData("Operator Controller", operatorControllerChooser);
+
+    rightIntake.setInverted(true);
   }
 
   /**

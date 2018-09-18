@@ -13,7 +13,7 @@ public class JorgeDriver implements Driver {
 
     @Override
     public void drive(DifferentialDrive differentialDrive) {
-        differentialDrive.arcadeDrive(getSpeed(), getRotation(), true);
+        differentialDrive.arcadeDrive(-getSpeed(), getRotation(), true);
     }
 
     private double getSpeed() {

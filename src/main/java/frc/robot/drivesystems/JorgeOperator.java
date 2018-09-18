@@ -19,7 +19,7 @@ public class JorgeOperator implements Operator {
         double leftTrigger = controlSet.getOperatorController().getTriggerAxis(Hand.kLeft);
         double rightTrigger = controlSet.getOperatorController().getTriggerAxis(Hand.kRight);
         if (leftTrigger > rightTrigger) {
-            return leftTrigger;
+            return -leftTrigger;
         } else if (rightTrigger > leftTrigger) {
             return rightTrigger;
         } else {

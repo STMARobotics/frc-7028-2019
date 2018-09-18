@@ -16,7 +16,7 @@ public class BrandonDriver implements Driver {
     }
 
     private double getSpeed() {
-        return controlSet.getDriverController().getY(Hand.kLeft);
+        return (-controlSet.getDriverController().getY(Hand.kLeft))/2;
     }
 
     private double getRotation() {
