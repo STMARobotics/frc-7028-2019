@@ -1,41 +1,19 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.ManipulatorsSubsystem;
 
-public class DriveToSwitchRight extends Command {
+public class RightAutoCommand extends CommandGroup {
 
-    private DifferentialDrive driveTrain;
-    private Spark lift;
-    private Timer timer;
-
-    public DriveToSwitchRight(Subsystem subsystem, DifferentialDrive driveTrain, Spark lift) {
-        requires(subsystem);
-        this.driveTrain = driveTrain;
-        this.lift = lift;
-    }
-
-    protected void initialize() {
-
-    }
-
-    protected void execute() {
-
-    }
-
-    protected boolean isFinished() {
-        return true;
-    }
-
-    protected void end() {
-
-    }
-
-    protected void interrupted() {
-        
+    public RightAutoCommand(DriveTrainSubsystem driveTrainSubsystem, ManipulatorsSubsystem manipulatorsSubsystem, char switchPosition) {
+        addSequential(new DriveForwardCommand(driveTrainSubsystem, .25, 3));
+        if (switchPosition == 'R') {
+            addSequential(new SpinCommand(driveTrainSubsystem, -90));
+            addParallel(new RaiseLiftCommand(manipulatorsSubsystem, 1, 1.5));
+            addSequential(new DriveForwardCommand(driveTrainSubsystem, .25, 2));
+            addSequential(new OperateIntakeCommand(manipulatorsSubsystem, .1, 1));
+        }
     }
 
 }

@@ -4,16 +4,18 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class DriveForward extends Command {
+public class DriveForwardCommand extends Command {
 
     private DriveTrainSubsystem driveTrainSubsystem;
     private double time;
+    private double speed;
     private Timer timer;
 
-    public DriveForward(DriveTrainSubsystem driveTrainSubsystem, double time) {
+    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double time) {
         requires(driveTrainSubsystem);
         this.driveTrainSubsystem = driveTrainSubsystem;
         this.time = time;
+        this.speed = speed;
     }
 
     protected void initialize() {
@@ -21,7 +23,7 @@ public class DriveForward extends Command {
     }
 
     protected void execute() {
-        driveTrainSubsystem.getDriveTrain().arcadeDrive(.5, 0);;
+        driveTrainSubsystem.getDriveTrain().arcadeDrive(-speed, 0);;
     }
 
     protected boolean isFinished() {
@@ -30,6 +32,7 @@ public class DriveForward extends Command {
     }
 
     protected void end() {
+        driveTrainSubsystem.getDriveTrain().arcadeDrive(0, 0);
         timer.stop();
     }
 

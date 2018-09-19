@@ -8,12 +8,14 @@ public class RaiseLiftCommand extends Command {
 
     ManipulatorsSubsystem manipulatorsSubsystem;
     double time;
+    double speed;
     Timer timer = new Timer();
 
-    public RaiseLiftCommand(ManipulatorsSubsystem manipulatorsSubsystem, double time) {
+    public RaiseLiftCommand(ManipulatorsSubsystem manipulatorsSubsystem, double speed, double time) {
         requires(manipulatorsSubsystem);
         this.manipulatorsSubsystem = manipulatorsSubsystem;
         this.time = time;
+        this.speed = speed;
     }
 
     @Override
@@ -23,7 +25,7 @@ public class RaiseLiftCommand extends Command {
 
     @Override
     protected void execute() {
-        manipulatorsSubsystem.setLiftSpeed(1);
+        manipulatorsSubsystem.setLiftSpeed(speed);
     }
 
     @Override

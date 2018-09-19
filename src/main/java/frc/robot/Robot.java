@@ -10,23 +10,16 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.CenterAutoCommand;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.DriveToSwitchLeft;
-import frc.robot.commands.DriveToSwitchRight;
+import frc.robot.commands.LeftAutoCommand;
 import frc.robot.commands.OperateCommand;
+import frc.robot.commands.RightAutoCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
-
-import javax.xml.xpath.XPathVariableResolver;
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.Spark;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.drivesystems.BrandonDriver;
 import frc.robot.drivesystems.BrandonOperator;
@@ -62,6 +55,15 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private Command driveCommand;
   private Command operateCommand;
+  private Command autoCommand;
+
+  // finds position of switches and scale
+  // array of three characters (either 'L' or 'R')
+  // first char = position of alliance switch
+  // second char = position of scale
+  // third cher = position of opponent switch
+  private String gameData = DriverStation.getInstance().getGameSpecificMessage();
+  private char switchPosition = gameData.charAt(0);
 
   /**
    * This function is run when the robot is first started up and should be
@@ -90,6 +92,11 @@ public class Robot extends TimedRobot {
     operatorControllerChooser.addObject("Operator Controller: 1", controllerOne);
     operatorControllerChooser.addDefault("Operator Controller: 2", controllerTwo);
     SmartDashboard.putData("Operator Controller", operatorControllerChooser);
+
+    autoChooser.addDefault("Center Auto", new CenterAutoCommand(driveTrainSubsystem, manipulatorsSubsystem));
+    autoChooser.addObject("Right Auto", new RightAutoCommand(driveTrainSubsystem, manipulatorsSubsystem, switchPosition));
+    autoChooser.addObject("Left Auto", new LeftAutoCommand(driveTrainSubsystem, manipulatorsSubsystem, switchPosition));
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -132,7 +139,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_chooser.getSelected();
+    //m_autonomousCommand = m_chooser.getSelected();
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -142,11 +149,12 @@ public class Robot extends TimedRobot {
      */
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.start();
-    }
+   // if (m_autonomousCommand != null) {
+    //  m_autonomousCommand.start();
+    //}
 
-    autoChooser.getSelected().start();
+    autoCommand = autoChooser.getSelected();
+    autoCommand.start();
   }
 
   /**
@@ -163,9 +171,10 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+   // if (m_autonomousCommand != null) {
+     // m_autonomousCommand.cancel();
+   // }
+    autoCommand.cancel();
     driveCommand.start();
     operateCommand.start();
   }
