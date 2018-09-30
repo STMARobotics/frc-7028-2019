@@ -13,9 +13,12 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.CenterAutoLeftCommand;
+import frc.robot.commands.CenterAutoRightCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.LeftAutoNoSwitchCommand;
 import frc.robot.commands.LeftAutoSwitchCommand;
 import frc.robot.commands.OperateCommand;
+import frc.robot.commands.RightAutoNoSwitchCommand;
 import frc.robot.commands.RightAutoSwitchCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
@@ -49,7 +52,7 @@ public class Robot extends TimedRobot {
   private static SendableChooser<Operator> operatorChooser = new SendableChooser<>();
   private static SendableChooser<XboxController> driverControllerChooser = new SendableChooser<>();
   private static SendableChooser<XboxController> operatorControllerChooser = new SendableChooser<>();
-  private static SendableChooser<Command> autoChooser = new SendableChooser<>();
+  private static SendableChooser<String> autoChooser = new SendableChooser<>();
   private final XboxController controllerOne = new XboxController(0);
   private final XboxController controllerTwo = new XboxController(2);
   private final ControlSet controlSet = new ControlSet(driverControllerChooser, operatorControllerChooser);
@@ -58,8 +61,6 @@ public class Robot extends TimedRobot {
   private Command driveCommand;
   private Command operateCommand;
   private Command autoCommand;
-
-  private char switchPosition;
 
   // finds position of switches and scale
   // array of three characters (either 'L' or 'R')
@@ -95,10 +96,9 @@ public class Robot extends TimedRobot {
     operatorControllerChooser.addDefault("Operator Controller: 2", controllerTwo);
     SmartDashboard.putData("Operator Controller", operatorControllerChooser);
 
-    autoChooser.addDefault("Center Auto", new CenterAutoLeftCommand(driveTrainSubsystem, manipulatorsSubsystem));
-    autoChooser.addObject("Right Auto",
-        new RightAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem, switchPosition));
-    autoChooser.addObject("Left Auto", new LeftAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem, switchPosition));
+    autoChooser.addDefault("Center Auto", "Center");
+    autoChooser.addObject("Right Auto", "Right");
+    autoChooser.addObject("Left Auto", "Left");
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -158,8 +158,25 @@ public class Robot extends TimedRobot {
     // m_autonomousCommand.start();
     // }
     String gameData = DriverStation.getInstance().getGameSpecificMessage();
-    switchPosition = gameData.charAt(0);
-    autoCommand = autoChooser.getSelected();
+    char switchPosition = gameData.charAt(0);
+    String chosenCommand = autoChooser.getSelected();
+    if (switchPosition == 'L') {
+      if (chosenCommand.equals("Right")) {
+        autoCommand = new RightAutoNoSwitchCommand(driveTrainSubsystem);
+      } else if (chosenCommand.equals("Left")) {
+        autoCommand = new LeftAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem);
+      } else {
+        autoCommand = new CenterAutoLeftCommand(driveTrainSubsystem, manipulatorsSubsystem);
+      }
+    } else {
+      if (chosenCommand.equals("Right")) {
+        autoCommand = new RightAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem);
+      } else if (chosenCommand.equals("Left")) {
+        autoCommand = new LeftAutoNoSwitchCommand(driveTrainSubsystem);
+      } else {
+        autoCommand = new CenterAutoRightCommand(driveTrainSubsystem, manipulatorsSubsystem);
+      }
+    }
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
     autoCommand.start();
   }
