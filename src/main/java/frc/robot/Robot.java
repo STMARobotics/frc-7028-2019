@@ -12,13 +12,16 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.CenterAutoCommand;
+import frc.robot.commands.CenterAutoLeftCommand;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.LeftAutoCommand;
+import frc.robot.commands.LeftAutoSwitchCommand;
 import frc.robot.commands.OperateCommand;
-import frc.robot.commands.RightAutoCommand;
+import frc.robot.commands.RightAutoSwitchCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.drivesystems.BrandonDriver;
@@ -28,7 +31,6 @@ import frc.robot.drivesystems.Driver;
 import frc.robot.drivesystems.JorgeDriver;
 import frc.robot.drivesystems.JorgeOperator;
 import frc.robot.drivesystems.Operator;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -49,7 +51,7 @@ public class Robot extends TimedRobot {
   private static SendableChooser<XboxController> operatorControllerChooser = new SendableChooser<>();
   private static SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final XboxController controllerOne = new XboxController(0);
-  private final XboxController controllerTwo = new XboxController(1);
+  private final XboxController controllerTwo = new XboxController(2);
   private final ControlSet controlSet = new ControlSet(driverControllerChooser, operatorControllerChooser);
 
   private Command m_autonomousCommand;
@@ -57,17 +59,17 @@ public class Robot extends TimedRobot {
   private Command operateCommand;
   private Command autoCommand;
 
+  private char switchPosition;
+
   // finds position of switches and scale
   // array of three characters (either 'L' or 'R')
   // first char = position of alliance switch
   // second char = position of scale
   // third cher = position of opponent switch
-  private String gameData = DriverStation.getInstance().getGameSpecificMessage();
-  private char switchPosition = gameData.charAt(0);
 
   /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
    */
   @Override
   public void robotInit() {
@@ -75,7 +77,7 @@ public class Robot extends TimedRobot {
     driveCommand = new DriveCommand(driverChooser, driveTrainSubsystem);
     operateCommand = new OperateCommand(operatorChooser, manipulatorsSubsystem);
     // chooser.addObject("My Auto", new MyAutoCommand());
-    SmartDashboard.putData("Auto mode", m_chooser);
+    //SmartDashboard.putData("Auto mode", m_chooser);
 
     driverChooser.addDefault("Jorge Driver", new JorgeDriver(controlSet));
     driverChooser.addObject("Brandon Driver", new BrandonDriver(controlSet));
@@ -93,28 +95,30 @@ public class Robot extends TimedRobot {
     operatorControllerChooser.addDefault("Operator Controller: 2", controllerTwo);
     SmartDashboard.putData("Operator Controller", operatorControllerChooser);
 
-    autoChooser.addDefault("Center Auto", new CenterAutoCommand(driveTrainSubsystem, manipulatorsSubsystem));
-    autoChooser.addObject("Right Auto", new RightAutoCommand(driveTrainSubsystem, manipulatorsSubsystem, switchPosition));
-    autoChooser.addObject("Left Auto", new LeftAutoCommand(driveTrainSubsystem, manipulatorsSubsystem, switchPosition));
+    autoChooser.addDefault("Center Auto", new CenterAutoLeftCommand(driveTrainSubsystem, manipulatorsSubsystem));
+    autoChooser.addObject("Right Auto",
+        new RightAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem, switchPosition));
+    autoChooser.addObject("Left Auto", new LeftAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem, switchPosition));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use
-   * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for
+   * items like diagnostics that you want ran during disabled, autonomous,
+   * teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
   }
 
   /**
-   * This function is called once each time the robot enters Disabled mode.
-   * You can use it to reset any subsystem information you want to clear when
-   * the robot is disabled.
+   * This function is called once each time the robot enters Disabled mode. You
+   * can use it to reset any subsystem information you want to clear when the
+   * robot is disabled.
    */
   @Override
   public void disabledInit() {
@@ -128,32 +132,35 @@ public class Robot extends TimedRobot {
 
   /**
    * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
-   * chooser code works with the Java SmartDashboard. If you prefer the
-   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-   * getString code to get the auto name from the text box below the Gyro
+   * between different autonomous modes using the dashboard. The sendable chooser
+   * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
+   * remove all of the chooser code and uncomment the getString code to get the
+   * auto name from the text box below the Gyro
    *
-   * <p>You can add additional auto modes by adding additional commands to the
-   * chooser code above (like the commented example) or additional comparisons
-   * to the switch structure below with additional strings & commands.
+   * <p>
+   * You can add additional auto modes by adding additional commands to the
+   * chooser code above (like the commented example) or additional comparisons to
+   * the switch structure below with additional strings & commands.
    */
   @Override
   public void autonomousInit() {
-    //m_autonomousCommand = m_chooser.getSelected();
+    // m_autonomousCommand = m_chooser.getSelected();
 
     /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
+     * String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
+     * switch(autoSelected) { case "My Auto": autonomousCommand = new
+     * MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new
+     * ExampleCommand(); break; }
      */
 
     // schedule the autonomous command (example)
-   // if (m_autonomousCommand != null) {
-    //  m_autonomousCommand.start();
-    //}
-
+    // if (m_autonomousCommand != null) {
+    // m_autonomousCommand.start();
+    // }
+    String gameData = DriverStation.getInstance().getGameSpecificMessage();
+    switchPosition = gameData.charAt(0);
     autoCommand = autoChooser.getSelected();
+    driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
     autoCommand.start();
   }
 
@@ -171,10 +178,13 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-   // if (m_autonomousCommand != null) {
-     // m_autonomousCommand.cancel();
-   // }
-    autoCommand.cancel();
+    // if (m_autonomousCommand != null) {
+    // m_autonomousCommand.cancel();
+    // }
+    if (autoCommand != null) {
+      autoCommand.cancel();
+    }
+    driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
     driveCommand.start();
     operateCommand.start();
   }

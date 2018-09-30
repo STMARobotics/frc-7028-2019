@@ -4,27 +4,24 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.ManipulatorsSubsystem;
 
-public class RaiseLiftCommand extends Command {
+public class LowerLiftCommand extends Command {
 
     private ManipulatorsSubsystem manipulatorsSubsystem;
-    private Timer timer  = new Timer();
+    private Timer timer = new Timer();
 
-    public RaiseLiftCommand(ManipulatorsSubsystem manipulatorsSubsystem) {
+    public LowerLiftCommand(ManipulatorsSubsystem manipulatorsSubsystem) {
         requires(manipulatorsSubsystem);
         this.manipulatorsSubsystem = manipulatorsSubsystem;
     }
 
-    @Override
-    protected void initialize() {
+    protected void intitialize() {
         timer.start();
     }
 
-    @Override
     protected void execute() {
-        manipulatorsSubsystem.setLiftSpeed(1);
+        manipulatorsSubsystem.setLiftSpeed(-1);
     }
 
-    @Override
     protected boolean isFinished() {
         return timer.get() >= 3;
     }
@@ -33,7 +30,8 @@ public class RaiseLiftCommand extends Command {
         manipulatorsSubsystem.setLiftSpeed(0);
     }
 
-    protected void interrupted() {
+    public void interrupted() {
 
     }
+
 }

@@ -1,10 +1,14 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.SPI;
 
 public class DriveTrainSubsystem extends Subsystem {
 
@@ -15,13 +19,42 @@ public class DriveTrainSubsystem extends Subsystem {
     private final SpeedControllerGroup leftDriveTrain = new SpeedControllerGroup(leftFront, leftBack);
     private final SpeedControllerGroup rightDriveTrain = new SpeedControllerGroup(rightFront, rightBack);
     private final DifferentialDrive driveTrain = new DifferentialDrive(leftDriveTrain, rightDriveTrain);
+    private final AHRS gyro = new AHRS(SPI.Port.kMXP);
+
+    public DriveTrainSubsystem() {
+        leftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        leftFront.setSensorPhase(true);
+        leftBack.follow(leftFront);
+
+        rightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        rightBack.follow(rightFront);
+    }
 
     public void initDefaultCommand() {
-
+        
     }
 
     public DifferentialDrive getDriveTrain() {
         return this.driveTrain;
+    }
+
+    public void setNeutralMode(NeutralMode neutralMode) {
+        leftFront.setNeutralMode(neutralMode);
+        leftBack.setNeutralMode(neutralMode);
+        rightFront.setNeutralMode(neutralMode);
+        rightBack.setNeutralMode(neutralMode);
+    }
+
+    public int getLeftEncoderPosition() {
+        return leftFront.getSelectedSensorPosition(0);
+    }
+
+    public int getRightEncoderPosition() {
+        return rightFront.getSelectedSensorPosition(0);
+    }
+
+    public float getGyroPosition() {
+        return gyro.getYaw();
     }
 
 }
