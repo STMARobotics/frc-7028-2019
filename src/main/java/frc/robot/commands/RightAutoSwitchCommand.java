@@ -12,7 +12,7 @@ public class RightAutoSwitchCommand extends CommandGroup {
         addSequential(new WaitCommand(.5));
         addParallel(new RaiseLiftCommand(manipulatorsSubsystem));
         addSequential(new SpinCommand(driveTrainSubsystem, -90));
-        addSequential(new DriveForwardCommand(driveTrainSubsystem, .5, 36));
+        addSequential(new DriveForwardCommand(driveTrainSubsystem, .5, 18));
         addSequential(new OperateIntakeCommand(manipulatorsSubsystem, .5, 1));
     }
 

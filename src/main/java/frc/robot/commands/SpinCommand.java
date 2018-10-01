@@ -26,7 +26,7 @@ public class SpinCommand extends Command {
     protected void execute() {
         double speed = .5d;
         if (isInRange(15)) {
-            speed = .3d;
+            speed = .35d;
         }
         if (degrees > 0) {
             driveTrainSubsystem.getDriveTrain().arcadeDrive(0, speed);
