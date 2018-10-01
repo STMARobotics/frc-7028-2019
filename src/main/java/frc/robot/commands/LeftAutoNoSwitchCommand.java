@@ -6,7 +6,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 public class LeftAutoNoSwitchCommand extends CommandGroup {
 
     public LeftAutoNoSwitchCommand(DriveTrainSubsystem driveTrainSubsystem) {
-        addSequential(new DriveForwardCommand(driveTrainSubsystem, .5, 120));
+        addSequential(new DriveForwardCommand(driveTrainSubsystem, .5, 145));
     }
 
 }

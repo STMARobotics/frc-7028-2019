@@ -8,7 +8,7 @@ import frc.robot.subsystems.ManipulatorsSubsystem;
 public class RightAutoSwitchCommand extends CommandGroup {
 
     public RightAutoSwitchCommand(DriveTrainSubsystem driveTrainSubsystem, ManipulatorsSubsystem manipulatorsSubsystem) {
-        addSequential(new DriveForwardCommand(driveTrainSubsystem, .5, 120));
+        addSequential(new DriveForwardCommand(driveTrainSubsystem, .5, 145));
         addSequential(new WaitCommand(.5));
         addParallel(new RaiseLiftCommand(manipulatorsSubsystem));
         addSequential(new SpinCommand(driveTrainSubsystem, -90));
