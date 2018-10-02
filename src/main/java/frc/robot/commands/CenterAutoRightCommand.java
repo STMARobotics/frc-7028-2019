@@ -12,7 +12,7 @@ public class CenterAutoRightCommand extends CommandGroup {
         addSequential(new DriveForwardCommand(driveTrainSubsystem, .5, 30));
         addParallel(new RaiseLiftCommand(manipulatorsSubsystem));
         addSequential(new SpinCommand(driveTrainSubsystem, -90));
-        addSequential(new DriveForwardCommand(driveTrainSubsystem, .5, 61));
+        addSequential(new DriveForwardCommand(driveTrainSubsystem, .5, 61, 5));
         addSequential(new OperateIntakeCommand(manipulatorsSubsystem, .5, 1));
     }
 
