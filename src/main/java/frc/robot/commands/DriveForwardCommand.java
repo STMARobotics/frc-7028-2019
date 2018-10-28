@@ -1,12 +1,10 @@
 package frc.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.PIDCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class DriveForwardCommand extends Command {
+public class DriveForwardCommand extends PIDCommand {
 
     private DriveTrainSubsystem driveTrainSubsystem;
     private double distance;
@@ -18,13 +16,11 @@ public class DriveForwardCommand extends Command {
     private Timer timer = new Timer();
 
     public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance) {
-        requires(driveTrainSubsystem);
-        this.driveTrainSubsystem = driveTrainSubsystem;
-        this.distance = distance;
-        this.speed = speed;
+        this(driveTrainSubsystem, speed, distance, 0.0);
     }
 
     public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance, double timeout) {
+        super(0.1, 0.001, 0.0);
         requires(driveTrainSubsystem);
         this.driveTrainSubsystem = driveTrainSubsystem;
         this.distance = distance;
@@ -37,10 +33,11 @@ public class DriveForwardCommand extends Command {
         leftTarget = rotations + driveTrainSubsystem.getLeftEncoderPosition();
         rightTarget = rotations + driveTrainSubsystem.getRightEncoderPosition();
         timer.start();
+        this.setSetpoint(driveTrainSubsystem.getGyroPosition());
     }
 
     protected void execute() {
-        driveTrainSubsystem.getDriveTrain().arcadeDrive(speed, 0);
+
     }
 
     protected boolean isFinished() {
@@ -49,9 +46,7 @@ public class DriveForwardCommand extends Command {
                 return true;
             }
         }
-        boolean isfinished = driveTrainSubsystem.getLeftEncoderPosition() >= leftTarget 
-            && driveTrainSubsystem.getRightEncoderPosition() >= rightTarget;
-        return isfinished;
+        return driveTrainSubsystem.getLeftEncoderPosition() >= leftTarget && driveTrainSubsystem.getRightEncoderPosition() >= rightTarget;
     }
 
     protected void end() {
@@ -60,6 +55,16 @@ public class DriveForwardCommand extends Command {
 
     protected void interrupted() {
 
+    }
+
+    @Override
+    protected void usePIDOutput(double output) {
+        driveTrainSubsystem.getDriveTrain().arcadeDrive(speed, output);
+    }
+
+    @Override
+    protected double returnPIDInput() {
+        return driveTrainSubsystem.getGyroPosition();
     }
 
 }
