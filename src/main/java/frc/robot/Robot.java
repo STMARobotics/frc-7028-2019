@@ -46,19 +46,16 @@ import frc.robot.smartdashboard.CachingSendableChooser;
 public class Robot extends TimedRobot {
   private static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
   private static ManipulatorsSubsystem manipulatorsSubsystem = new ManipulatorsSubsystem();
-  private static OI m_oi;
 
-  private static SendableChooser<Command> m_chooser = new CachingSendableChooser<>();
   private static SendableChooser<Driver> driverChooser = new CachingSendableChooser<>();
   private static SendableChooser<Operator> operatorChooser = new CachingSendableChooser<>();
   private static SendableChooser<XboxController> driverControllerChooser = new CachingSendableChooser<>();
   private static SendableChooser<XboxController> operatorControllerChooser = new CachingSendableChooser<>();
-  private static SendableChooser<String> autoChooser = new SendableChooser<>();
+  private static SendableChooser<String> autoChooser = new CachingSendableChooser<>();
   private final XboxController controllerOne = new XboxController(0);
   private final XboxController controllerTwo = new XboxController(2);
   private final ControlSet controlSet = new ControlSet(driverControllerChooser, operatorControllerChooser);
 
-  private Command m_autonomousCommand;
   private Command driveCommand;
   private Command operateCommand;
   private Command autoCommand;
@@ -75,11 +72,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_oi = new OI();
     driveCommand = new DriveCommand(driverChooser, driveTrainSubsystem);
     operateCommand = new OperateCommand(operatorChooser, manipulatorsSubsystem);
-    // chooser.addObject("My Auto", new MyAutoCommand());
-    //SmartDashboard.putData("Auto mode", m_chooser);
 
     driverChooser.addDefault("Jorge Driver", new JorgeDriver(controlSet));
     driverChooser.addObject("Brandon Driver", new BrandonDriver(controlSet));
@@ -146,19 +140,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_chooser.getSelected();
-
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
-     * switch(autoSelected) { case "My Auto": autonomousCommand = new
-     * MyAutoCommand(); break; case "Default Auto": default: autonomousCommand = new
-     * ExampleCommand(); break; }
-     */
-
-    // schedule the autonomous command (example)
-    // if (m_autonomousCommand != null) {
-    // m_autonomousCommand.start();
-    // }
     String gameData = DriverStation.getInstance().getGameSpecificMessage();
     char switchPosition = gameData.charAt(0);
     String chosenCommand = autoChooser.getSelected();
@@ -197,9 +178,6 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    // if (m_autonomousCommand != null) {
-    // m_autonomousCommand.cancel();
-    // }
     if (autoCommand != null) {
       autoCommand.cancel();
     }
