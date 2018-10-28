@@ -34,6 +34,7 @@ import frc.robot.drivesystems.Driver;
 import frc.robot.drivesystems.JorgeDriver;
 import frc.robot.drivesystems.JorgeOperator;
 import frc.robot.drivesystems.Operator;
+import frc.robot.smartdashboard.CachingSendableChooser;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -47,11 +48,11 @@ public class Robot extends TimedRobot {
   private static ManipulatorsSubsystem manipulatorsSubsystem = new ManipulatorsSubsystem();
   private static OI m_oi;
 
-  private static SendableChooser<Command> m_chooser = new SendableChooser<>();
-  private static SendableChooser<Driver> driverChooser = new SendableChooser<>();
-  private static SendableChooser<Operator> operatorChooser = new SendableChooser<>();
-  private static SendableChooser<XboxController> driverControllerChooser = new SendableChooser<>();
-  private static SendableChooser<XboxController> operatorControllerChooser = new SendableChooser<>();
+  private static SendableChooser<Command> m_chooser = new CachingSendableChooser<>();
+  private static SendableChooser<Driver> driverChooser = new CachingSendableChooser<>();
+  private static SendableChooser<Operator> operatorChooser = new CachingSendableChooser<>();
+  private static SendableChooser<XboxController> driverControllerChooser = new CachingSendableChooser<>();
+  private static SendableChooser<XboxController> operatorControllerChooser = new CachingSendableChooser<>();
   private static SendableChooser<String> autoChooser = new SendableChooser<>();
   private final XboxController controllerOne = new XboxController(0);
   private final XboxController controllerTwo = new XboxController(2);
