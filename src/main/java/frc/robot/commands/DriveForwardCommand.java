@@ -20,7 +20,7 @@ public class DriveForwardCommand extends PIDCommand {
     }
 
     public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance, double timeout) {
-        super(0.1, 0.001, 0.0);
+        super(0.04, 0, 0);
         requires(driveTrainSubsystem);
         this.driveTrainSubsystem = driveTrainSubsystem;
         this.distance = distance;
@@ -50,6 +50,7 @@ public class DriveForwardCommand extends PIDCommand {
     }
 
     protected void end() {
+        timer.stop();
         driveTrainSubsystem.getDriveTrain().arcadeDrive(0, 0);
     }
 
@@ -60,6 +61,7 @@ public class DriveForwardCommand extends PIDCommand {
     @Override
     protected void usePIDOutput(double output) {
         driveTrainSubsystem.getDriveTrain().arcadeDrive(speed, output);
+        System.out.println(System.currentTimeMillis() + ", " + output);
     }
 
     @Override

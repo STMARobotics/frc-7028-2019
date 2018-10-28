@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.WaitCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class SpinCommand extends Command {
