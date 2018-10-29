@@ -8,6 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.commands.DriveTrainSubDefaultCommand;
 import edu.wpi.first.wpilibj.SPI;
 
 public class DriveTrainSubsystem extends Subsystem {
@@ -35,7 +36,7 @@ public class DriveTrainSubsystem extends Subsystem {
     }
 
     public void initDefaultCommand() {
-        
+        setDefaultCommand(new DriveTrainSubDefaultCommand(this));
     }
 
     public DifferentialDrive getDriveTrain() {

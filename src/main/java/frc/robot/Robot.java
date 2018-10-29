@@ -38,7 +38,6 @@ import frc.robot.drivesystems.HunterOperator;
 import frc.robot.drivesystems.JorgeDriver;
 import frc.robot.drivesystems.JorgeOperator;
 import frc.robot.drivesystems.Operator;
-import frc.robot.smartdashboard.CachingSendableChooser;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -51,11 +50,11 @@ public class Robot extends TimedRobot {
   private static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
   private static ManipulatorsSubsystem manipulatorsSubsystem = new ManipulatorsSubsystem();
 
-  private static SendableChooser<Driver> driverChooser = new CachingSendableChooser<>();
-  private static SendableChooser<Operator> operatorChooser = new CachingSendableChooser<>();
-  private static SendableChooser<XboxController> driverControllerChooser = new CachingSendableChooser<>();
-  private static SendableChooser<XboxController> operatorControllerChooser = new CachingSendableChooser<>();
-  private static SendableChooser<String> autoChooser = new CachingSendableChooser<>();
+  private static SendableChooser<Driver> driverChooser = new SendableChooser<>();
+  private static SendableChooser<Operator> operatorChooser = new SendableChooser<>();
+  private static SendableChooser<XboxController> driverControllerChooser = new SendableChooser<>();
+  private static SendableChooser<XboxController> operatorControllerChooser = new SendableChooser<>();
+  private static SendableChooser<String> autoChooser = new SendableChooser<>();
   private final XboxController controllerOne = new XboxController(0);
   private final XboxController controllerTwo = new XboxController(2);
   private final ControlSet controlSet = new ControlSet(driverControllerChooser, operatorControllerChooser);
@@ -63,12 +62,6 @@ public class Robot extends TimedRobot {
   private Command driveCommand;
   private Command operateCommand;
   private Command autoCommand;
-
-  // finds position of switches and scale
-  // array of three characters (either 'L' or 'R')
-  // first char = position of alliance switch
-  // second char = position of scale
-  // third cher = position of opponent switch
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -116,7 +109,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Gyro position", driveTrainSubsystem.getGyroPosition());
   }
 
   /**
@@ -148,6 +140,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    // finds position of switches and scale
+    // array of three characters (either 'L' or 'R')
+    // first char = position of alliance switch
+    // second char = position of scale
+    // third cher = position of opponent switch
     String gameData = DriverStation.getInstance().getGameSpecificMessage();
     char switchPosition = gameData.charAt(0);
     String chosenCommand = autoChooser.getSelected();
