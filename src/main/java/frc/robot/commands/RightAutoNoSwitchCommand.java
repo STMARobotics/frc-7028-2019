@@ -2,11 +2,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.GyroSubsystem;
 
 public class RightAutoNoSwitchCommand extends CommandGroup {
 
-    public RightAutoNoSwitchCommand(DriveTrainSubsystem driveTrainSubsystem) {
-        addSequential(new DriveForwardCommand(driveTrainSubsystem, .5, 145));
+    public RightAutoNoSwitchCommand(DriveTrainSubsystem driveTrainSubsystem, GyroSubsystem gyroSubsystem) {
+        addSequential(new DriveForwardCommand(driveTrainSubsystem, gyroSubsystem, .5, 145));
     }
 
 }

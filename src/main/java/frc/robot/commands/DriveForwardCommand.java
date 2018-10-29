@@ -3,10 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.GyroSubsystem;
 
 public class DriveForwardCommand extends PIDCommand {
 
     private DriveTrainSubsystem driveTrainSubsystem;
+    private GyroSubsystem gyroSubsystem;
     private double distance;
     private double rotations;
     private double speed;
@@ -15,14 +17,16 @@ public class DriveForwardCommand extends PIDCommand {
     private double timeout;
     private Timer timer = new Timer();
 
-    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance) {
-        this(driveTrainSubsystem, speed, distance, 0.0);
+    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, GyroSubsystem gyroSubsystem, double speed, double distance) {
+        this(driveTrainSubsystem, gyroSubsystem, speed, distance, 0.0);
     }
 
-    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance, double timeout) {
+    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, GyroSubsystem gyroSubsystem, double speed, double distance, double timeout) {
         super(0.04, 0, 0);
         requires(driveTrainSubsystem);
+        requires(gyroSubsystem);
         this.driveTrainSubsystem = driveTrainSubsystem;
+        this.gyroSubsystem = gyroSubsystem;
         this.distance = distance;
         this.speed = speed;
         this.timeout = timeout;
@@ -33,7 +37,7 @@ public class DriveForwardCommand extends PIDCommand {
         leftTarget = rotations + driveTrainSubsystem.getLeftEncoderPosition();
         rightTarget = rotations + driveTrainSubsystem.getRightEncoderPosition();
         timer.start();
-        this.setSetpoint(driveTrainSubsystem.getGyroPosition());
+        this.setSetpoint(gyroSubsystem.getGyroPosition());
     }
 
     protected void execute() {
@@ -65,7 +69,7 @@ public class DriveForwardCommand extends PIDCommand {
 
     @Override
     protected double returnPIDInput() {
-        return driveTrainSubsystem.getGyroPosition();
+        return gyroSubsystem.getGyroPosition();
     }
 
 }

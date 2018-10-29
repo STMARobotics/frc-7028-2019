@@ -2,22 +2,25 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.GyroSubsystem;
 
 public class SpinCommand extends PIDCommand {
 
     private DriveTrainSubsystem driveTrainSubsystem;
+    private GyroSubsystem gyroSubsystem;
     private double degrees;
     private double target;
 
-    public SpinCommand(DriveTrainSubsystem driveTrainSubsystem, float degrees) {
+    public SpinCommand(DriveTrainSubsystem driveTrainSubsystem, GyroSubsystem gyroSubsystem, float degrees) {
         super(0.02, 0, 0);
         requires(driveTrainSubsystem);
+        requires(gyroSubsystem);
         this.driveTrainSubsystem = driveTrainSubsystem;
         this.degrees = degrees;
     }
 
     protected void initialize() {
-        target = driveTrainSubsystem.getGyroPosition() + degrees;
+        target = gyroSubsystem.getGyroPosition() + degrees;
         this.setSetpoint(target);
     }
 
@@ -26,11 +29,11 @@ public class SpinCommand extends PIDCommand {
     }
 
     protected boolean isFinished() {
-        return !driveTrainSubsystem.getGyro().isRotating() && isInRange(1);
+        return !gyroSubsystem.getIsRotating() && isInRange(1);
     }
 
     private boolean isInRange(double diff) {
-        double gyroPosition = driveTrainSubsystem.getGyroPosition();
+        double gyroPosition = gyroSubsystem.getGyroPosition();
         double rangeLow = target - diff;
         double rangeHigh = target + diff;
         return rangeLow <= gyroPosition && gyroPosition <= rangeHigh;
@@ -53,7 +56,7 @@ public class SpinCommand extends PIDCommand {
 
     @Override
     protected double returnPIDInput() {
-        return driveTrainSubsystem.getGyroPosition();
+        return gyroSubsystem.getGyroPosition();
     }
 
 }

@@ -21,6 +21,7 @@ import frc.robot.commands.OperateCommand;
 import frc.robot.commands.RightAutoNoSwitchCommand;
 import frc.robot.commands.RightAutoSwitchCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -49,6 +50,7 @@ import frc.robot.drivesystems.Operator;
 public class Robot extends TimedRobot {
   private static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
   private static ManipulatorsSubsystem manipulatorsSubsystem = new ManipulatorsSubsystem();
+  private static GyroSubsystem gyroSubsystem = new GyroSubsystem();
 
   private static SendableChooser<Driver> driverChooser = new SendableChooser<>();
   private static SendableChooser<Operator> operatorChooser = new SendableChooser<>();
@@ -150,19 +152,19 @@ public class Robot extends TimedRobot {
     String chosenCommand = autoChooser.getSelected();
     if (switchPosition == 'L') {
       if (chosenCommand.equals("Right")) {
-        autoCommand = new RightAutoNoSwitchCommand(driveTrainSubsystem);
+        autoCommand = new RightAutoNoSwitchCommand(driveTrainSubsystem, gyroSubsystem);
       } else if (chosenCommand.equals("Left")) {
-        autoCommand = new LeftAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem);
+        autoCommand = new LeftAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem, gyroSubsystem);
       } else {
-        autoCommand = new CenterAutoLeftCommand(driveTrainSubsystem, manipulatorsSubsystem);
+        autoCommand = new CenterAutoLeftCommand(driveTrainSubsystem, manipulatorsSubsystem, gyroSubsystem);
       }
     } else {
       if (chosenCommand.equals("Right")) {
-        autoCommand = new RightAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem);
+        autoCommand = new RightAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem, gyroSubsystem);
       } else if (chosenCommand.equals("Left")) {
-        autoCommand = new LeftAutoNoSwitchCommand(driveTrainSubsystem);
+        autoCommand = new LeftAutoNoSwitchCommand(driveTrainSubsystem, gyroSubsystem);
       } else {
-        autoCommand = new CenterAutoRightCommand(driveTrainSubsystem, manipulatorsSubsystem);
+        autoCommand = new CenterAutoRightCommand(driveTrainSubsystem, manipulatorsSubsystem, gyroSubsystem);
       }
     }
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
