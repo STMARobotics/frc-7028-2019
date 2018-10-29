@@ -61,7 +61,6 @@ public class DriveForwardCommand extends PIDCommand {
     @Override
     protected void usePIDOutput(double output) {
         driveTrainSubsystem.getDriveTrain().arcadeDrive(speed, output);
-        System.out.println(System.currentTimeMillis() + ", " + output);
     }
 
     @Override

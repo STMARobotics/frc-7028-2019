@@ -27,10 +27,14 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.drivesystems.AidanDriver;
+import frc.robot.drivesystems.AidanOperator;
 import frc.robot.drivesystems.BrandonDriver;
 import frc.robot.drivesystems.BrandonOperator;
 import frc.robot.drivesystems.ControlSet;
 import frc.robot.drivesystems.Driver;
+import frc.robot.drivesystems.HunterDriver;
+import frc.robot.drivesystems.HunterOperator;
 import frc.robot.drivesystems.JorgeDriver;
 import frc.robot.drivesystems.JorgeOperator;
 import frc.robot.drivesystems.Operator;
@@ -77,6 +81,8 @@ public class Robot extends TimedRobot {
 
     driverChooser.addDefault("Jorge Driver", new JorgeDriver(controlSet));
     driverChooser.addObject("Brandon Driver", new BrandonDriver(controlSet));
+    driverChooser.addObject("Hunter Driver", new HunterDriver(controlSet));
+    driverChooser.addObject("Aidan Driver", new AidanDriver(controlSet));
     SmartDashboard.putData("Driver", driverChooser);
 
     driverControllerChooser.addDefault("Driver Controller: 1", controllerOne);
@@ -85,6 +91,8 @@ public class Robot extends TimedRobot {
 
     operatorChooser.addDefault("Jorge Operator", new JorgeOperator(controlSet));
     operatorChooser.addObject("Brandon Operator", new BrandonOperator(controlSet));
+    operatorChooser.addObject("Hunter Operator", new HunterOperator(controlSet));
+    operatorChooser.addObject("Aidan Operator", new AidanOperator(controlSet));
     SmartDashboard.putData("Operator", operatorChooser);
 
     operatorControllerChooser.addObject("Operator Controller: 1", controllerOne);

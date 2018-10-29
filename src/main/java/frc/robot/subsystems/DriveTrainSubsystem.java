@@ -57,8 +57,12 @@ public class DriveTrainSubsystem extends Subsystem {
         return rightFront.getSelectedSensorPosition(0);
     }
 
-    public float getGyroPosition() {
-        return gyro.getYaw();
+    public double getGyroPosition() {
+        return gyro.getAngle();
+    }
+
+    public AHRS getGyro() {
+        return gyro;
     }
 
 }
