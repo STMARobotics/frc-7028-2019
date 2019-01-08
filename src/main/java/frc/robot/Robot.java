@@ -74,29 +74,29 @@ public class Robot extends TimedRobot {
     driveCommand = new DriveCommand(driverChooser, driveTrainSubsystem);
     operateCommand = new OperateCommand(operatorChooser, manipulatorsSubsystem);
 
-    driverChooser.addDefault("Jorge Driver", new JorgeDriver(controlSet));
-    driverChooser.addObject("Brandon Driver", new BrandonDriver(controlSet));
-    driverChooser.addObject("Hunter Driver", new HunterDriver(controlSet));
-    driverChooser.addObject("Aidan Driver", new AidanDriver(controlSet));
+    driverChooser.setDefaultOption("Jorge Driver", new JorgeDriver(controlSet));
+    driverChooser.addOption("Brandon Driver", new BrandonDriver(controlSet));
+    driverChooser.addOption("Hunter Driver", new HunterDriver(controlSet));
+    driverChooser.addOption("Aidan Driver", new AidanDriver(controlSet));
     SmartDashboard.putData("Driver", driverChooser);
 
-    driverControllerChooser.addDefault("Driver Controller: 1", controllerOne);
-    driverControllerChooser.addObject("Driver Controller: 2", controllerTwo);
+    driverControllerChooser.setDefaultOption("Driver Controller: 1", controllerOne);
+    driverControllerChooser.addOption("Driver Controller: 2", controllerTwo);
     SmartDashboard.putData("Driver Controller", driverControllerChooser);
 
-    operatorChooser.addDefault("Jorge Operator", new JorgeOperator(controlSet));
-    operatorChooser.addObject("Brandon Operator", new BrandonOperator(controlSet));
-    operatorChooser.addObject("Hunter Operator", new HunterOperator(controlSet));
-    operatorChooser.addObject("Aidan Operator", new AidanOperator(controlSet));
+    operatorChooser.setDefaultOption("Jorge Operator", new JorgeOperator(controlSet));
+    operatorChooser.addOption("Brandon Operator", new BrandonOperator(controlSet));
+    operatorChooser.addOption("Hunter Operator", new HunterOperator(controlSet));
+    operatorChooser.addOption("Aidan Operator", new AidanOperator(controlSet));
     SmartDashboard.putData("Operator", operatorChooser);
 
-    operatorControllerChooser.addObject("Operator Controller: 1", controllerOne);
-    operatorControllerChooser.addDefault("Operator Controller: 2", controllerTwo);
+    operatorControllerChooser.setDefaultOption("Operator Controller: 1", controllerOne);
+    operatorControllerChooser.addOption("Operator Controller: 2", controllerTwo);
     SmartDashboard.putData("Operator Controller", operatorControllerChooser);
 
-    autoChooser.addDefault("Center Auto", "Center");
-    autoChooser.addObject("Right Auto", "Right");
-    autoChooser.addObject("Left Auto", "Left");
+    autoChooser.setDefaultOption("Center Auto", "Center");
+    autoChooser.addOption("Right Auto", "Right");
+    autoChooser.addOption("Left Auto", "Left");
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 

@@ -22,13 +22,9 @@ public class DriveTrainSubsystem extends Subsystem {
     public DriveTrainSubsystem() {
         leftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         leftFront.setSensorPhase(true);
-        leftFront.setSafetyEnabled(true);
-        leftBack.setSafetyEnabled(true);
         leftBack.follow(leftFront);
 
         rightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-        rightFront.setSafetyEnabled(true);
-        rightBack.setSafetyEnabled(true);
         rightBack.follow(rightFront);
     }
 
