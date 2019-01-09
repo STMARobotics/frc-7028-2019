@@ -12,11 +12,12 @@ public class SpinCommand extends PIDCommand {
     private double target;
 
     public SpinCommand(DriveTrainSubsystem driveTrainSubsystem, GyroSubsystem gyroSubsystem, float degrees) {
-        super(0.02, 0, 0);
+        super(0.005, 0.0003, 0);
         requires(driveTrainSubsystem);
         requires(gyroSubsystem);
         this.driveTrainSubsystem = driveTrainSubsystem;
         this.degrees = degrees;
+        this.gyroSubsystem = gyroSubsystem;
     }
 
     protected void initialize() {
@@ -29,7 +30,7 @@ public class SpinCommand extends PIDCommand {
     }
 
     protected boolean isFinished() {
-        return !gyroSubsystem.getIsRotating() && isInRange(1);
+        return isInRange(2);
     }
 
     private boolean isInRange(double diff) {
@@ -48,9 +49,6 @@ public class SpinCommand extends PIDCommand {
     }
     @Override
     protected void usePIDOutput(double output) {
-        if (output > .5) {
-            output = .5;
-        }
         driveTrainSubsystem.getDriveTrain().arcadeDrive(0, output);
     }
 
