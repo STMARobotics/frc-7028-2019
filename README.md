@@ -1,4 +1,5 @@
 # FRC 7028 - Binary Battalion 2019
+[![Build Status](https://travis-ci.com/STMARobotics/frc-7028-2019.svg?token=r78Bjsm5Zsh1CxGy6eXH&branch=master)](https://travis-ci.com/STMARobotics/frc-7028-2019)
 
 ## Workstation setup
 1) Remove any old FRC stuff you have installed (WPILib Alpha, NI Update, etc.)
