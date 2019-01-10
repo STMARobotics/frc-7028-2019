@@ -20,7 +20,6 @@ import frc.robot.subsystems.ManipulatorsSubsystem;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.drivesystems.BrandonDriver;
 import frc.robot.drivesystems.BrandonOperator;
@@ -40,10 +39,6 @@ import frc.robot.drivesystems.Operator;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
-  private static ManipulatorsSubsystem manipulatorsSubsystem = new ManipulatorsSubsystem();
-  private static GyroSubsystem gyroSubsystem = new GyroSubsystem();
-
   private static SendableChooser<Driver> driverChooser = new SendableChooser<>();
   private static SendableChooser<Operator> operatorChooser = new SendableChooser<>();
   private static SendableChooser<XboxController> driverControllerChooser = new SendableChooser<>();
@@ -52,6 +47,11 @@ public class Robot extends TimedRobot {
   private final XboxController controllerOne = new XboxController(0);
   private final XboxController controllerTwo = new XboxController(2);
   private final ControlSet controlSet = new ControlSet(driverControllerChooser, operatorControllerChooser);
+
+  
+  private static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
+  private static ManipulatorsSubsystem manipulatorsSubsystem = new ManipulatorsSubsystem();
+  private static GyroSubsystem gyroSubsystem = new GyroSubsystem();
 
   private Command driveCommand;
   private Command operateCommand;
@@ -132,11 +132,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // finds position of switches and scale
-    // array of three characters (either 'L' or 'R')
-    // first char = position of alliance switch
-    // second char = position of scale
-    // third cher = position of opponent switch
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
     autoCommand.start();
   }

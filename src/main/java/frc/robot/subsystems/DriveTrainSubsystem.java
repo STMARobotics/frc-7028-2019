@@ -7,7 +7,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.commands.DriveTrainSubDefaultCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.commands.DriveCommand;
+import frc.robot.drivesystems.Driver;
 
 public class DriveTrainSubsystem extends Subsystem {
 
@@ -19,17 +21,21 @@ public class DriveTrainSubsystem extends Subsystem {
     private final SpeedControllerGroup rightDriveTrain = new SpeedControllerGroup(rightFront, rightBack);
     private final DifferentialDrive driveTrain = new DifferentialDrive(leftDriveTrain, rightDriveTrain);
 
-    public DriveTrainSubsystem() {
+    private SendableChooser<Driver> driverChooser;
+
+    public DriveTrainSubsystem(SendableChooser<Driver> driverChooser) {
         leftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         leftFront.setSensorPhase(true);
         leftBack.follow(leftFront);
 
         rightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         rightBack.follow(rightFront);
+
+        this.driverChooser = driverChooser;
     }
 
     public void initDefaultCommand() {
-        setDefaultCommand(new DriveTrainSubDefaultCommand(this));
+        setDefaultCommand(new DriveCommand(driverChooser, this));
     }
 
     public DifferentialDrive getDriveTrain() {
