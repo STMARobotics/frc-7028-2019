@@ -3,7 +3,7 @@ branches:
   - master
 sudo: false
 language: java
-script: ./gradlew build
+script: ./gradlew test
 jdk:
 - openjdk11
 notifications:
@@ -14,11 +14,3 @@ before_deploy:
       - git config --local user.email "7028Robotics@mystma.org"
       - git tag "1.0.$TRAVIS_BUILD_NUMBER"
 deploy:
-  provider: releases
-  skip_cleanup: true
-  api_key:
-    secure: iBMEnwHY3YODx53BOkprDJGXAHw4XgNvydssS1DFS19LlONSMNjfNz51yS1RRdlY4A6h5gyOgTW/EMKE35tFsMX5cfZp/tVUjQCPlsFcLcdxzLiBavxSJlTfVwHYXjDnfMAI/kdp6kZX7AX/aRHuhv4f4HoKdkzvjJHoXqz3bF5Rjlcx6fKUsZ0TY7roEMXrH7rVkQhrj3NMyAmruJdAPRGyZpV8WA9ar2s3hGLZdzhftOGIzgYYtAmeNPQ1Y1eu77wVO/HjzoiQhF/CnbfoqkKGdHMRFELDwaFVb5NxtNPafe9hSZoMSbfTAijVFimqsQeBB+8innS8Xdcfmh5R/N2ITZWen9/0+fxtieAIjzcVmrL+8DIgqYlR8LgP9k9i32n3QWZ6AVBh+fBF5nzZICBlykZq3DzN3FkdkKz5DanEjIv3VLRPeuC7JRbwMDq1iCmGRvTubInvmFZP/XzIWJueQ0J7K9IMctkbRRHS7JJpcw8HJhDDOJfkZ+4e5vBgV2XSVC9LXkBD5wsLXFaLkGHE+Bo0XNaWPddudhm16cFNapLpshz195kysPgYO/bzTEfV84cu25eZmAvwLg5Y/O9Nf7VYn8BhsJIP7e0lTV9xaL6Vd7rwpNm2ATUbEadX2IjyOtMz7QaCXJ3ZRsdDJinL57F9vY7NNaJ/nUf2PUw=
-  file: 
-    - $TRAVIS_BUILD_DIR/build/libs/frc-7028-2019.jar
-  on:
-    repo: STMARobotics/frc-7028-2019
