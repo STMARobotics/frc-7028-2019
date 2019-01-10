@@ -17,6 +17,7 @@ import frc.robot.commands.OperateCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
+import frc.robot.vision.Limelight;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -49,9 +50,10 @@ public class Robot extends TimedRobot {
   private final ControlSet controlSet = new ControlSet(driverControllerChooser, operatorControllerChooser);
 
   
-  private static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
+  public static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
   private static ManipulatorsSubsystem manipulatorsSubsystem = new ManipulatorsSubsystem();
-  private static GyroSubsystem gyroSubsystem = new GyroSubsystem();
+  public static GyroSubsystem gyroSubsystem = new GyroSubsystem();
+  public static Limelight limelight = new Limelight();
 
   private Command driveCommand;
   private Command operateCommand;

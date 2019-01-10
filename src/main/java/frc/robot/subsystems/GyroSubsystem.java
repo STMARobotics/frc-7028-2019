@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class GyroSubsystem extends Subsystem {
 
-    private final AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private static final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
-    public double getGyroPosition() {
+    public static double getGyroPosition() {
         return gyro.getAngle();
     }
 
-    public boolean getIsRotating() {
+    public static boolean getIsRotating() {
         return gyro.isRotating();
     }
 

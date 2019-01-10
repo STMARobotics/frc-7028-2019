@@ -2,8 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
+import frc.robot.vision.Gyro;
 
 public class DriveForwardCommand extends PIDCommand {
 
@@ -16,6 +18,10 @@ public class DriveForwardCommand extends PIDCommand {
     private double rightTarget;
     private double timeout;
     private Timer timer = new Timer();
+
+    public DriveForwardCommand(double speed, double distance){
+        this(Robot.driveTrainSubsystem, Robot.gyroSubsystem, speed, distance, 0.0);
+    }
 
     public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, GyroSubsystem gyroSubsystem, double speed, double distance) {
         this(driveTrainSubsystem, gyroSubsystem, speed, distance, 0.0);
