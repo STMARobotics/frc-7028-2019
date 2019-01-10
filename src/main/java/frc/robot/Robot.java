@@ -12,14 +12,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.CenterAutoLeftCommand;
-import frc.robot.commands.CenterAutoRightCommand;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.LeftAutoNoSwitchCommand;
-import frc.robot.commands.LeftAutoSwitchCommand;
 import frc.robot.commands.OperateCommand;
-import frc.robot.commands.RightAutoNoSwitchCommand;
-import frc.robot.commands.RightAutoSwitchCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
@@ -28,8 +22,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.drivesystems.AidanDriver;
-import frc.robot.drivesystems.AidanOperator;
 import frc.robot.drivesystems.BrandonDriver;
 import frc.robot.drivesystems.BrandonOperator;
 import frc.robot.drivesystems.ControlSet;
@@ -77,7 +69,6 @@ public class Robot extends TimedRobot {
     driverChooser.setDefaultOption("Jorge Driver", new JorgeDriver(controlSet));
     driverChooser.addOption("Brandon Driver", new BrandonDriver(controlSet));
     driverChooser.addOption("Hunter Driver", new HunterDriver(controlSet));
-    driverChooser.addOption("Aidan Driver", new AidanDriver(controlSet));
     SmartDashboard.putData("Driver", driverChooser);
 
     driverControllerChooser.setDefaultOption("Driver Controller: 1", controllerOne);
@@ -87,7 +78,6 @@ public class Robot extends TimedRobot {
     operatorChooser.setDefaultOption("Jorge Operator", new JorgeOperator(controlSet));
     operatorChooser.addOption("Brandon Operator", new BrandonOperator(controlSet));
     operatorChooser.addOption("Hunter Operator", new HunterOperator(controlSet));
-    operatorChooser.addOption("Aidan Operator", new AidanOperator(controlSet));
     SmartDashboard.putData("Operator", operatorChooser);
 
     operatorControllerChooser.setDefaultOption("Operator Controller: 1", controllerOne);
@@ -147,26 +137,6 @@ public class Robot extends TimedRobot {
     // first char = position of alliance switch
     // second char = position of scale
     // third cher = position of opponent switch
-    String gameData = DriverStation.getInstance().getGameSpecificMessage();
-    char switchPosition = gameData.charAt(0);
-    String chosenCommand = autoChooser.getSelected();
-    if (switchPosition == 'L') {
-      if (chosenCommand.equals("Right")) {
-        autoCommand = new RightAutoNoSwitchCommand(driveTrainSubsystem, gyroSubsystem);
-      } else if (chosenCommand.equals("Left")) {
-        autoCommand = new LeftAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem, gyroSubsystem);
-      } else {
-        autoCommand = new CenterAutoLeftCommand(driveTrainSubsystem, manipulatorsSubsystem, gyroSubsystem);
-      }
-    } else {
-      if (chosenCommand.equals("Right")) {
-        autoCommand = new RightAutoSwitchCommand(driveTrainSubsystem, manipulatorsSubsystem, gyroSubsystem);
-      } else if (chosenCommand.equals("Left")) {
-        autoCommand = new LeftAutoNoSwitchCommand(driveTrainSubsystem, gyroSubsystem);
-      } else {
-        autoCommand = new CenterAutoRightCommand(driveTrainSubsystem, manipulatorsSubsystem, gyroSubsystem);
-      }
-    }
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
     autoCommand.start();
   }
