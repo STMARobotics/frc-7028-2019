@@ -23,7 +23,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.drivesystems.BrandonDriver;
 import frc.robot.drivesystems.BrandonOperator;
-import frc.robot.drivesystems.ControlSet;
 import frc.robot.drivesystems.Driver;
 import frc.robot.drivesystems.HunterDriver;
 import frc.robot.drivesystems.HunterOperator;
@@ -46,8 +45,6 @@ public class Robot extends TimedRobot {
   private static SendableChooser<String> autoChooser = new SendableChooser<>();
   private final XboxController controllerOne = new XboxController(0);
   private final XboxController controllerTwo = new XboxController(2);
-  private final ControlSet controlSet = new ControlSet(driverControllerChooser, operatorControllerChooser);
-
   
   private static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
   private static ManipulatorsSubsystem manipulatorsSubsystem = new ManipulatorsSubsystem();
@@ -66,18 +63,18 @@ public class Robot extends TimedRobot {
     driveCommand = new DriveCommand(driverChooser, driveTrainSubsystem);
     operateCommand = new OperateCommand(operatorChooser, manipulatorsSubsystem);
 
-    driverChooser.setDefaultOption("Jorge Driver", new JorgeDriver(controlSet));
-    driverChooser.addOption("Brandon Driver", new BrandonDriver(controlSet));
-    driverChooser.addOption("Hunter Driver", new HunterDriver(controlSet));
+    driverChooser.setDefaultOption("Jorge Driver", new JorgeDriver(driverControllerChooser));
+    driverChooser.addOption("Brandon Driver", new BrandonDriver(driverControllerChooser));
+    driverChooser.addOption("Hunter Driver", new HunterDriver(driverControllerChooser));
     SmartDashboard.putData("Driver", driverChooser);
 
     driverControllerChooser.setDefaultOption("Driver Controller: 1", controllerOne);
     driverControllerChooser.addOption("Driver Controller: 2", controllerTwo);
     SmartDashboard.putData("Driver Controller", driverControllerChooser);
 
-    operatorChooser.setDefaultOption("Jorge Operator", new JorgeOperator(controlSet));
-    operatorChooser.addOption("Brandon Operator", new BrandonOperator(controlSet));
-    operatorChooser.addOption("Hunter Operator", new HunterOperator(controlSet));
+    operatorChooser.setDefaultOption("Jorge Operator", new JorgeOperator(operatorControllerChooser));
+    operatorChooser.addOption("Brandon Operator", new BrandonOperator(operatorControllerChooser));
+    operatorChooser.addOption("Hunter Operator", new HunterOperator(operatorControllerChooser));
     SmartDashboard.putData("Operator", operatorChooser);
 
     operatorControllerChooser.setDefaultOption("Operator Controller: 1", controllerOne);

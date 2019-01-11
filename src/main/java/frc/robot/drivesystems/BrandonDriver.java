@@ -1,15 +1,17 @@
 package frc.robot.drivesystems;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class BrandonDriver implements Driver {
 
-    private ControlSet controlSet;
+    private SendableChooser<XboxController> driverControllerChooser;
     private boolean slowMode = false;
 
-    public BrandonDriver(ControlSet controlSet) {
-        this.controlSet = controlSet;
+    public BrandonDriver(SendableChooser<XboxController> driverControllerChooser) {
+        this.driverControllerChooser = driverControllerChooser;
     }
 
     public void drive(DifferentialDrive differentialDrive) {
@@ -23,15 +25,15 @@ public class BrandonDriver implements Driver {
     }
 
     private double getSpeed() {
-        return (-controlSet.getDriverController().getY(Hand.kLeft));
+        return (-driverControllerChooser.getSelected().getY(Hand.kLeft));
     }
 
     private double getRotation() {
-        return controlSet.getDriverController().getX(Hand.kRight);
+        return driverControllerChooser.getSelected().getX(Hand.kRight);
     }
 
     private boolean getSlowMode() {
-        if (controlSet.getDriverController().getBButtonPressed()) {
+        if (driverControllerChooser.getSelected().getBButtonPressed()) {
             slowMode = !slowMode;
         }
         return slowMode;

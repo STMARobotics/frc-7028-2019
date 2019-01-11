@@ -19,6 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 /**
  * Unit tests for BrandonDriver
@@ -27,7 +28,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class BradonDriverTest {
 
     @Mock
-    private ControlSet mockControlSet;
+    private SendableChooser<XboxController> mockControllerChooser;
 
     @Mock
     private XboxController mockDriverController;
@@ -40,7 +41,7 @@ public class BradonDriverTest {
 
     @Before
     public void setUp() {
-        when(mockControlSet.getDriverController()).thenReturn(mockDriverController);
+        when(mockControllerChooser.getSelected()).thenReturn(mockDriverController);
     }
 
     /**
