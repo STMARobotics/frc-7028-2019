@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
  * Unit tests for BrandonDriver
  */
 @RunWith(MockitoJUnitRunner.class)
-public class BradonDriverTest {
+public class BrandonDriverTest {
 
     @Mock
     private SendableChooser<XboxController> mockControllerChooser;
