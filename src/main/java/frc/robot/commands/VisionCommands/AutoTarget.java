@@ -39,15 +39,15 @@ public class AutoTarget extends Command {
                 x = 0.0;
                 y = 0.0;
             } else if(aPercent < 2){
-                y += 0.3;
+                y += 0.4;
             } else if(aPercent  < 4){
-                y += 0.1;
+                y += 0.2;
             } else if ( aPercent > 5){
                 y -= 0.1;
             }
 
 
-            Robot.driveTrainSubsystem.getDriveTrain().arcadeDrive(x, y);
+            Robot.driveTrainSubsystem.getDriveTrain().arcadeDrive(y, x, false);
 
 
         /*if(Math.abs(xOffDeg) >= 10.0){

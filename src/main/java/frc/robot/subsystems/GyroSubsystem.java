@@ -15,6 +15,14 @@ public class GyroSubsystem extends Subsystem {
         return gyro.getAngle();
     }
 
+    public static double getGyroYaw(){
+        return gyro.getYaw();
+    }
+
+    public static void stopThing(){
+        gyro.reset();
+    }
+
     public static boolean getIsRotating() {
         return gyro.isRotating();
     }

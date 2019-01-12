@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
+import frc.robot.commands.VisionCommands.AdvancedTarget;
+import frc.robot.commands.VisionCommands.AutoTarget;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
@@ -44,7 +46,7 @@ public class Robot extends TimedRobot {
   private static SendableChooser<Operator> operatorChooser = new SendableChooser<>();
   private static SendableChooser<XboxController> driverControllerChooser = new SendableChooser<>();
   private static SendableChooser<XboxController> operatorControllerChooser = new SendableChooser<>();
-  private static SendableChooser<String> autoChooser = new SendableChooser<>();
+  private static SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final XboxController controllerOne = new XboxController(0);
   private final XboxController controllerTwo = new XboxController(2);
   private final ControlSet controlSet = new ControlSet(driverControllerChooser, operatorControllerChooser);
@@ -86,9 +88,7 @@ public class Robot extends TimedRobot {
     operatorControllerChooser.addOption("Operator Controller: 2", controllerTwo);
     SmartDashboard.putData("Operator Controller", operatorControllerChooser);
 
-    autoChooser.setDefaultOption("Center Auto", "Center");
-    autoChooser.addOption("Right Auto", "Right");
-    autoChooser.addOption("Left Auto", "Left");
+    autoChooser.addOption("Follow the thing", new AutoTarget());
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
@@ -135,6 +135,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
+    
+    System.out.println(autoCommand);
+    autoCommand = new AutoTarget();
     autoCommand.start();
   }
 

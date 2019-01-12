@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.command.PIDCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
-import frc.robot.vision.Gyro;
 
 public class DriveForwardCommand extends PIDCommand {
 
@@ -20,19 +19,16 @@ public class DriveForwardCommand extends PIDCommand {
     private Timer timer = new Timer();
 
     public DriveForwardCommand(double speed, double distance){
-        this(Robot.driveTrainSubsystem, Robot.gyroSubsystem, speed, distance, 0.0);
+        this(Robot.driveTrainSubsystem, speed, distance, 0.0);
     }
 
-    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, GyroSubsystem gyroSubsystem, double speed, double distance) {
-        this(driveTrainSubsystem, gyroSubsystem, speed, distance, 0.0);
+    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance) {
+        this(driveTrainSubsystem, speed, distance, 0.0);
     }
 
-    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, GyroSubsystem gyroSubsystem, double speed, double distance, double timeout) {
+    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance, double timeout) {
         super(0.04, 0, 0);
-        requires(driveTrainSubsystem);
-        requires(gyroSubsystem);
         this.driveTrainSubsystem = driveTrainSubsystem;
-        this.gyroSubsystem = gyroSubsystem;
         this.distance = distance;
         this.speed = speed;
         this.timeout = timeout;
@@ -43,10 +39,11 @@ public class DriveForwardCommand extends PIDCommand {
         leftTarget = rotations + driveTrainSubsystem.getLeftEncoderPosition();
         rightTarget = rotations + driveTrainSubsystem.getRightEncoderPosition();
         timer.start();
-        this.setSetpoint(gyroSubsystem.getGyroPosition());
+        this.setSetpoint(GyroSubsystem.getGyroPosition());
     }
 
     protected void execute() {
+        System.out.println("Running");
 
     }
 

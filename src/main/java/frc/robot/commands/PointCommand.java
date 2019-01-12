@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import frc.robot.Robot;
-import frc.robot.vision.Gyro;
+import frc.robot.subsystems.GyroSubsystem;
 
 public class PointCommand extends PIDCommand{
 
@@ -25,7 +25,7 @@ public class PointCommand extends PIDCommand{
 
     @Override
     protected double returnPIDInput() {
-        return Gyro.getGyroPosition();
+        return GyroSubsystem.getGyroPosition();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class PointCommand extends PIDCommand{
 
     @Override
     protected boolean isFinished() {
-        return Math.abs(Gyro.getGyroPosition()) < 0.5;
+        return Math.abs(GyroSubsystem.getGyroPosition()) < 0.5;
     }
 
 
