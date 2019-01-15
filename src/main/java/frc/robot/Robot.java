@@ -16,6 +16,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.VisionCommands.AdvancedTarget;
 import frc.robot.commands.VisionCommands.AutoTarget;
+import frc.robot.commands.VisionCommands.CombinedTarget;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
@@ -137,7 +138,7 @@ public class Robot extends TimedRobot {
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
     
     System.out.println(autoCommand);
-    autoCommand = new AutoTarget();
+    autoCommand = new CombinedTarget();
     autoCommand.start();
   }
 

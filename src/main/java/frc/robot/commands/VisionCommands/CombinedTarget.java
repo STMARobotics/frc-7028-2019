@@ -18,24 +18,37 @@ public class CombinedTarget extends Command {
     }
 
     //Tuning Values
-    double KpAim = 0.1; //P value in pid
-    double KpDistance = 0.1;
+    double KpAim = 0.01; //P value in pid
+    double KpDistance = 0.2;
 
     //Spin
-    double minPower = 0.05; //About the minimum amount of power required to move
-    double xDeadZone = 1.0; //In degrees
+    double minPower = 0.09; //About the minimum amount of power required to move
+    double xDeadZone = 1.5; //In degrees
 
     //Forewards/Backwards
-    double areaTarget = 4.0; //Percent of screen
-    double yTarget = 5.0; //Degrees from center
+    double areaTarget = 0.5; //Percent of screen
+    double yTarget = 0.0; //Degrees from center
 
     @Override
     protected void execute() {
         
         double turnAdjust = getXAdjust();
 
-        double foreAdjust = getYAdjustArea();
+
+        double foreAdjust = getYAdjustHeight();
         
+        if(Math.abs(turnAdjust) < 0.05){
+            turnAdjust = 0.0;
+        } else {
+            turnAdjust += Math.signum(turnAdjust)*minPower;
+        }
+        if(Math.abs(foreAdjust) < 0.05){
+            foreAdjust = 0.0;
+        } else {
+            foreAdjust += Math.signum(foreAdjust)*minPower;
+        }
+
+        //System.out.println(foreAdjust);
         /**
          *    ^  ^   ^  |  Drive Straight and turn right
          *    |  |   |  v  ++ +-
@@ -50,7 +63,7 @@ public class CombinedTarget extends Command {
          *    v  v   v  |  -- -+
          */
 
-        Robot.driveTrainSubsystem.getDriveTrain().arcadeDrive(foreAdjust, turnAdjust);
+        Robot.driveTrainSubsystem.getDriveTrain().arcadeDrive(foreAdjust, turnAdjust, false);
 
 
     }
@@ -62,16 +75,7 @@ public class CombinedTarget extends Command {
         //Convert that to what we need to change
         double headingErr = xOffDeg;
 
-        //Start from none moving
-        double steeringAdjust = 0.0;
-
-        if(xOffDeg > xDeadZone){
-            steeringAdjust = KpAim*headingErr - minPower;
-        }else if (xOffDeg < xDeadZone){
-            steeringAdjust = KpAim*headingErr + minPower;
-        }
-
-        return steeringAdjust;
+        return KpAim*headingErr;
     }
 
     private double getYAdjustArea(){
