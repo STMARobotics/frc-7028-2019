@@ -10,8 +10,6 @@ cache:
   directories:
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper/
-  
-script: ./gradlew check
 
 jdk:
 - openjdk11
@@ -24,5 +22,3 @@ before_deploy:
       - git config --local user.name "7028Robotics"
       - git config --local user.email "7028Robotics@mystma.org"
       - git tag "1.0.$TRAVIS_BUILD_NUMBER"
-
-deploy:

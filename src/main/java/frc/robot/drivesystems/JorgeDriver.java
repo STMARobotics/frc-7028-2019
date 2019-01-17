@@ -16,7 +16,7 @@ public class JorgeDriver implements Driver {
 
     @Override
     public void drive(DifferentialDrive differentialDrive) {
-        double speed = -getSpeed();
+        double speed = getSpeed();
         double rotation = getRotation();
         if (getSlowMode()) {
             speed = speed / 1.5;

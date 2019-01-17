@@ -52,7 +52,7 @@ public class BrandonDriverTest {
 
         brandonDriver.drive(mockDifferentialDrive);
 
-        verify(mockDifferentialDrive).arcadeDrive(eq(-.123d), anyDouble(), anyBoolean());
+        verify(mockDifferentialDrive).arcadeDrive(eq(.123d), anyDouble(), anyBoolean());
     }
 
     /**
@@ -77,7 +77,7 @@ public class BrandonDriverTest {
 
         brandonDriver.drive(mockDifferentialDrive);
 
-        verify(mockDifferentialDrive).arcadeDrive(eq(-.6d), anyDouble(), anyBoolean());
+        verify(mockDifferentialDrive).arcadeDrive(eq(.6d), anyDouble(), anyBoolean());
     }
 
     /**
