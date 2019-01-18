@@ -44,9 +44,6 @@ public class DriveTrainSubsystem extends Subsystem {
         leftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         rightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
-        leftBack.follow(leftFront);
-        rightBack.follow(rightFront);
-
         rightFront.setInverted(true);
         rightBack.setInverted(true);
         rightFront.setSensorPhase(true);
@@ -57,7 +54,7 @@ public class DriveTrainSubsystem extends Subsystem {
         rightSpeedGroup.setInverted(true);
 
         driveTrain = new DifferentialDrive(leftSpeedGroup, rightSpeedGroup);
-        
+
         this.driverChooser = driverChooser;
 
         SmartDashboard.putData("Left Master", leftFront);
@@ -92,6 +89,10 @@ public class DriveTrainSubsystem extends Subsystem {
 
     public void setUseDifferentialDrive(boolean useDifferentialDrive) {
         driveTrain.setSafetyEnabled(useDifferentialDrive);
+        if (!useDifferentialDrive) {
+            leftBack.follow(leftFront);
+            rightBack.follow(rightFront);
+        }
     }
 
     public WPI_TalonSRX getLeftTalonSRX() {

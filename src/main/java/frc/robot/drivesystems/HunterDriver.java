@@ -28,9 +28,9 @@ public class HunterDriver implements Driver {
         double leftTrigger = driverControllerChooser.getSelected().getTriggerAxis(Hand.kLeft);
         double rightTrigger = driverControllerChooser.getSelected().getTriggerAxis(Hand.kRight);
         if (rightTrigger > leftTrigger) {
-            return -rightTrigger;
+            return rightTrigger;
         } else if (leftTrigger > rightTrigger) {
-            return leftTrigger;
+            return -leftTrigger;
         } else {
             return 0;
         }
