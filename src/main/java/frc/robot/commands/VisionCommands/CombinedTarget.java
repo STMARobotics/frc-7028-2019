@@ -30,7 +30,7 @@ public class CombinedTarget extends Command {
 
     //Tuning Values
     double KpAim = 0.02; //P value in pid
-    double KpDistance = 0.05;
+    double KpDistance = 0.03;
 
     //Spin
     double minPower = 0.09; //About the minimum amount of power required to move
