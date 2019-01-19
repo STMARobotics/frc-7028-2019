@@ -1,23 +1,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import frc.robot.Globals;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
 public class SpinCommand extends PIDCommand {
 
-    private DriveTrainSubsystem driveTrainSubsystem;
-    private GyroSubsystem gyroSubsystem;
+    private DriveTrainSubsystem driveTrainSubsystem = Globals.getDrivetrain();
+    private GyroSubsystem gyroSubsystem = Globals.getGyro();
     private double degrees;
     private double target;
 
-    public SpinCommand(DriveTrainSubsystem driveTrainSubsystem, GyroSubsystem gyroSubsystem, float degrees) {
+    public SpinCommand(float degrees) {
         super(0.005, 0.0003, 0);
+        this.degrees = degrees;
         requires(driveTrainSubsystem);
         requires(gyroSubsystem);
-        this.driveTrainSubsystem = driveTrainSubsystem;
-        this.degrees = degrees;
-        this.gyroSubsystem = gyroSubsystem;
+    }
+
+    public SpinCommand(DriveTrainSubsystem driveTrain, GyroSubsystem gyro, float degrees){
+        this(degrees);
+        this.gyroSubsystem = gyro;
+        this.driveTrainSubsystem = driveTrain;
     }
 
     protected void initialize() {
@@ -41,7 +46,7 @@ public class SpinCommand extends PIDCommand {
     }
 
     protected void end() {
-        driveTrainSubsystem.getDriveTrain().arcadeDrive(0, 0);
+        driveTrainSubsystem.getDiffDrive().arcadeDrive(0, 0);
     }
 
     protected void interrupted() {
@@ -49,7 +54,7 @@ public class SpinCommand extends PIDCommand {
     }
     @Override
     protected void usePIDOutput(double output) {
-        driveTrainSubsystem.getDriveTrain().arcadeDrive(0, output);
+        driveTrainSubsystem.getDiffDrive().arcadeDrive(0, output);
     }
 
     @Override
