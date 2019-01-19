@@ -1,11 +1,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import frc.robot.Globals;
 import frc.robot.Robot;
+import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
+import frc.robot.vision.Limelight;
 
 public class PointCommand extends PIDCommand{
 
+    private DriveTrainSubsystem driveTrain = Globals.getDrivetrain();
+    private Limelight limelight = Globals.getLimelight();
+    private GyroSubsystem gyro = Globals.getGyro();
 
     double degrees;
     public PointCommand(double degrees){
@@ -13,9 +19,16 @@ public class PointCommand extends PIDCommand{
         this.degrees = degrees;
     }
 
+    public PointCommand(DriveTrainSubsystem driveTrain, GyroSubsystem gyro, Limelight limelight, double degrees){
+        this(degrees);
+        this.driveTrain = driveTrain;
+        this.limelight = limelight;
+        this.gyro = gyro;
+    }
+
     @Override
     protected void end() {
-        Robot.driveTrainSubsystem.getDriveTrain().arcadeDrive(0, 0);
+        Globals.getDrivetrain().getDiffDrive().arcadeDrive(0, 0);
     }
 
     @Override
@@ -25,17 +38,17 @@ public class PointCommand extends PIDCommand{
 
     @Override
     protected double returnPIDInput() {
-        return GyroSubsystem.getGyroPosition();
+        return gyro.getGyroPosition();
     }
 
     @Override
     protected void usePIDOutput(double output) {
-        Robot.driveTrainSubsystem.getDriveTrain().arcadeDrive(0, output);;
+        driveTrain.getDiffDrive().arcadeDrive(0, output);;
     }
 
     @Override
     protected boolean isFinished() {
-        return Math.abs(GyroSubsystem.getGyroPosition()) < 0.5;
+        return Math.abs(gyro.getGyroPosition()) < 0.5;
     }
 
 

@@ -1,15 +1,26 @@
 package frc.robot.commands.VisionCommands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.Globals;
 import frc.robot.Robot;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.vision.Limelight;
 import frc.robot.vision.Limelight.Target;
 import frc.robot.vision.Limelight.Value;
 
 public class CombinedTarget extends Command {
 
+    private DriveTrainSubsystem driveTrain = Globals.getDrivetrain();
+    private Limelight limelight = Globals.getLimelight();
+
     public CombinedTarget() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.driveTrainSubsystem);
+        requires(Globals.getDrivetrain());
+    }
+
+    public CombinedTarget(DriveTrainSubsystem driveTrain, Limelight limelight){
+        this.driveTrain = driveTrain;
+        this.limelight = limelight;
     }
 
     // Called just before this Command runs the first time
@@ -63,14 +74,14 @@ public class CombinedTarget extends Command {
          *    v  v   v  |  -- -+
          */
 
-        Robot.driveTrainSubsystem.getDriveTrain().arcadeDrive(foreAdjust, turnAdjust, false);
+        driveTrain.getDiffDrive().arcadeDrive(foreAdjust, turnAdjust, false);
 
 
     }
 
     private double getXAdjust(){
         //Get current degrees from center
-        double xOffDeg = Robot.limelight.getValue(Value.xOffDeg);
+        double xOffDeg = limelight.getValue(Value.xOffDeg);
 
         //Convert that to what we need to change
         double headingErr = xOffDeg;
@@ -85,7 +96,7 @@ public class CombinedTarget extends Command {
 
         //Driving Adjust is KpDistance * distanceError (above)
 
-        return (KpDistance * (areaTarget - Robot.limelight.getValue(Value.areaPercent)));
+        return (KpDistance * (areaTarget - limelight.getValue(Value.areaPercent)));
     }
 
     private double getYAdjustHeight(){
@@ -93,7 +104,7 @@ public class CombinedTarget extends Command {
         //double yOffDeg = Robot.limelight.getValue(Value.yOffDeg) - yTarget;
         //double distanceAdjust = KpDistance * -yOffDeg;
 
-        return KpDistance * -(Robot.limelight.getValue(Value.yOffDeg) - yTarget);
+        return KpDistance * -(limelight.getValue(Value.yOffDeg) - yTarget);
 
     }
 

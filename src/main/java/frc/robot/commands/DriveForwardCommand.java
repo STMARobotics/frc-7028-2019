@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import frc.robot.Globals;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
@@ -9,7 +10,7 @@ import frc.robot.subsystems.GyroSubsystem;
 public class DriveForwardCommand extends PIDCommand {
 
     private DriveTrainSubsystem driveTrainSubsystem;
-    private GyroSubsystem gyroSubsystem;
+    private GyroSubsystem gyroSubsystem = Globals.getGyro();
     private double distance;
     private double rotations;
     private double speed;
@@ -19,7 +20,7 @@ public class DriveForwardCommand extends PIDCommand {
     private Timer timer = new Timer();
 
     public DriveForwardCommand(double speed, double distance){
-        this(Robot.driveTrainSubsystem, speed, distance, 0.0);
+        this(Globals.getDrivetrain(), speed, distance, 0.0);
     }
 
     public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance) {
@@ -39,7 +40,7 @@ public class DriveForwardCommand extends PIDCommand {
         leftTarget = rotations + driveTrainSubsystem.getLeftEncoderPosition();
         rightTarget = rotations + driveTrainSubsystem.getRightEncoderPosition();
         timer.start();
-        this.setSetpoint(GyroSubsystem.getGyroPosition());
+        this.setSetpoint(gyroSubsystem.getGyroPosition());
     }
 
     protected void execute() {
@@ -58,7 +59,7 @@ public class DriveForwardCommand extends PIDCommand {
 
     protected void end() {
         timer.stop();
-        driveTrainSubsystem.getDriveTrain().arcadeDrive(0, 0);
+        driveTrainSubsystem.getDiffDrive().arcadeDrive(0, 0);
     }
 
     protected void interrupted() {
@@ -67,7 +68,7 @@ public class DriveForwardCommand extends PIDCommand {
 
     @Override
     protected void usePIDOutput(double output) {
-        driveTrainSubsystem.getDriveTrain().arcadeDrive(speed, output);
+        driveTrainSubsystem.getDiffDrive().arcadeDrive(speed, output);
     }
 
     @Override

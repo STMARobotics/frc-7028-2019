@@ -11,19 +11,19 @@ public class GyroSubsystem extends Subsystem {
 
     private static final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
-    public static double getGyroPosition() {
+    public double getGyroPosition() {
         return gyro.getAngle();
     }
 
-    public static double getGyroYaw(){
+    public double getGyroYaw(){
         return gyro.getYaw();
     }
 
-    public static void stopThing(){
+    public void stopThing(){
         gyro.reset();
     }
 
-    public static boolean getIsRotating() {
+    public boolean getIsRotating() {
         return gyro.isRotating();
     }
 
