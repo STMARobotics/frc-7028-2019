@@ -21,6 +21,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class Robot extends TimedRobot {
 
+
   private static SendableChooser<Command> autoChooser = new SendableChooser<>();
   private Command driveCommand;
   private Command operateCommand;
@@ -28,12 +29,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+
     driveCommand = new DriveCommand();
     operateCommand = new OperateCommand();
 
     Controls.robotInit();
 
     autoChooser.addOption("Follow the thing", new AutoTarget());
+
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
