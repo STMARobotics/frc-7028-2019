@@ -8,13 +8,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.DriveForwardCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.PathCommand;
+import frc.robot.commands.PathGroupCommand;
+import frc.robot.commands.SpinCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
@@ -62,7 +66,6 @@ public class Robot extends TimedRobot {
   private Path start2BayOne;
   private Path bayOne2Human;
   private Path human2BayTwo;
-
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -122,8 +125,11 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     driveCommand.cancel();
+    time.delay(2);
+    driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
   }
 
+  Timer time;
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
@@ -141,13 +147,19 @@ public class Robot extends TimedRobot {
    * chooser code above (like the commented example) or additional comparisons to
    * the switch structure below with additional strings & commands.
    */
+  PathGroupCommand pGroup;
   @Override
   public void autonomousInit() {
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
     // autoCommand.start();
-    new PathCommand(start2BayOne, driveTrainSubsystem).start();
-    //new PathCommand(bayOne2Human, driveTrainSubsystem).start();
-    //new PathCommand(human2BayTwo, driveTrainSubsystem).start();
+    pGroup = new PathGroupCommand();
+    pGroup.addSequential(new PathCommand(start2BayOne, driveTrainSubsystem));
+    pGroup.addSequential(new SpinCommand(driveTrainSubsystem, gyroSubsystem, -90));
+    pGroup.addSequential(new PathCommand(bayOne2Human, driveTrainSubsystem));
+    pGroup.addSequential(new SpinCommand(driveTrainSubsystem, gyroSubsystem, -90));
+    pGroup.addSequential(new SpinCommand(driveTrainSubsystem, gyroSubsystem, -90));
+    pGroup.addSequential(new PathCommand(human2BayTwo, driveTrainSubsystem));
+    pGroup.start();
   }
 
   /**
