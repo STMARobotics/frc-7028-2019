@@ -14,9 +14,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
+import frc.robot.commands.PathCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
@@ -29,6 +33,7 @@ import frc.robot.drivesystems.HunterOperator;
 import frc.robot.drivesystems.JorgeDriver;
 import frc.robot.drivesystems.JorgeOperator;
 import frc.robot.drivesystems.Operator;
+import frc.robot.motion.Path;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -53,6 +58,8 @@ public class Robot extends TimedRobot {
   private Command driveCommand;
   private Command operateCommand;
   private Command autoCommand;
+
+  private Path bayOnePath;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -85,6 +92,8 @@ public class Robot extends TimedRobot {
     autoChooser.addOption("Right Auto", "Right");
     autoChooser.addOption("Left Auto", "Left");
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    bayOnePath = Path.loadFromPathWeaver("BayOne");
   }
 
   /**
@@ -130,7 +139,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
-    autoCommand.start();
+    // autoCommand.start();
+    new PathCommand(bayOnePath, driveTrainSubsystem).start();
   }
 
   /**
