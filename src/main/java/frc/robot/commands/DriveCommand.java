@@ -13,9 +13,9 @@ public class DriveCommand extends Command {
     private SendableChooser<Driver> driverChooser;
 
     public DriveCommand() {
-        requires(driveTrainSubsystem);
         this.driveTrainSubsystem = Globals.getDrivetrain();
         this.driverChooser = Controls.driverChooser;
+        requires(driveTrainSubsystem);
     }
 
     public DriveCommand(DriveTrainSubsystem driveTrain){
