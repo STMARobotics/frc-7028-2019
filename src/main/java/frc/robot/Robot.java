@@ -59,7 +59,9 @@ public class Robot extends TimedRobot {
   private Command operateCommand;
   private Command autoCommand;
 
-  private Path bayOnePath;
+  private Path start2BayOne;
+  private Path bayOne2Human;
+  private Path human2BayTwo;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -93,7 +95,10 @@ public class Robot extends TimedRobot {
     autoChooser.addOption("Left Auto", "Left");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    bayOnePath = Path.loadFromPathWeaver("BayOne");
+    start2BayOne = Path.loadFromPathWeaver("Start2BayOne");
+    bayOne2Human = Path.loadFromPathWeaver("BayOne2Human");
+    human2BayTwo = Path.loadFromPathWeaver("Human2BayTwo");
+
   }
 
   /**
@@ -140,7 +145,9 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
     // autoCommand.start();
-    new PathCommand(bayOnePath, driveTrainSubsystem).start();
+    new PathCommand(start2BayOne, driveTrainSubsystem).start();
+    //new PathCommand(bayOne2Human, driveTrainSubsystem).start();
+    //new PathCommand(human2BayTwo, driveTrainSubsystem).start();
   }
 
   /**
