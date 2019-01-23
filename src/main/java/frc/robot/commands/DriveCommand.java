@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Controls;
+import frc.robot.Globals;
 import frc.robot.drivesystems.Driver;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
@@ -10,10 +12,14 @@ public class DriveCommand extends Command {
     private DriveTrainSubsystem driveTrainSubsystem;
     private SendableChooser<Driver> driverChooser;
 
-    public DriveCommand(SendableChooser<Driver> driverChooser, DriveTrainSubsystem driveTrainSubsystem) {
+    public DriveCommand() {
+        this.driveTrainSubsystem = Globals.getDrivetrain();
+        this.driverChooser = Controls.driverChooser;
         requires(driveTrainSubsystem);
-        this.driveTrainSubsystem = driveTrainSubsystem;
-        this.driverChooser = driverChooser;
+    }
+
+    public DriveCommand(DriveTrainSubsystem driveTrain){
+        this.driveTrainSubsystem = driveTrain;
     }
 
     protected void initialize() {
@@ -22,7 +28,7 @@ public class DriveCommand extends Command {
 
     protected void execute() {
         Driver driver = driverChooser.getSelected();
-        driver.drive(driveTrainSubsystem.getDriveTrain());
+        driver.drive(driveTrainSubsystem.getDiffDrive());
     }
 
     protected boolean isFinished() {

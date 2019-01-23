@@ -22,6 +22,8 @@ import frc.robot.commands.SpinCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
+import frc.robot.commands.VisionCommands.AutoTarget;
+import frc.robot.commands.VisionCommands.CombinedTarget;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,63 +41,27 @@ import frc.robot.drivesystems.JorgeOperator;
 import frc.robot.drivesystems.Operator;
 import frc.robot.motion.Path;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
- * project.
- */
 public class Robot extends TimedRobot {
-  private static SendableChooser<Driver> driverChooser = new SendableChooser<>();
-  private static SendableChooser<Operator> operatorChooser = new SendableChooser<>();
-  private static SendableChooser<XboxController> driverControllerChooser = new SendableChooser<>();
-  private static SendableChooser<XboxController> operatorControllerChooser = new SendableChooser<>();
-  private static SendableChooser<String> autoChooser = new SendableChooser<>();
-  private final XboxController controllerOne = new XboxController(0);
-  private final XboxController controllerTwo = new XboxController(2);
-  
-  private static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
-  private static ManipulatorsSubsystem manipulatorsSubsystem = new ManipulatorsSubsystem();
-  private static GyroSubsystem gyroSubsystem = new GyroSubsystem();
 
+
+  private static SendableChooser<Command> autoChooser = new SendableChooser<>();
   private Command driveCommand;
   private Command operateCommand;
   private Command autoCommand;
-
   private Path start2BayOne;
   private Path bayOne2Human;
   private Path human2BayTwo;
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any initialization code.
-   */
+
   @Override
   public void robotInit() {
-    driveCommand = new DriveCommand(driverChooser, driveTrainSubsystem);
-    operateCommand = new OperateCommand(operatorChooser, manipulatorsSubsystem);
 
-    driverChooser.setDefaultOption("Jorge Driver", new JorgeDriver(driverControllerChooser));
-    driverChooser.addOption("Brandon Driver", new BrandonDriver(driverControllerChooser));
-    driverChooser.addOption("Hunter Driver", new HunterDriver(driverControllerChooser));
-    SmartDashboard.putData("Driver", driverChooser);
+    driveCommand = new DriveCommand();
+    operateCommand = new OperateCommand();
 
-    driverControllerChooser.setDefaultOption("Driver Controller: 1", controllerOne);
-    driverControllerChooser.addOption("Driver Controller: 2", controllerTwo);
-    SmartDashboard.putData("Driver Controller", driverControllerChooser);
+    Controls.robotInit();
 
-    operatorChooser.setDefaultOption("Jorge Operator", new JorgeOperator(operatorControllerChooser));
-    operatorChooser.addOption("Brandon Operator", new BrandonOperator(operatorControllerChooser));
-    operatorChooser.addOption("Hunter Operator", new HunterOperator(operatorControllerChooser));
-    SmartDashboard.putData("Operator", operatorChooser);
+    autoChooser.addOption("Follow the thing", new AutoTarget());
 
-    operatorControllerChooser.setDefaultOption("Operator Controller: 1", controllerOne);
-    operatorControllerChooser.addOption("Operator Controller: 2", controllerTwo);
-    SmartDashboard.putData("Operator Controller", operatorControllerChooser);
-
-    autoChooser.setDefaultOption("Center Auto", "Center");
-    autoChooser.addOption("Right Auto", "Right");
-    autoChooser.addOption("Left Auto", "Left");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     start2BayOne = Path.loadFromPathWeaver("Start2BayOne");
@@ -104,24 +70,11 @@ public class Robot extends TimedRobot {
 
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for
-   * items like diagnostics that you want ran during disabled, autonomous,
-   * teleoperated and test.
-   *
-   * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow
-   * and SmartDashboard integrated updating.
-   */
+
   @Override
   public void robotPeriodic() {
   }
 
-  /**
-   * This function is called once each time the robot enters Disabled mode. You
-   * can use it to reset any subsystem information you want to clear when the
-   * robot is disabled.
-   */
   @Override
   public void disabledInit() {
     driveCommand.cancel();
@@ -135,18 +88,6 @@ public class Robot extends TimedRobot {
     Scheduler.getInstance().run();
   }
 
-  /**
-   * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable chooser
-   * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
-   * remove all of the chooser code and uncomment the getString code to get the
-   * auto name from the text box below the Gyro
-   *
-   * <p>
-   * You can add additional auto modes by adding additional commands to the
-   * chooser code above (like the commented example) or additional comparisons to
-   * the switch structure below with additional strings & commands.
-   */
   PathGroupCommand pGroup;
   @Override
   public void autonomousInit() {
@@ -162,9 +103,6 @@ public class Robot extends TimedRobot {
     pGroup.start();
   }
 
-  /**
-   * This function is called periodically during autonomous.
-   */
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
@@ -179,14 +117,11 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-    driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
+    Globals.getDrivetrain().setNeutralMode(NeutralMode.Coast);
     driveCommand.start();
     operateCommand.start();
   }
 
-  /**
-   * This function is called periodically during operator control.
-   */
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
@@ -197,9 +132,6 @@ public class Robot extends TimedRobot {
     teleopInit();
   }
 
-  /**
-   * This function is called periodically during test mode.
-   */
   @Override
   public void testPeriodic() {
     teleopPeriodic();
