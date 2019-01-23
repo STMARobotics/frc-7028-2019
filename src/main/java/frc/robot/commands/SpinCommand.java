@@ -7,8 +7,8 @@ import frc.robot.subsystems.GyroSubsystem;
 
 public class SpinCommand extends PIDCommand {
 
-    private DriveTrainSubsystem driveTrainSubsystem = Globals.getDrivetrain();
-    private GyroSubsystem gyroSubsystem = Globals.getGyro();
+    private DriveTrainSubsystem driveTrainSubsystem;
+    private GyroSubsystem gyroSubsystem;
     private double degrees;
     private double target;
 
@@ -18,10 +18,8 @@ public class SpinCommand extends PIDCommand {
         requires(gyroSubsystem);
     }
 
-    public SpinCommand(DriveTrainSubsystem driveTrain, GyroSubsystem gyro, float degrees){
-        this(degrees);
-        this.gyroSubsystem = gyro;
-        this.driveTrainSubsystem = driveTrain;
+    public SpinCommand(float degrees){
+        this(Globals.getDrivetrain(), Globals.getGyro(), degrees);
     }
 
     protected void initialize() {

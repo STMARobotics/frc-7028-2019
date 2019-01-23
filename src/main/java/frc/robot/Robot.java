@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     driveCommand.cancel();
     time.delay(2);
-    driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
+    Globals.getDrivetrain().setNeutralMode(NeutralMode.Coast);
   }
 
   Timer time;
@@ -91,15 +91,15 @@ public class Robot extends TimedRobot {
   PathGroupCommand pGroup;
   @Override
   public void autonomousInit() {
-    driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
+    Globals.getDrivetrain().setNeutralMode(NeutralMode.Brake);
     // autoCommand.start();
     pGroup = new PathGroupCommand();
-    pGroup.addSequential(new PathCommand(start2BayOne, driveTrainSubsystem));
-    pGroup.addSequential(new SpinCommand(driveTrainSubsystem, gyroSubsystem, -90));
-    pGroup.addSequential(new PathCommand(bayOne2Human, driveTrainSubsystem));
-    pGroup.addSequential(new SpinCommand(driveTrainSubsystem, gyroSubsystem, -90));
-    pGroup.addSequential(new SpinCommand(driveTrainSubsystem, gyroSubsystem, -90));
-    pGroup.addSequential(new PathCommand(human2BayTwo, driveTrainSubsystem));
+    pGroup.addSequential(new PathCommand(start2BayOne, Globals.getDrivetrain()));
+    pGroup.addSequential(new SpinCommand(-90));
+    pGroup.addSequential(new PathCommand(bayOne2Human, Globals.getDrivetrain()));
+    pGroup.addSequential(new SpinCommand(-90));
+    pGroup.addSequential(new SpinCommand(-90));
+    pGroup.addSequential(new PathCommand(human2BayTwo, Globals.getDrivetrain()));
     pGroup.start();
   }
 
