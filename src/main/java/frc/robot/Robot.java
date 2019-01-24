@@ -22,6 +22,7 @@ import frc.robot.commands.SpinCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
+import frc.robot.vision.Limelight.Value;
 import frc.robot.commands.VisionCommands.AutoTarget;
 import frc.robot.commands.VisionCommands.CombinedTarget;
 
@@ -54,6 +55,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+
+    Globals.Setup();
 
     driveCommand = new DriveCommand();
     operateCommand = new OperateCommand();
@@ -92,14 +95,18 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Globals.getDrivetrain().setNeutralMode(NeutralMode.Brake);
-    // autoCommand.start();
     pGroup = new PathGroupCommand();
     pGroup.addSequential(new PathCommand(start2BayOne, Globals.getDrivetrain()));
+    CombinedTarget visionTarget = new CombinedTarget(1.5);
+    pGroup.addSequential(visionTarget);
+    //pGroup.addSequential(new DriveForwardCommand(0.3, 35));
     pGroup.addSequential(new SpinCommand(-90));
     pGroup.addSequential(new PathCommand(bayOne2Human, Globals.getDrivetrain()));
+    pGroup.addSequential(new CombinedTarget(1.5));
     pGroup.addSequential(new SpinCommand(-90));
     pGroup.addSequential(new SpinCommand(-90));
     pGroup.addSequential(new PathCommand(human2BayTwo, Globals.getDrivetrain()));
+    pGroup.addSequential(new CombinedTarget(1.5));
     pGroup.start();
   }
 

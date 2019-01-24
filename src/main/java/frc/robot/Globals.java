@@ -7,13 +7,20 @@ import frc.robot.vision.Limelight;
 
 public class Globals{
 
-    private static DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem(Controls.driverChooser);
-    private static ManipulatorsSubsystem manipulatorsSubsystem = new ManipulatorsSubsystem();
-    private static GyroSubsystem gyroSubsystem = new GyroSubsystem();
-    private static Limelight limelight = new Limelight();
+    private static DriveTrainSubsystem driveTrainSubsystem;
+    private static ManipulatorsSubsystem manipulatorsSubsystem;
+    private static GyroSubsystem gyroSubsystem;
+    private static Limelight limelight;
 
 
     private static boolean isUnitTesting = false;
+    
+    public static void Setup(){
+        driveTrainSubsystem = new DriveTrainSubsystem(Controls.driverChooser);
+        manipulatorsSubsystem = new ManipulatorsSubsystem();
+        gyroSubsystem = new GyroSubsystem();
+        limelight = new Limelight();
+    }
 
     public static void StartUnitTest(){
         isUnitTesting = true;

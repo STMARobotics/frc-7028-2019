@@ -14,6 +14,9 @@ public class SpinCommand extends PIDCommand {
 
     public SpinCommand(DriveTrainSubsystem driveTrainSubsystem, GyroSubsystem gyroSubsystem, float degrees) {
         super(0.007, 0.0003, 0);
+        this.driveTrainSubsystem = driveTrainSubsystem;
+        this.gyroSubsystem = gyroSubsystem;
+        this.degrees = degrees;
         requires(driveTrainSubsystem);
         requires(gyroSubsystem);
     }
