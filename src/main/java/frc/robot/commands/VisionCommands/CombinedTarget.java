@@ -35,7 +35,7 @@ public class CombinedTarget extends Command {
     //Tuning Values
     double KpAim = 0.02; //P value in pid
     double KpDistanceY = 0.03;
-    double KpDistanceArea = 0.12;
+    double KpDistanceArea = 0.5;
 
     //Spin
     double minPower = 0.09; //About the minimum amount of power required to move
@@ -54,7 +54,7 @@ public class CombinedTarget extends Command {
     protected void execute() {
 
         if (limelight.getValue(Value.areaPercent) == 0.0){
-            System.out.println("No TARGER");
+            System.out.println("NO TARGET");
             if(noFrame++ > maxNoFrames){
                 finished = true;
             }

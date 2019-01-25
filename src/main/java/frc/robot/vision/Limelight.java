@@ -118,5 +118,12 @@ public class Limelight {
     private void resetPilelineLatency(){
         m_table.getEntry("tl").setValue(0.0);
     }
+
+    public boolean hasTarget(){
+        if (getValue(Value.areaPercent) == 0)
+            return false;
+        else 
+            return true;
+    }
     
 }
