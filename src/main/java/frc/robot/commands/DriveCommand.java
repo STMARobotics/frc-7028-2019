@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Controls;
 import frc.robot.Globals;
-import frc.robot.drivesystems.Driver;
+import frc.robot.drivesystems.driver.Driver;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class DriveCommand extends Command {
@@ -13,13 +13,13 @@ public class DriveCommand extends Command {
     private SendableChooser<Driver> driverChooser;
 
     public DriveCommand() {
-        this.driveTrainSubsystem = Globals.getDrivetrain();
-        this.driverChooser = Controls.driverChooser;
-        requires(driveTrainSubsystem);
+        this(Globals.getDrivetrain());
     }
 
     public DriveCommand(DriveTrainSubsystem driveTrain){
         this.driveTrainSubsystem = driveTrain;
+        this.driverChooser = Controls.driverChooser;
+        requires(driveTrainSubsystem);
     }
 
     protected void initialize() {

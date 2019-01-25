@@ -3,7 +3,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.drivesystems.*;
+import frc.robot.drivesystems.driver.*;
+import frc.robot.drivesystems.operator.*;
 
 public class Controls {
 

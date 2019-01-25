@@ -10,13 +10,13 @@ import frc.robot.vision.Limelight.Value;
 
 public class LocateTarget extends Command {
 
-    private DriveTrainSubsystem driveTrain = Globals.getDrivetrain();
-    private Limelight limelight = Globals.getLimelight();
+    private DriveTrainSubsystem driveTrain;
+    private Limelight limelight;
 
     private boolean lookingForTarget;
 
     public LocateTarget() {
-        requires(driveTrain);
+        this(Globals.getDrivetrain(), Globals.getLimelight());
     }
 
     public LocateTarget(DriveTrainSubsystem driveTrain, Limelight limelight){

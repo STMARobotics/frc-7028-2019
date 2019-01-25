@@ -1,11 +1,9 @@
-package frc.robot.commands;
+package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 public class PathGroupCommand extends CommandGroup{
 
-    public PathGroupCommand(){
-        
-    }
+    //Eventual may need stuff
 
 }

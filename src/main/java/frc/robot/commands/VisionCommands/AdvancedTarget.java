@@ -1,14 +1,10 @@
 package frc.robot.commands.VisionCommands;
 
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.robot.Globals;
-import frc.robot.Robot;
-import frc.robot.commands.DriveForwardCommand;
-import frc.robot.commands.PointCommand;
-import frc.robot.subsystems.GyroSubsystem;
-import frc.robot.vision.Limelight.Value;
+import jdk.jfr.Experimental;
 
+@Deprecated
+@Experimental
 public class AdvancedTarget extends CommandGroup{
 
     double heading;

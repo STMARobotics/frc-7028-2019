@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import frc.robot.Globals;

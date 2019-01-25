@@ -1,9 +1,8 @@
-package frc.robot.commands;
+package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import frc.robot.Globals;
-import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
@@ -45,8 +44,6 @@ public class DriveForwardCommand extends PIDCommand {
     }
 
     protected void execute() {
-        System.out.println("Running");
-
     }
 
     protected boolean isFinished() {

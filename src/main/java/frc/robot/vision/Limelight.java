@@ -83,9 +83,8 @@ public class Limelight {
     }
     
     /**
-     * Checks "tx?" Returns the current offset from target (-27 to 27 degrees)
+     * Gets a value of a target from the network table
      * @param target Looking target. Usually target, if you want a specific channel use target0-2
-     * @return X offset in degress
      */
     public double getValue(Value value, Target target){
         try{
@@ -98,6 +97,11 @@ public class Limelight {
         return 0;
     }
 
+    /**
+     * Gets a value of the current found target from the network table
+     * @param value Type of value you want
+     * @see Value
+     */
     public double getValue(Value value){
         try{
         NetworkTableEntry entry = m_table.getEntry(value.getBegin());
@@ -119,11 +123,10 @@ public class Limelight {
         m_table.getEntry("tl").setValue(0.0);
     }
 
-    public boolean hasTarget(){
-        if (getValue(Value.areaPercent) == 0)
-            return false;
-        else 
-            return true;
+    //TODO SHUFFLE add distance kFactors to shuffleboard
+    private double kFactorPercent = 0.0, KFactorDistance = 0.0;
+    public double getDistanceApprox(){
+        return kFactorPercent * KFactorDistance / getValue(Value.areaPercent);
     }
-    
+
 }

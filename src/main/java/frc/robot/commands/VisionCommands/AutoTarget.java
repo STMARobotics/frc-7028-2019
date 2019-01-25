@@ -8,6 +8,7 @@ import frc.robot.vision.Limelight;
 import frc.robot.vision.Limelight.Target;
 import frc.robot.vision.Limelight.Value;
 
+@Deprecated
 public class AutoTarget extends Command {
 
     private Limelight limelight = Globals.getLimelight();

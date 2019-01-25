@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -14,33 +16,12 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.DriveForwardCommand;
 import frc.robot.commands.OperateCommand;
-import frc.robot.commands.PathCommand;
-import frc.robot.commands.PathGroupCommand;
-import frc.robot.commands.SpinCommand;
-import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.GyroSubsystem;
-import frc.robot.subsystems.ManipulatorsSubsystem;
-import frc.robot.vision.Limelight.Value;
+import frc.robot.commands.AutoCommands.PathCommand;
+import frc.robot.commands.AutoCommands.PathGroupCommand;
 import frc.robot.commands.VisionCommands.AutoTarget;
 import frc.robot.commands.VisionCommands.CombinedTarget;
 import frc.robot.commands.VisionCommands.CommandTillVision;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.drivesystems.BrandonDriver;
-import frc.robot.drivesystems.BrandonOperator;
-import frc.robot.drivesystems.Driver;
-import frc.robot.drivesystems.HunterDriver;
-import frc.robot.drivesystems.HunterOperator;
-import frc.robot.drivesystems.JorgeDriver;
-import frc.robot.drivesystems.JorgeOperator;
-import frc.robot.drivesystems.Operator;
 import frc.robot.motion.Path;
 
 public class Robot extends TimedRobot {
@@ -74,7 +55,6 @@ public class Robot extends TimedRobot {
 
   }
 
-
   @Override
   public void robotPeriodic() {
   }
@@ -98,8 +78,8 @@ public class Robot extends TimedRobot {
     Globals.getDrivetrain().setNeutralMode(NeutralMode.Brake);
 
     PathGroupCommand pGroup = new PathGroupCommand();
-    pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, Globals.getDrivetrain()), new CombinedTarget(1.2)));
-    //pGroup.addSequential(new CombinedTarget(1.1));
+    pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, Globals.getDrivetrain()), new CombinedTarget().setTarget(1.2)));
+    //pGroup.addSequential(new CombinedTarget().setTarget(1.1));
     pGroup.start();
   }
 

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
-import frc.robot.drivesystems.Driver;
+import frc.robot.drivesystems.driver.Driver;
 
 public class DriveTrainSubsystem extends Subsystem {
 

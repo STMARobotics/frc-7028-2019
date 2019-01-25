@@ -8,23 +8,22 @@ import frc.robot.vision.Limelight.Value;
 
 public class CombinedTarget extends Command {
 
-    private DriveTrainSubsystem driveTrain = Globals.getDrivetrain();
-    private Limelight limelight = Globals.getLimelight();
-
-    public CombinedTarget(double targetArea) {
-        // Use requires() here to declare subsystem dependencies
-        requires(Globals.getDrivetrain());
-        this.areaTarget = targetArea;
-    }
+    private DriveTrainSubsystem driveTrain;
+    private Limelight limelight;
 
     public CombinedTarget() {
-        // Use requires() here to declare subsystem dependencies
-        requires(Globals.getDrivetrain());
+        this(Globals.getDrivetrain(), Globals.getLimelight());
     }
 
     public CombinedTarget(DriveTrainSubsystem driveTrain, Limelight limelight){
         this.driveTrain = driveTrain;
         this.limelight = limelight;
+        requires(driveTrain);
+    }
+
+    public CombinedTarget setTarget(double targetArea){
+        this.areaTarget = targetArea;
+        return this;
     }
 
     // Called just before this Command runs the first time
@@ -151,20 +150,14 @@ public class CombinedTarget extends Command {
     // Called once after isFinished returns true
     @Override
     protected void end() { 
-        distance = calculateDistanceFromArea(Globals.getLimelight().getValue(Value.areaPercent));
+        distance = limelight.getDistanceApprox();
         System.out.println("We should be about " + distance);
-        Globals.getDrivetrain().getDiffDrive().arcadeDrive(0, 0);
+        driveTrain.getDiffDrive().arcadeDrive(0, 0);
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     @Override
     protected void interrupted() {
-    }
-
-    double kFactorPercent = 1.8; //Value ta (degrees)
-    double KFactorDistance = 22; //Distance from target(inches) with that value ta
-    public double calculateDistanceFromArea(double CurrentArea){
-        return kFactorPercent*KFactorDistance / CurrentArea;
     }
 }

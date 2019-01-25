@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.AutoCommands;
 
 import frc.robot.motion.Path;
 import frc.robot.subsystems.DriveTrainSubsystem;
