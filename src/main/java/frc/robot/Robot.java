@@ -38,6 +38,8 @@ public class Robot extends TimedRobot {
     autoChooser.addOption("Follow the thing", new AutoTarget());
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    Globals.getLimelight().Init();
   }
 
 
@@ -48,6 +50,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     driveCommand.cancel();
+
+    Globals.getLimelight().Disable();
   }
 
   @Override

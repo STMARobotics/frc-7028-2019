@@ -4,22 +4,23 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Notifier;
 
 public class Limelight {
 
     private NetworkTable m_table;
     private String m_tableName;
     private boolean isConnected = false;
-    private double _hearBeatPeriod = 0.1;
-
+    
     private double _latency = 0.0;
+    private double _targetArea = 0.0;
+    private double _targetX = 0.0;
+    private double _targetY = 0.0;
+    private boolean _targetAcquired = false;
 
     public Limelight(){
         m_tableName = "limelight";
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
-        _hearBeat.startPeriodic(_hearBeatPeriod);
-
+        
         //add an event listener on the latency value, every time that gets changed we'll update our values
         m_table.addEntryListener("tl", (table, key, entry, value, flags) -> {
             UpdateValues(table, value.getDouble());
@@ -27,31 +28,47 @@ public class Limelight {
         } , EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
 
+    private static final String _ledMode = "ledMode";
+    private static final String _camMode = "camMode";
+
+    public void Init()
+    {
+        m_table.getEntry(_ledMode).setDouble(0.0); //set to current pipeline mode
+        m_table.getEntry(_camMode).setDouble(0.0); //set to vision mode
+    }
+
+    public void Disable()
+    {
+        m_table.getEntry(_ledMode).setDouble(1.0); //force off
+        m_table.getEntry(_camMode).setDouble(1.0); //driver camera (stops vision processing)
+    }
+
     private void UpdateValues(NetworkTable table, double latency)
     {
         _latency = latency;
-        //TODO Update all fields from the table param here
+        isConnected = latency != 0.0;
+        
+        _targetArea = getValue(Value.areaPercent);
+        _targetX = getValue(Value.xOffDeg);
+        _targetY = getValue(Value.yOffDeg);
+        _targetAcquired = table.getEntry("tv").getDouble(0.0) != 0.0;
+
+        System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
     }
 
-    Notifier _hearBeat = new Notifier(new LimelightThread());
+    public double TargetArea()
+    {
+        return _targetArea;
+    }
 
-    class LimelightThread implements Runnable{
+    public double TargetX()
+    {
+        return _targetX;
+    }
 
-		@Override
-		public void run() {
-            resetPilelineLatency();
-            try{
-                Thread.sleep(500);
-            } catch (InterruptedException e){
-                e.printStackTrace();
-            }
-            if(getPipelinelatency() == 0.0){
-                isConnected = false;
-            } else {
-                isConnected = true;
-            }
-		}
-
+    public double TargetY()
+    {
+        return _targetY;
     }
 
     public boolean isConnected(){
@@ -63,15 +80,8 @@ public class Limelight {
      * @return TargetFound Boolean
      */
     public boolean isTargetFound(){
-        NetworkTableEntry tv = m_table.getEntry("tv");
-        double v = tv.getDouble(0);
-        if (v == 0.0f){
-            return false;
-        } else {
-            return true; 
-        }
+        return _targetAcquired;
     }
-
 
     public enum Value {
         xOffDeg("tx"), yOffDeg("ty"), areaPercent("ta"), skew("ts"), targetFound("tv");
