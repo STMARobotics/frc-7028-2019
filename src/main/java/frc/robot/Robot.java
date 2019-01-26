@@ -69,8 +69,6 @@ public class Robot extends TimedRobot {
     start2BayOne = Path.loadFromPathWeaver("Start2BayOne");
     bayOne2Human = Path.loadFromPathWeaver("BayOne2Human");
     human2BayTwo = Path.loadFromPathWeaver("Human2BayTwo");
-    
-    Globals.getLimelight().Init();
   }
 
   @Override
@@ -93,6 +91,7 @@ public class Robot extends TimedRobot {
   PathGroupCommand pGroup;
   @Override
   public void autonomousInit() {
+    Globals.getLimelight().Init();
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
 
     PathGroupCommand pGroup = new PathGroupCommand();
@@ -113,6 +112,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Globals.getLimelight().Init();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

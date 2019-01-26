@@ -24,7 +24,7 @@ public class Limelight {
         //add an event listener on the latency value, every time that gets changed we'll update our values
         m_table.addEntryListener("tl", (table, key, entry, value, flags) -> {
             UpdateValues(table, value.getDouble());
-            System.out.println("Latency Updated: " + _latency);
+            //System.out.println("Latency Updated: " + _latency);
         } , EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
 
@@ -53,7 +53,7 @@ public class Limelight {
         _targetY = getValue(Value.yOffDeg);
         _targetAcquired = table.getEntry("tv").getDouble(0.0) != 0.0;
 
-        System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
+        //System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
     }
 
     public double TargetArea()
