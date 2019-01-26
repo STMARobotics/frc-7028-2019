@@ -73,7 +73,6 @@ public class CommandTillVision extends Command {
 	@Override
 	protected void execute() {
 		//TODO Have xFrames on ShuffleBoard
-		//TODO Remove 21 and 20
 		if(limelight.isTargetFound() && frames >= 0){
 			frames++;
 		}

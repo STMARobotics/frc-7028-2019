@@ -13,21 +13,19 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.AutoCommands.PathCommand;
 import frc.robot.commands.AutoCommands.PathGroupCommand;
-import frc.robot.commands.VisionCommands.AutoTarget;
 import frc.robot.commands.VisionCommands.CombinedTarget;
 import frc.robot.commands.VisionCommands.CommandTillVision;
 import frc.robot.motion.Path;
 
 public class Robot extends TimedRobot {
 
-
-  private static SendableChooser<Command> autoChooser = new SendableChooser<>();
   private Command driveCommand;
   private Command operateCommand;
   private Command autoCommand;
@@ -45,10 +43,6 @@ public class Robot extends TimedRobot {
 
     Controls.robotInit();
 
-    autoChooser.addOption("Follow the thing", new AutoTarget());
-
-    SmartDashboard.putData("Auto Chooser", autoChooser);
-
     start2BayOne = Path.loadFromPathWeaver("Start2BayOne");
     bayOne2Human = Path.loadFromPathWeaver("BayOne2Human");
     human2BayTwo = Path.loadFromPathWeaver("Human2BayTwo");
@@ -62,11 +56,9 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     driveCommand.cancel();
-    time.delay(2);
+    Timer.delay(2);
     Globals.getDrivetrain().setNeutralMode(NeutralMode.Coast);
   }
-
-  Timer time;
   @Override
   public void disabledPeriodic() {
     Scheduler.getInstance().run();
@@ -80,6 +72,7 @@ public class Robot extends TimedRobot {
     PathGroupCommand pGroup = new PathGroupCommand();
     pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, Globals.getDrivetrain()), new CombinedTarget().setTarget(1.2)));
     //pGroup.addSequential(new CombinedTarget().setTarget(1.1));
+    
     pGroup.start();
   }
 
