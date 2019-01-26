@@ -41,8 +41,8 @@ public class CommandTillVision extends Command {
 	 * @param command Initial running command
 	 * @param visionCommand Take over command
 	 */
-	public CommandTillVision(Command command, Command visionCommand){
-		this(command, visionCommand, Globals.getLimelight(), Globals.getDrivetrain());
+	public CommandTillVision(Command command, Command visionCommand, DriveTrainSubsystem driveTrainSubsystem){
+		this(command, visionCommand, Globals.getLimelight(), driveTrainSubsystem);
 	}
 	
 	/**

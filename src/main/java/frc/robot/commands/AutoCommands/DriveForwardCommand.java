@@ -2,14 +2,13 @@ package frc.robot.commands.AutoCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDCommand;
-import frc.robot.Globals;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
 public class DriveForwardCommand extends PIDCommand {
 
     private DriveTrainSubsystem driveTrainSubsystem;
-    private GyroSubsystem gyroSubsystem = Globals.getGyro();
+    private GyroSubsystem gyroSubsystem;
     private double distance;
     private double rotations;
     private double speed;
@@ -18,21 +17,17 @@ public class DriveForwardCommand extends PIDCommand {
     private double timeout;
     private Timer timer = new Timer();
 
-
-    public DriveForwardCommand(double speed, double distance){
-        this(Globals.getDrivetrain(), speed, distance, 0.0);
+    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance, GyroSubsystem gyroSubsystem) {
+        this(driveTrainSubsystem, speed, distance, gyroSubsystem, 0.0);
     }
 
-    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance) {
-        this(driveTrainSubsystem, speed, distance, 0.0);
-    }
-
-    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance, double timeout) {
+    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance, GyroSubsystem gyroSubsystem, double timeout) {
         super(0.04, 0, 0);
         this.driveTrainSubsystem = driveTrainSubsystem;
         this.distance = distance;
         this.speed = speed;
         this.timeout = timeout;
+        this.gyroSubsystem = gyroSubsystem;
     }
 
     protected void initialize() {

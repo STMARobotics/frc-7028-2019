@@ -13,10 +13,6 @@ public class LocateTarget extends Command {
 
     private boolean lookingForTarget;
 
-    public LocateTarget() {
-        this(Globals.getDrivetrain(), Globals.getLimelight());
-    }
-
     public LocateTarget(DriveTrainSubsystem driveTrain, Limelight limelight){
         this.driveTrain = driveTrain;
         this.limelight = limelight;

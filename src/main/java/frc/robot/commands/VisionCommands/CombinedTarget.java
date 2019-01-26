@@ -1,7 +1,6 @@
 package frc.robot.commands.VisionCommands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Globals;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.Limelight.Value;
@@ -10,10 +9,6 @@ public class CombinedTarget extends Command {
 
     private DriveTrainSubsystem driveTrain;
     private Limelight limelight;
-
-    public CombinedTarget() {
-        this(Globals.getDrivetrain(), Globals.getLimelight());
-    }
 
     public CombinedTarget(DriveTrainSubsystem driveTrain, Limelight limelight){
         this.driveTrain = driveTrain;

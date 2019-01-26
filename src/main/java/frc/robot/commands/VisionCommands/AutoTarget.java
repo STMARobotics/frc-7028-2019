@@ -12,17 +12,12 @@ import frc.robot.vision.Limelight.Value;
 public class AutoTarget extends Command {
 
     private Limelight limelight = Globals.getLimelight();
-    private DriveTrainSubsystem driveTrain = Globals.getDrivetrain();
+    private DriveTrainSubsystem driveTrainSubsystem;
 
-    public AutoTarget() {
-        // Use requires() here to declare subsystem dependencies
-        requires(Globals.getDrivetrain());
-    }
-
-    public AutoTarget(DriveTrainSubsystem driveTrain, Limelight limelight){
+    public AutoTarget(DriveTrainSubsystem driveTrainSubsystem, Limelight limelight){
         this.limelight = limelight;
-        this.driveTrain = driveTrain;
-        requires(driveTrain);
+        this.driveTrainSubsystem = driveTrainSubsystem;
+        requires(driveTrainSubsystem);
     }
 
     // Called just before this Command runs the first time
@@ -58,7 +53,7 @@ public class AutoTarget extends Command {
             y -= 0.1;
         }
 
-        driveTrain.getDiffDrive().arcadeDrive(y, x, false);
+        driveTrainSubsystem.getDiffDrive().arcadeDrive(y, x, false);
 
         /*
          * if(Math.abs(xOffDeg) >= 10.0){ double direction = Math.signum(xOffDeg);

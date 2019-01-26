@@ -65,7 +65,7 @@ public class DriveTrainSubsystem extends Subsystem {
     }
 
     public void initDefaultCommand() {
-        setDefaultCommand(new DriveCommand());
+        setDefaultCommand(new DriveCommand(this, driverChooser));
     }
 
     public DifferentialDrive getDiffDrive() {

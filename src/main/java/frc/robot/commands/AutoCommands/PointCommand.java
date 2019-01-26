@@ -8,11 +8,7 @@ public class PointCommand extends Command{
 
     private DriveTrainSubsystem driveTrain;
     private GyroSubsystem gyro;
-
-    double degrees;
-    public PointCommand(double degrees){
-        this(Globals.getDrivetrain(), Globals.getGyro(), degrees);
-    }
+    private double degrees;
 
     public PointCommand(DriveTrainSubsystem driveTrain, GyroSubsystem gyro, double degrees){
         this.driveTrain = driveTrain;

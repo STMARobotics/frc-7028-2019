@@ -9,11 +9,12 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
@@ -22,7 +23,12 @@ import frc.robot.commands.AutoCommands.PathCommand;
 import frc.robot.commands.AutoCommands.PathGroupCommand;
 import frc.robot.commands.VisionCommands.CombinedTarget;
 import frc.robot.commands.VisionCommands.CommandTillVision;
+import frc.robot.drivesystems.driver.Driver;
+import frc.robot.drivesystems.driver.JoystickDriver;
+import frc.robot.drivesystems.operator.Operator;
 import frc.robot.motion.Path;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.ManipulatorsSubsystem;
 
 public class Robot extends TimedRobot {
 
@@ -33,15 +39,28 @@ public class Robot extends TimedRobot {
   private Path bayOne2Human;
   private Path human2BayTwo;
 
+  private DriveTrainSubsystem driveTrainSubsystem;
+  private ManipulatorsSubsystem manipulatorsSubsystem;
+
+  private SendableChooser<Driver> driverChooser = new SendableChooser<>();
+  private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
+
+  private Joystick joystick = new Joystick(0);
+  private XboxController operatorController = new XboxController(2);
+
   @Override
   public void robotInit() {
 
     Globals.Setup();
 
-    driveCommand = new DriveCommand();
-    operateCommand = new OperateCommand();
+    driverChooser.setDefaultOption("Joystick Driver", new JoystickDriver(joystick));
+    SmartDashboard.putData("DriverChooser", driverChooser);
 
-    Controls.robotInit();
+    driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
+    manipulatorsSubsystem = new ManipulatorsSubsystem();
+
+    driveCommand = new DriveCommand(driveTrainSubsystem, driverChooser);
+    operateCommand = new OperateCommand(manipulatorsSubsystem, operatorChooser);
 
     start2BayOne = Path.loadFromPathWeaver("Start2BayOne");
     bayOne2Human = Path.loadFromPathWeaver("BayOne2Human");
@@ -57,7 +76,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     driveCommand.cancel();
     Timer.delay(2);
-    Globals.getDrivetrain().setNeutralMode(NeutralMode.Coast);
+    driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
   }
   @Override
   public void disabledPeriodic() {
@@ -67,10 +86,10 @@ public class Robot extends TimedRobot {
   PathGroupCommand pGroup;
   @Override
   public void autonomousInit() {
-    Globals.getDrivetrain().setNeutralMode(NeutralMode.Brake);
+    driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
 
     PathGroupCommand pGroup = new PathGroupCommand();
-    pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, Globals.getDrivetrain()), new CombinedTarget().setTarget(1.2)));
+    pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
     //pGroup.addSequential(new CombinedTarget().setTarget(1.1));
     
     pGroup.start();
@@ -90,9 +109,9 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-    Globals.getDrivetrain().setNeutralMode(NeutralMode.Coast);
+    driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
     driveCommand.start();
-    operateCommand.start();
+    // operateCommand.start();
   }
 
   @Override
