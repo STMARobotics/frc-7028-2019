@@ -1,4 +1,4 @@
-package frc.robot.commands.VisionCommands;
+package frc.robot.commands.vision;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import jdk.jfr.Experimental;

@@ -1,4 +1,4 @@
-package frc.robot.commands.VisionCommands;
+package frc.robot.commands.vision;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.DriveTrainSubsystem;

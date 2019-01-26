@@ -19,15 +19,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
-import frc.robot.commands.AutoCommands.PathCommand;
-import frc.robot.commands.AutoCommands.PathGroupCommand;
-import frc.robot.commands.VisionCommands.CombinedTarget;
-import frc.robot.commands.VisionCommands.CommandTillVision;
+import frc.robot.commands.auto.PathCommand;
+import frc.robot.commands.auto.PathGroupCommand;
+import frc.robot.commands.auto.PointCommand;
+import frc.robot.commands.vision.CombinedTarget;
+import frc.robot.commands.vision.CommandTillVision;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.JoystickDriver;
 import frc.robot.drivesystems.operator.Operator;
 import frc.robot.motion.Path;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
 
 public class Robot extends TimedRobot {
@@ -41,6 +43,7 @@ public class Robot extends TimedRobot {
 
   private DriveTrainSubsystem driveTrainSubsystem;
   private ManipulatorsSubsystem manipulatorsSubsystem;
+  private GyroSubsystem gyroSubsystem;
 
   private SendableChooser<Driver> driverChooser = new SendableChooser<>();
   private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
@@ -58,6 +61,7 @@ public class Robot extends TimedRobot {
 
     driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
     manipulatorsSubsystem = new ManipulatorsSubsystem();
+    gyroSubsystem = new GyroSubsystem();
 
     driveCommand = new DriveCommand(driveTrainSubsystem, driverChooser);
     operateCommand = new OperateCommand(manipulatorsSubsystem, operatorChooser);
@@ -94,6 +98,10 @@ public class Robot extends TimedRobot {
     PathGroupCommand pGroup = new PathGroupCommand();
     pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
     //pGroup.addSequential(new CombinedTarget().setTarget(1.1));
+    pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
+    pGroup.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
+    pGroup.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
     
     pGroup.start();
   }

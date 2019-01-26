@@ -1,4 +1,4 @@
-package frc.robot.commands.VisionCommands;
+package frc.robot.commands.vision;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 

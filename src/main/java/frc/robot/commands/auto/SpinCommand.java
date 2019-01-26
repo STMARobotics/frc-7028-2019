@@ -1,4 +1,4 @@
-package frc.robot.commands.AutoCommands;
+package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
