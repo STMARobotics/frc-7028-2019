@@ -65,7 +65,8 @@ public class Robot extends TimedRobot {
     start2BayOne = Path.loadFromPathWeaver("Start2BayOne");
     bayOne2Human = Path.loadFromPathWeaver("BayOne2Human");
     human2BayTwo = Path.loadFromPathWeaver("Human2BayTwo");
-
+    
+    Globals.getLimelight().Init();
   }
 
   @Override
@@ -77,6 +78,8 @@ public class Robot extends TimedRobot {
     driveCommand.cancel();
     Timer.delay(2);
     driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
+
+    Globals.getLimelight().Disable();
   }
   @Override
   public void disabledPeriodic() {
