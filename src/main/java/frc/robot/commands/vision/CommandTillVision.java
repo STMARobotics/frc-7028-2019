@@ -33,7 +33,6 @@ public class CommandTillVision extends Command {
 		this.childCommand = visionCommand;
 		this.limelight = limelight;
 		this.driveTrain = driveTrain;
-		parentCommand.start();
 	}
 	
 	/**
@@ -67,9 +66,13 @@ public class CommandTillVision extends Command {
 		return this;
 	}
 
+	@Override
+	protected void initialize() {
+		parentCommand.start();
+	}
 
-	int frames = 0;
-	boolean started = false;
+	private int frames = 0;
+	private boolean started = false;
 	@Override
 	protected void execute() {
 		//TODO Have xFrames on ShuffleBoard

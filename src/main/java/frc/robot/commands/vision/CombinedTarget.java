@@ -27,9 +27,9 @@ public class CombinedTarget extends Command {
     }
 
     //Tuning Values
-    double KpAim = 0.02;
-    double KpDistanceY = 0.03;
-    double KpDistanceArea = 0.5;
+    private double KpAim = 0.02;
+    private double KpDistanceY = 0.03;
+    private double KpDistanceArea = 0.5;
 
     //Spin
     double minPower = 0.09; //About the minimum amount of power required to move
@@ -46,38 +46,32 @@ public class CombinedTarget extends Command {
     @Override
     protected void execute() {
 
-        if (limelight.getValue(Value.areaPercent) == 0.0){
+        if (limelight.isTargetFound()){
+            noFrame = 0;
+        } else {
             System.out.println("NO TARGET");
             if(noFrame++ > maxNoFrames){
                 finished = true;
             }
             driveTrain.getDiffDrive().arcadeDrive(0, 0);
             return;
-        } else {
-            noFrame = 0;
         }
         
         double turnAdjust = getXAdjust();
-
-
         double foreAdjust = getYAdjustArea();
-        
-        System.out.println(foreAdjust);
 
-        boolean complete = true;//dirty
         if(Math.abs(turnAdjust) < 0.05){
             turnAdjust = 0.0;
         } else {
             turnAdjust += Math.signum(turnAdjust)*minPower;
-            complete = false;
         }
+
         if(Math.abs(foreAdjust) < 0.05){
             foreAdjust = 0.0;
         } else {
             foreAdjust += Math.signum(foreAdjust)*minPower;
-            complete = false;
         }
-        finished = complete;
+        finished = turnAdjust == 0 && foreAdjust == 0;
         
         /**
          *    ^  ^   ^  |  Drive Straight and turn right
@@ -100,14 +94,9 @@ public class CombinedTarget extends Command {
 
     private double getXAdjust(){
         //Get current degrees from center
-        double xOffDeg = limelight.getValue(Value.xOffDeg);
+        double xOffDeg = limelight.TargetX();
 
-        //Convert that to what we need to change
-        double headingErr = xOffDeg;
-
-        if (headingErr == 0.0) return 0;
-
-        return KpAim*headingErr;
+        return KpAim*xOffDeg;
     }
 
     private double getYAdjustArea(){
@@ -117,20 +106,11 @@ public class CombinedTarget extends Command {
 
         //Driving Adjust is KpDistance * distanceError (above)
 
-        if( limelight.getValue(Value.areaPercent) == 0.0) return 0;
-        System.out.println((areaTarget - limelight.getValue(Value.areaPercent)));
-        return (KpDistanceArea* (areaTarget - limelight.getValue(Value.areaPercent)));
-    }
-
-    private double getYAdjustHeight(){
+        if( !limelight.isTargetFound()){
+            return 0d;
+        }
         
-        //double yOffDeg = Robot.limelight.getValue(Value.yOffDeg) - yTarget;
-        //double distanceAdjust = KpDistance * -yOffDeg;
-
-        if (yTarget == 0) return 0;
-
-        return KpDistanceY * -(limelight.getValue(Value.yOffDeg) - yTarget);
-
+        return (KpDistanceArea* (areaTarget - limelight.getValue(Value.areaPercent)));
     }
 
     @Override
@@ -138,17 +118,11 @@ public class CombinedTarget extends Command {
         return finished;
     }
 
-    public double distance;
-
     @Override
     protected void end() { 
-        distance = limelight.getDistanceApprox();
+        double distance = limelight.getDistanceApprox();
         System.out.println("We should be about " + distance);
         driveTrain.getDiffDrive().arcadeDrive(0, 0);
     }
 
-    @Override
-    protected void interrupted() {
-        end();
-    }
 }

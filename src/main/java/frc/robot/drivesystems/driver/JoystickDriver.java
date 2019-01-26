@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class JoystickDriver implements Driver {
 
     private Joystick joystick;
+    private static final double PRECISION_SPEED_MOD = .6d;
+    private static final double PRECISION_ROTATION_MOD = .7d;
+    private static final double ROTATION_MOD = .8d;
 
     public JoystickDriver(Joystick joystick) {
         this.joystick = joystick;
@@ -15,8 +18,8 @@ public class JoystickDriver implements Driver {
         double speed = getSpeed();
         double rotation = getRotation();
         if (joystick.getTrigger()) {
-            speed *= .6;
-            rotation *= .7;
+            speed *= PRECISION_SPEED_MOD;
+            rotation *= PRECISION_ROTATION_MOD;
         }
         differentialDrive.arcadeDrive(speed, rotation, true);
     }
@@ -26,7 +29,7 @@ public class JoystickDriver implements Driver {
     }
 
     private double getRotation() {
-        return joystick.getZ() * .8;
+        return joystick.getZ() * ROTATION_MOD;
     }
 
 }
