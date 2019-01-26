@@ -1,5 +1,6 @@
 package frc.robot.vision;
 
+import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -12,10 +13,24 @@ public class Limelight {
     private boolean isConnected = false;
     private double _hearBeatPeriod = 0.1;
 
+    private double _latency = 0.0;
+
     public Limelight(){
         m_tableName = "limelight";
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
         _hearBeat.startPeriodic(_hearBeatPeriod);
+
+        //add an event listener on the latency value, every time that gets changed we'll update our values
+        m_table.addEntryListener("tl", (table, key, entry, value, flags) -> {
+            UpdateValues(table, value.getDouble());
+            System.out.println("Latency Updated: " + _latency);
+        } , EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    }
+
+    private void UpdateValues(NetworkTable table, double latency)
+    {
+        _latency = latency;
+        //TODO Update all fields from the table param here
     }
 
     Notifier _hearBeat = new Notifier(new LimelightThread());
