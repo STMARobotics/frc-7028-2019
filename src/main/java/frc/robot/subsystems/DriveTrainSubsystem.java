@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -17,10 +18,10 @@ public class DriveTrainSubsystem extends Subsystem {
     private static final double WHEEL_DIAMETER_INCHES = 6d;
     private static final double WHEEL_CIRCUMFERENCE_INCHES = WHEEL_DIAMETER_INCHES * Math.PI;
 
-    private final WPI_TalonSRX leftFront = new WPI_TalonSRX(0);
-    private final WPI_TalonSRX leftBack = new WPI_TalonSRX(1);
-    private final WPI_TalonSRX rightFront = new WPI_TalonSRX(2);
-    private final WPI_TalonSRX rightBack = new WPI_TalonSRX(3);
+    private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(0);
+    private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(1);
+    private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(2);
+    private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(3);
     private final DifferentialDrive driveTrain;
 
     private SendableChooser<Driver> driverChooser;
@@ -36,21 +37,21 @@ public class DriveTrainSubsystem extends Subsystem {
         talonConfig.slot0.integralZone = 400;
         talonConfig.slot0.closedLoopPeakOutput = 1.0;
 
-        rightFront.configAllSettings(talonConfig);
-        leftFront.configAllSettings(talonConfig);
+        rightMaster.configAllSettings(talonConfig);
+        leftMaster.configAllSettings(talonConfig);
 
-        leftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-        rightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+        rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
-        rightFront.setInverted(true);
-        rightBack.setInverted(true);
-        rightFront.setSensorPhase(true);
-        leftFront.setSensorPhase(true);
+        rightMaster.setInverted(true);
+        rightSlave.setInverted(true);
+        rightMaster.setSensorPhase(true);
+        leftMaster.setSensorPhase(true);
 
-        leftBack.follow(leftFront);
-        rightBack.follow(rightFront);
+        leftSlave.follow(leftMaster);
+        rightSlave.follow(rightMaster);
         
-        driveTrain = new DifferentialDrive(leftFront, rightFront);
+        driveTrain = new DifferentialDrive(leftMaster, rightMaster);
         driveTrain.setRightSideInverted(false);
         
         this.driverChooser = driverChooser;
@@ -65,34 +66,34 @@ public class DriveTrainSubsystem extends Subsystem {
     }
 
     public void setNeutralMode(NeutralMode neutralMode) {
-        leftFront.setNeutralMode(neutralMode);
-        leftBack.setNeutralMode(neutralMode);
-        rightFront.setNeutralMode(neutralMode);
-        rightBack.setNeutralMode(neutralMode);
+        leftMaster.setNeutralMode(neutralMode);
+        leftSlave.setNeutralMode(neutralMode);
+        rightMaster.setNeutralMode(neutralMode);
+        rightSlave.setNeutralMode(neutralMode);
     }
 
     public int getLeftEncoderPosition() {
-        return leftFront.getSelectedSensorPosition(0);
+        return leftMaster.getSelectedSensorPosition(0);
     }
 
     public int getRightEncoderPosition() {
-        return rightFront.getSelectedSensorPosition(0);
+        return rightMaster.getSelectedSensorPosition(0);
     }
 
     public void setUseDifferentialDrive(boolean useDifferentialDrive) {
         driveTrain.setSafetyEnabled(useDifferentialDrive);
         if (!useDifferentialDrive) {
-            leftBack.follow(leftFront);
-            rightBack.follow(rightFront);
+            leftSlave.follow(leftMaster);
+            rightSlave.follow(rightMaster);
         }
     }
 
     public WPI_TalonSRX getLeftTalonSRX() {
-        return leftFront;
+        return leftMaster;
     }
 
     public WPI_TalonSRX getRightTalonSRX() {
-        return rightFront;
+        return rightMaster;
     }
 
     /**
