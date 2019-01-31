@@ -5,11 +5,9 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.drivesystems.driver.Driver;
 
@@ -49,19 +47,13 @@ public class DriveTrainSubsystem extends Subsystem {
         rightFront.setSensorPhase(true);
         leftFront.setSensorPhase(true);
 
-        SpeedControllerGroup leftSpeedGroup =  new SpeedControllerGroup(leftFront, leftBack);
-        SpeedControllerGroup rightSpeedGroup = new SpeedControllerGroup(rightFront, rightBack);
-        rightSpeedGroup.setInverted(true);
-
-        driveTrain = new DifferentialDrive(leftSpeedGroup, rightSpeedGroup);
-
+        leftBack.follow(leftFront);
+        rightBack.follow(rightFront);
+        
+        driveTrain = new DifferentialDrive(leftFront, rightFront);
+        driveTrain.setRightSideInverted(false);
+        
         this.driverChooser = driverChooser;
-
-        SmartDashboard.putData("Left Master", leftFront);
-        SmartDashboard.putData("Left Slave", leftBack);
-
-        SmartDashboard.putData("Right Master", rightFront);
-        SmartDashboard.putData("Right Slave", rightBack);
     }
 
     public void initDefaultCommand() {

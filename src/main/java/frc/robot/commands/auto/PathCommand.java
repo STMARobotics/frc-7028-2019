@@ -23,15 +23,29 @@ public class PathCommand extends Command {
 
     private final Path path;
 
+    private boolean isForward;
+
+
     /**
-     * Constructor
+     * Constructs path to drive forwards
      * @param path path to execute
      * @param driveTrainSubsystem drive train
      */
     public PathCommand(Path path, DriveTrainSubsystem driveTrainSubsystem) {
+        this(path, driveTrainSubsystem, true);
+    }
+
+    /**
+     * Constructor
+     * @param path path to execute
+     * @param driveTrainSubsystem drive train
+     * @param isForward execute path forwards
+     */
+    public PathCommand(Path path, DriveTrainSubsystem driveTrainSubsystem, boolean isForward) {
         requires(driveTrainSubsystem);
         this.driveTrainSubsystem = driveTrainSubsystem;
         this.path = path;
+        this.isForward = isForward;
     }
 
     @Override
@@ -39,8 +53,8 @@ public class PathCommand extends Command {
         driveTrainSubsystem.setUseDifferentialDrive(false);
 
         // Load the trajectory points into buffers
-        loadBuffer(path.getLeftTrajectory(), leftPointStream);
-        loadBuffer(path.getRightTrajectory(), rightPointStream);
+        loadBuffer(path.getLeftTrajectory(), isForward ? leftPointStream : rightPointStream);
+        loadBuffer(path.getRightTrajectory(), isForward ? rightPointStream : leftPointStream);
 
         WPI_TalonSRX leftTalon = driveTrainSubsystem.getLeftTalonSRX();
         WPI_TalonSRX rightTalon = driveTrainSubsystem.getRightTalonSRX();
@@ -61,17 +75,18 @@ public class PathCommand extends Command {
      * @param trajectory trajectory to buffer
      * @param stream buffer to load
      */
-    private static void loadBuffer(Trajectory trajectory, BufferedTrajectoryPointStream stream) {
+    private void loadBuffer(Trajectory trajectory, BufferedTrajectoryPointStream stream) {
         stream.Clear();
 
         var segments = trajectory.segments;
+        int direction = isForward ? 1 : -1;
         for (int i = 0; i < segments.length; i++) {
             var segment = segments[i];
             var point = new TrajectoryPoint();
 
             point.timeDur = (int)(segment.dt * 1000);
-            point.position = DriveTrainSubsystem.insToSteps(segment.position);
-            point.velocity = DriveTrainSubsystem.insPerSecToStepsPerDecisec(segment.velocity);
+            point.position = DriveTrainSubsystem.insToSteps(segment.position) * direction;
+            point.velocity = DriveTrainSubsystem.insPerSecToStepsPerDecisec(segment.velocity) * direction;
             
             point.auxiliaryPos = 0;
             point.auxiliaryVel = 0;
@@ -92,6 +107,8 @@ public class PathCommand extends Command {
 
     @Override
     protected void end() {
+        driveTrainSubsystem.getLeftTalonSRX().clearMotionProfileTrajectories();
+        driveTrainSubsystem.getRightTalonSRX().clearMotionProfileTrajectories();
         driveTrainSubsystem.setUseDifferentialDrive(true);
     }
 }

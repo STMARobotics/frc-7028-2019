@@ -94,14 +94,22 @@ public class Robot extends TimedRobot {
     Globals.getLimelight().Init();
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
 
-    PathGroupCommand pGroup = new PathGroupCommand();
-    pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    //pGroup.addSequential(new CombinedTarget().setTarget(1.1));
-    pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
-    pGroup.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
-    pGroup.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    // PathGroupCommand pGroup = new PathGroupCommand();
+    // pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    // //pGroup.addSequential(new CombinedTarget().setTarget(1.1));
+    // pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
+    // pGroup.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    // pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
+    // pGroup.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
     
+    // pGroup.start();
+
+    PathGroupCommand pGroup = new PathGroupCommand();
+    pGroup.addSequential(new PathCommand(start2BayOne, driveTrainSubsystem));
+    pGroup.addSequential(new PathCommand(start2BayOne, driveTrainSubsystem, false));
+    pGroup.addSequential(new PathCommand(human2BayTwo, driveTrainSubsystem));
+    pGroup.addSequential(new PathCommand(human2BayTwo, driveTrainSubsystem, false));
+
     pGroup.start();
   }
 
