@@ -10,6 +10,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
@@ -21,9 +22,6 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PathGroupCommand;
-import frc.robot.commands.auto.PointCommand;
-import frc.robot.commands.vision.CombinedTarget;
-import frc.robot.commands.vision.CommandTillVision;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.JoystickDriver;
 import frc.robot.drivesystems.operator.Operator;
@@ -44,6 +42,7 @@ public class Robot extends TimedRobot {
   private DriveTrainSubsystem driveTrainSubsystem;
   private ManipulatorsSubsystem manipulatorsSubsystem;
   private GyroSubsystem gyroSubsystem;
+  private PowerDistributionPanel pdp = new PowerDistributionPanel();
 
   private SendableChooser<Driver> driverChooser = new SendableChooser<>();
   private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
@@ -60,7 +59,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("DriverChooser", driverChooser);
 
     driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
-    manipulatorsSubsystem = new ManipulatorsSubsystem();
+    manipulatorsSubsystem = new ManipulatorsSubsystem(pdp);
     gyroSubsystem = new GyroSubsystem();
 
     driveCommand = new DriveCommand(driveTrainSubsystem, driverChooser);
