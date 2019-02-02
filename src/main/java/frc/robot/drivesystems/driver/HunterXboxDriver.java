@@ -1,17 +1,16 @@
 package frc.robot.drivesystems.driver;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-public class HunterDriver implements Driver {
+public class HunterXboxDriver implements Driver {
 
-    private SendableChooser<XboxController> driverControllerChooser;
+    private XboxController controller;
     private boolean slowMode = false;
 
-    public HunterDriver(SendableChooser<XboxController> driverControllerChooser) {
-        this.driverControllerChooser = driverControllerChooser;
+    public HunterXboxDriver(XboxController controller) {
+        this.controller = controller;
     }
 
     public void drive(DifferentialDrive differentialDrive) {
@@ -25,8 +24,8 @@ public class HunterDriver implements Driver {
     }
 
     public double getSpeed() {
-        double leftTrigger = driverControllerChooser.getSelected().getTriggerAxis(Hand.kLeft);
-        double rightTrigger = driverControllerChooser.getSelected().getTriggerAxis(Hand.kRight);
+        double leftTrigger = controller.getTriggerAxis(Hand.kLeft);
+        double rightTrigger = controller.getTriggerAxis(Hand.kRight);
         if (rightTrigger > leftTrigger) {
             return rightTrigger;
         } else if (leftTrigger > rightTrigger) {
@@ -37,11 +36,11 @@ public class HunterDriver implements Driver {
     }
 
     public double getRotation() {
-        return driverControllerChooser.getSelected().getX(Hand.kLeft);
+        return controller.getX(Hand.kLeft);
     }
 
     public boolean getSlowMode() {
-        if (driverControllerChooser.getSelected().getAButtonPressed()) {
+        if (controller.getAButtonPressed()) {
             slowMode = !slowMode;
         }
         return slowMode;

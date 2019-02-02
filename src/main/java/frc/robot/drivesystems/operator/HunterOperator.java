@@ -1,15 +1,14 @@
 package frc.robot.drivesystems.operator;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.subsystems.ManipulatorsSubsystem;
 
 public class HunterOperator implements Operator {
 
-    private SendableChooser<XboxController> operatorControllerChooser;
+    private XboxController controller;
 
-    public HunterOperator(SendableChooser<XboxController> operatorControllerChooser) {
-        this.operatorControllerChooser = operatorControllerChooser;
+    public HunterOperator(XboxController controller) {
+        this.controller = controller;
     }
 
     public void operate(ManipulatorsSubsystem manipulatorsSubsystem) {

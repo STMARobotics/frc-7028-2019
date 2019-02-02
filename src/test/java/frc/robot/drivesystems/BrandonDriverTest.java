@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.drivesystems.driver.BrandonDriver;
+import frc.robot.drivesystems.driver.BrandonXboxDriver;
 
 /**
  * Unit tests for BrandonDriver
@@ -38,7 +38,7 @@ public class BrandonDriverTest {
     private DifferentialDrive mockDifferentialDrive;
 
     @InjectMocks
-    private BrandonDriver brandonDriver;
+    private BrandonXboxDriver brandonDriver;
 
     @Before
     public void setUp() {

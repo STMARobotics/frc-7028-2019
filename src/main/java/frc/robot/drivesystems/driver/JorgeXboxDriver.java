@@ -5,17 +5,18 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
-public class BrandonDriver implements Driver {
+public class JorgeXboxDriver implements Driver {
 
-    private SendableChooser<XboxController> driverControllerChooser;
+    private XboxController controller;
     private boolean slowMode = false;
 
-    public BrandonDriver(SendableChooser<XboxController> driverControllerChooser) {
-        this.driverControllerChooser = driverControllerChooser;
+    public JorgeXboxDriver(XboxController controller) {
+        this.controller = controller;
     }
 
+    @Override
     public void drive(DifferentialDrive differentialDrive) {
-        double speed = getSpeed();
+        double speed = -getSpeed();
         double rotation = getRotation();
         if (getSlowMode()) {
             speed = speed / 1.5;
@@ -25,15 +26,15 @@ public class BrandonDriver implements Driver {
     }
 
     private double getSpeed() {
-        return -(driverControllerChooser.getSelected().getY(Hand.kLeft));
+        return controller.getY(Hand.kLeft);
     }
 
     private double getRotation() {
-        return driverControllerChooser.getSelected().getX(Hand.kRight);
+        return controller.getX(Hand.kRight);
     }
 
     private boolean getSlowMode() {
-        if (driverControllerChooser.getSelected().getBButtonPressed()) {
+        if (controller.getBButtonPressed()) {
             slowMode = !slowMode;
         }
         return slowMode;

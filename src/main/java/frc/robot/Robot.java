@@ -22,8 +22,14 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PathGroupCommand;
+import frc.robot.drivesystems.driver.BrandonJoystickDriver;
+import frc.robot.drivesystems.driver.BrandonXboxDriver;
 import frc.robot.drivesystems.driver.Driver;
-import frc.robot.drivesystems.driver.JoystickDriver;
+import frc.robot.drivesystems.driver.HunterXboxDriver;
+import frc.robot.drivesystems.driver.JorgeXboxDriver;
+import frc.robot.drivesystems.operator.BrandonOperator;
+import frc.robot.drivesystems.operator.HunterOperator;
+import frc.robot.drivesystems.operator.JorgeOperator;
 import frc.robot.drivesystems.operator.Operator;
 import frc.robot.motion.Path;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -48,6 +54,7 @@ public class Robot extends TimedRobot {
   private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
 
   private Joystick joystick = new Joystick(0);
+  private XboxController driverController = new XboxController(0);
   private XboxController operatorController = new XboxController(2);
 
   @Override
@@ -55,8 +62,16 @@ public class Robot extends TimedRobot {
 
     Globals.Setup();
 
-    driverChooser.setDefaultOption("Joystick Driver", new JoystickDriver(joystick));
-    SmartDashboard.putData("DriverChooser", driverChooser);
+    driverChooser.addDefault("Jorge Xbox Driver", new JorgeXboxDriver(driverController));
+    driverChooser.addOption("Hunter Xbox Driver", new HunterXboxDriver(driverController));
+    driverChooser.addOption("Brandon Xbox Driver", new BrandonXboxDriver(driverController));
+    driverChooser.addOption("Brandon Joystick Driver", new BrandonJoystickDriver(joystick));
+    SmartDashboard.putData("Driver Chooser", driverChooser);
+
+    operatorChooser.addDefault("Hunter Operator", new HunterOperator(operatorController));
+    operatorChooser.addOption("Jorge Operator", new JorgeOperator(operatorController));
+    operatorChooser.addOption("Brandon Operator", new BrandonOperator(operatorController));
+    SmartDashboard.putData("Operator Chooser", operatorChooser);
 
     driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
     manipulatorsSubsystem = new ManipulatorsSubsystem(pdp);
@@ -95,21 +110,13 @@ public class Robot extends TimedRobot {
 
     // PathGroupCommand pGroup = new PathGroupCommand();
     // pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    // //pGroup.addSequential(new CombinedTarget().setTarget(1.1));
+    // pGroup.addSequential(new CombinedTarget().setTarget(1.1));
     // pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
     // pGroup.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
     // pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
     // pGroup.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
     
     // pGroup.start();
-
-    PathGroupCommand pGroup = new PathGroupCommand();
-    pGroup.addSequential(new PathCommand(start2BayOne, driveTrainSubsystem));
-    pGroup.addSequential(new PathCommand(start2BayOne, driveTrainSubsystem, false));
-    pGroup.addSequential(new PathCommand(human2BayTwo, driveTrainSubsystem));
-    pGroup.addSequential(new PathCommand(human2BayTwo, driveTrainSubsystem, false));
-
-    pGroup.start();
   }
 
   @Override
@@ -129,7 +136,7 @@ public class Robot extends TimedRobot {
     }
     driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
     driveCommand.start();
-    // operateCommand.start();
+    operateCommand.start();
   }
 
   @Override

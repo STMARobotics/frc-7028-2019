@@ -1,18 +1,28 @@
 package frc.robot.drivesystems.operator;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.subsystems.ManipulatorsSubsystem;
 
 public class BrandonOperator implements Operator {
 
-    private SendableChooser<XboxController> operatorControllerChooser;
+    private XboxController controller;
 
-    public BrandonOperator(SendableChooser<XboxController> operatorControllerChooser) {
-        this.operatorControllerChooser = operatorControllerChooser;
+    public BrandonOperator(XboxController controller) {
+        this.controller = controller;
     }
 
     public void operate(ManipulatorsSubsystem manipulatorsSubsystem) {
+        manipulatorsSubsystem.setIntakeSpeed(getIntakeSpeed());
+        manipulatorsSubsystem.setPivotSpeed(getPivotSpeed());
+    }
+
+    private double getIntakeSpeed() {
+        return controller.getY(Hand.kLeft);
+    }
+
+    private double getPivotSpeed() {
+        return controller.getY(Hand.kRight);
     }
 
 }
