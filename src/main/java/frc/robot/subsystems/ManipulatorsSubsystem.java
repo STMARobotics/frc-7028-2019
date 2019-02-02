@@ -19,10 +19,18 @@ public class ManipulatorsSubsystem extends Subsystem {
         this.pdp = pdp;
     }
 
+    /**
+     * sets intake speed
+     * @param speed + is intake, - is output
+     */
     public void setIntakeSpeed(double speed) {
         intake.set(speed);
     }
 
+    /**
+     * sets pivot speed
+     * @param speed + is up, - is down
+     */
     public void setPivotSpeed(double speed) {
         double powerDraw = pdp.getCurrent(PIVOT_CHANNEL);
         if (powerDraw >= MAX_DRAW) {

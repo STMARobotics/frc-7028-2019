@@ -18,11 +18,11 @@ public class BrandonOperator implements Operator {
     }
 
     private double getIntakeSpeed() {
-        return controller.getY(Hand.kLeft);
+        return -controller.getY(Hand.kLeft);
     }
 
     private double getPivotSpeed() {
-        return controller.getY(Hand.kRight);
+        return -controller.getY(Hand.kRight);
     }
 
 }
