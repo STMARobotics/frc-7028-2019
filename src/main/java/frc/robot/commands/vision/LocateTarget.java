@@ -7,10 +7,12 @@ import frc.robot.vision.Limelight.Value;
 
 public class LocateTarget extends Command {
 
+    //Subsystems
     private DriveTrainSubsystem driveTrain;
     private Limelight limelight;
 
-    private boolean lookingForTarget;
+    //Tuning Values
+    double turnRate = 0.4; //Percent speed to spin.
 
     public LocateTarget(DriveTrainSubsystem driveTrain, Limelight limelight){
         this.driveTrain = driveTrain;
@@ -19,34 +21,12 @@ public class LocateTarget extends Command {
     }
 
     @Override
-    protected void initialize() {
-        lookingForTarget = true;
-    }
-
-    //Tuning Values
-    double turnRate = 0.4; //Percent speed to spin.
-
-    @Override
     protected void execute() {
-        
         driveTrain.getDiffDrive().arcadeDrive(0, turnRate);;
-
-        if(limelight.getValue(Value.targetFound) != 0){
-            lookingForTarget = false;
-        }
-
     }
 
     @Override
     protected boolean isFinished() {
-        return lookingForTarget;
-    }
-
-    @Override
-    protected void end() {
-    }
-
-    @Override
-    protected void interrupted() {
+        return limelight.isTargetFound();
     }
 }

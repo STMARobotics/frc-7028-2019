@@ -19,7 +19,7 @@ public class CommandTillVision extends Command {
 	private Command childCommand;
 
 	//Config - defaults
-	private int waitFrames = 20;
+	private int waitFrames = 20; // Frame every 20ms
 	private double minArea = 0.0;
 
 	/**
