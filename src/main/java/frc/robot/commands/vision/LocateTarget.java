@@ -1,7 +1,6 @@
 package frc.robot.commands.vision;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Globals;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.Limelight.Value;
