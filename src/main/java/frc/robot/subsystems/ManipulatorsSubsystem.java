@@ -2,7 +2,11 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.commands.OperateCommand;
+import frc.robot.drivesystems.operator.Operator;
 
 public class ManipulatorsSubsystem extends Subsystem {
 
@@ -14,9 +18,11 @@ public class ManipulatorsSubsystem extends Subsystem {
     // TODO calibrate max draw
     private final double MAX_DRAW = 10;
     private boolean lock = false;
+    private SendableChooser<Operator> operatorChooser;
 
-    public ManipulatorsSubsystem(PowerDistributionPanel pdp) {
+    public ManipulatorsSubsystem(PowerDistributionPanel pdp, SendableChooser<Operator> operatorChooser) {
         this.pdp = pdp;
+        this.operatorChooser = operatorChooser;
     }
 
     /**
@@ -51,7 +57,7 @@ public class ManipulatorsSubsystem extends Subsystem {
     }
 
     public void initDefaultCommand() {
-        
+        setDefaultCommand(new OperateCommand(this, operatorChooser));
     }
 
 }

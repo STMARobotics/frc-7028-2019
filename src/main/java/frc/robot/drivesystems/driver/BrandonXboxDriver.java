@@ -9,6 +9,7 @@ public class BrandonXboxDriver implements Driver {
 
     private XboxController controller;
     private boolean slowMode = false;
+    private boolean autoOverride = false;
 
     public BrandonXboxDriver(XboxController controller) {
         this.controller = controller;
@@ -37,6 +38,13 @@ public class BrandonXboxDriver implements Driver {
             slowMode = !slowMode;
         }
         return slowMode;
+    }
+
+    public boolean getAutoOverride() {
+        if (controller.getAButtonPressed()) {
+            autoOverride = true;
+        }
+        return autoOverride;
     }
 
 }

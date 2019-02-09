@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class HunterJoystickDriver implements Driver {
 
     private Joystick joystick;
+    private boolean autoOverride = false;
 
     public HunterJoystickDriver(Joystick joystick) {
         this.joystick = joystick;
@@ -37,6 +38,13 @@ public class HunterJoystickDriver implements Driver {
             return true;
         }
         return false;
+    }
+
+    public boolean getAutoOverride() {
+        if (joystick.getTrigger()) {
+            autoOverride = true;
+        }
+        return autoOverride;
     }
 
 }

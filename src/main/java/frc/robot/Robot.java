@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
+import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PathGroupCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
@@ -77,7 +78,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Operator Chooser", operatorChooser);
 
     driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
-    manipulatorsSubsystem = new ManipulatorsSubsystem(pdp);
+    manipulatorsSubsystem = new ManipulatorsSubsystem(pdp, operatorChooser);
     gyroSubsystem = new GyroSubsystem();
 
     driveCommand = new DriveCommand(driveTrainSubsystem, driverChooser);
@@ -124,6 +125,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
+    if (driverChooser.getSelected().getAutoOverride()) {
+      pGroup.cancel();
+    }
   }
 
   @Override

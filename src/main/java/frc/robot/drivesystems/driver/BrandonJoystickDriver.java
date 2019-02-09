@@ -7,6 +7,7 @@ public class BrandonJoystickDriver implements Driver {
 
     private Joystick joystick;
     private boolean slowMode = false;
+    private boolean autoOverride = false;
 
     public BrandonJoystickDriver(Joystick joystick) {
         this.joystick = joystick;
@@ -35,6 +36,13 @@ public class BrandonJoystickDriver implements Driver {
             slowMode = !slowMode;
         }
         return slowMode;
+    }
+
+    public boolean getAutoOverride() {
+        if (joystick.getRawButton(10)) {
+            autoOverride = true;
+        }
+        return autoOverride;
     }
 
 }
