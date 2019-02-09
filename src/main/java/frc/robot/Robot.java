@@ -22,6 +22,9 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PathGroupCommand;
+import frc.robot.commands.auto.PointCommand;
+import frc.robot.commands.vision.CombinedTarget;
+import frc.robot.commands.vision.CommandTillVision;
 import frc.robot.drivesystems.driver.BrandonJoystickDriver;
 import frc.robot.drivesystems.driver.BrandonXboxDriver;
 import frc.robot.drivesystems.driver.Driver;
@@ -108,15 +111,14 @@ public class Robot extends TimedRobot {
     Globals.getLimelight().Init();
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
 
-    // PathGroupCommand pGroup = new PathGroupCommand();
-    // pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    // pGroup.addSequential(new CombinedTarget().setTarget(1.1));
-    // pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
-    // pGroup.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    // pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
-    // pGroup.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    PathGroupCommand pGroup = new PathGroupCommand();
+    pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
+    pGroup.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
+    pGroup.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
     
-    // pGroup.start();
+    pGroup.start();
   }
 
   @Override
