@@ -42,10 +42,7 @@ public class JorgeXboxDriver implements Driver {
     }
 
     public boolean getAutoOverride() {
-        if (controller.getAButtonPressed()) {
-            autoOverride = true;
-        }
-        return autoOverride;
+        return controller.getAButtonPressed();
     }
 
 }

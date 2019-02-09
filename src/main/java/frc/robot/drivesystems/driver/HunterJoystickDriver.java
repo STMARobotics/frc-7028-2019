@@ -41,10 +41,7 @@ public class HunterJoystickDriver implements Driver {
     }
 
     public boolean getAutoOverride() {
-        if (joystick.getTrigger()) {
-            autoOverride = true;
-        }
-        return autoOverride;
+        return joystick.getTrigger();
     }
 
 }

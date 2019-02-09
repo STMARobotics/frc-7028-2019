@@ -6,8 +6,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class BrandonJoystickDriver implements Driver {
 
     private Joystick joystick;
-    private boolean slowMode = false;
-    private boolean autoOverride = false;
 
     public BrandonJoystickDriver(Joystick joystick) {
         this.joystick = joystick;
@@ -24,7 +22,7 @@ public class BrandonJoystickDriver implements Driver {
     }
 
     private double getSpeed() {
-        return joystick.getY();
+        return -joystick.getY();
     }
 
     private double getRotation() {
@@ -32,17 +30,11 @@ public class BrandonJoystickDriver implements Driver {
     }
 
     private boolean getSlowMode() {
-        if (joystick.getTrigger()) {
-            slowMode = !slowMode;
-        }
-        return slowMode;
+        return joystick.getTrigger();
     }
 
     public boolean getAutoOverride() {
-        if (joystick.getRawButton(10)) {
-            autoOverride = true;
-        }
-        return autoOverride;
+        return joystick.getRawButtonPressed(10);
     }
 
 }

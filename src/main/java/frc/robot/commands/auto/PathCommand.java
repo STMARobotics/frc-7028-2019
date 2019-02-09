@@ -106,6 +106,12 @@ public class PathCommand extends Command {
     }
 
     @Override
+    protected void interrupted() {
+        driveTrainSubsystem.getLeftTalonSRX().set(0);
+        driveTrainSubsystem.getRightTalonSRX().set(0);
+    }
+
+    @Override
     protected void end() {
         driveTrainSubsystem.getLeftTalonSRX().clearMotionProfileTrajectories();
         driveTrainSubsystem.getRightTalonSRX().clearMotionProfileTrajectories();

@@ -91,6 +91,11 @@ public class CommandTillVision extends Command {
 	}
 
 	@Override
+	protected void interrupted() {
+		childCommand.cancel();
+	}
+
+	@Override
 	protected boolean isFinished() {
 		return childCommand.isCompleted();
     }

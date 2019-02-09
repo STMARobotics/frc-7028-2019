@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -19,9 +18,9 @@ public class DriveTrainSubsystem extends Subsystem {
     private static final double WHEEL_CIRCUMFERENCE_INCHES = WHEEL_DIAMETER_INCHES * Math.PI;
 
     private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(0);
-    private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(1);
+    private final WPI_TalonSRX leftSlave = new WPI_TalonSRX(1);
     private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(2);
-    private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(3);
+    private final WPI_TalonSRX rightSlave = new WPI_TalonSRX(3);
     private final DifferentialDrive driveTrain;
 
     private SendableChooser<Driver> driverChooser;
