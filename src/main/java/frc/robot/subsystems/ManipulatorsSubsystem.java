@@ -52,6 +52,10 @@ public class ManipulatorsSubsystem extends Subsystem {
         }
     }
 
+    public void setPivotPosition(PivotPosition position) {
+        System.out.println("Moving arm to: " + position);
+    }
+
     public int getPivotPositon() {
         return 0;
     }
