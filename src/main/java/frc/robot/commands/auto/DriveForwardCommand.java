@@ -9,7 +9,7 @@ public class DriveForwardCommand extends PIDCommand {
 
     private DriveTrainSubsystem driveTrainSubsystem;
     private GyroSubsystem gyroSubsystem;
-    private double distance;
+    protected double distance;
     private double rotations;
     private double speed;
     private double leftTarget;
