@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
-import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PathGroupCommand;
 import frc.robot.drivesystems.driver.BrandonJoystickDriver;
 import frc.robot.drivesystems.driver.BrandonXboxDriver;
@@ -53,7 +52,8 @@ public class Robot extends TimedRobot {
   private SendableChooser<Driver> driverChooser = new SendableChooser<>();
   private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
 
-  private Joystick joystick = new Joystick(0);
+  private Joystick driverJoystick = new Joystick(0);
+  private Joystick operatorJoystick = new Joystick(2);
   private XboxController driverController = new XboxController(0);
   private XboxController operatorController = new XboxController(2);
 
@@ -65,10 +65,10 @@ public class Robot extends TimedRobot {
     driverChooser.addDefault("Jorge Xbox Driver", new JorgeXboxDriver(driverController));
     driverChooser.addOption("Hunter Xbox Driver", new HunterXboxDriver(driverController));
     driverChooser.addOption("Brandon Xbox Driver", new BrandonXboxDriver(driverController));
-    driverChooser.addOption("Brandon Joystick Driver", new BrandonJoystickDriver(joystick));
+    driverChooser.addOption("Brandon Joystick Driver", new BrandonJoystickDriver(driverJoystick));
     SmartDashboard.putData("Driver Chooser", driverChooser);
 
-    operatorChooser.addDefault("Hunter Operator", new HunterOperator(operatorController));
+    operatorChooser.addDefault("Hunter Operator", new HunterOperator(operatorJoystick));
     operatorChooser.addOption("Jorge Operator", new JorgeOperator(operatorController));
     operatorChooser.addOption("Brandon Operator", new BrandonOperator(operatorController));
     SmartDashboard.putData("Operator Chooser", operatorChooser);
