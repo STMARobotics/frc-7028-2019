@@ -37,4 +37,8 @@ public class BrandonJoystickDriver implements Driver {
         return joystick.getRawButtonPressed(10);
     }
 
+    public boolean getDropKeyPressed() {
+        return joystick.getRawButton(11);
+    }
+
 }

@@ -29,11 +29,10 @@ import frc.robot.drivesystems.driver.BrandonJoystickDriver;
 import frc.robot.drivesystems.driver.BrandonXboxDriver;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.HunterXboxDriver;
-import frc.robot.drivesystems.operator.BrandonOperator;
 import frc.robot.drivesystems.operator.HunterOperator;
-import frc.robot.drivesystems.operator.JorgeOperator;
 import frc.robot.drivesystems.operator.Operator;
 import frc.robot.motion.Path;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
@@ -49,6 +48,7 @@ public class Robot extends TimedRobot {
 
   private DriveTrainSubsystem driveTrainSubsystem;
   private ManipulatorsSubsystem manipulatorsSubsystem;
+  private ClimbSubsystem climbSubsystem;
   private GyroSubsystem gyroSubsystem;
   private PowerDistributionPanel pdp = new PowerDistributionPanel();
 
@@ -72,20 +72,29 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Driver Chooser", driverChooser);
 
     operatorChooser.setDefaultOption("Hunter Operator", new HunterOperator(operatorJoystick));
-    operatorChooser.addOption("Jorge Operator", new JorgeOperator(operatorController));
-    operatorChooser.addOption("Brandon Operator", new BrandonOperator(operatorController));
     SmartDashboard.putData("Operator Chooser", operatorChooser);
 
     driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
     manipulatorsSubsystem = new ManipulatorsSubsystem(pdp, operatorChooser);
+    climbSubsystem = new ClimbSubsystem(operatorChooser, driverChooser);
     gyroSubsystem = new GyroSubsystem();
 
     driveCommand = new DriveCommand(driveTrainSubsystem, driverChooser);
-    operateCommand = new OperateCommand(manipulatorsSubsystem, operatorChooser);
+    operateCommand = new OperateCommand(manipulatorsSubsystem, climbSubsystem, operatorChooser);
+
+    driveTrainSubsystem.setDefaultCommand(driveCommand);
+    manipulatorsSubsystem.setDefaultCommand(operateCommand);
+    climbSubsystem.setDefaultCommand(operateCommand);
 
     start2BayOne = Path.loadFromPathWeaver("Start2BayOne");
     bayOne2Human = Path.loadFromPathWeaver("BayOne2Human");
     human2BayTwo = Path.loadFromPathWeaver("Human2BayTwo");
+
+    generalInit();
+  }
+
+  public void generalInit() {
+    climbSubsystem.resetClimbGuides();
   }
 
   @Override
@@ -95,7 +104,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     driveCommand.cancel();
-    Timer.delay(2);
     driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
 
     Globals.getLimelight().Disable();
@@ -107,6 +115,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    generalInit();
     Globals.getLimelight().Init();
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
 
@@ -131,6 +140,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    generalInit();
     Globals.getLimelight().Init();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

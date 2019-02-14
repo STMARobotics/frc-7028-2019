@@ -44,4 +44,8 @@ public class BrandonXboxDriver implements Driver {
         return controller.getAButtonPressed();
     }
 
+    public boolean getDropKeyPressed() {
+        return false;
+    }
+
 }

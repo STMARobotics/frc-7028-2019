@@ -50,4 +50,8 @@ public class HunterXboxDriver implements Driver {
     public boolean getAutoOverride() {
         return controller.getAButtonPressed();
     }
+
+    public boolean getDropKeyPressed() {
+        return false;
+    }
 }

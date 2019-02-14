@@ -44,4 +44,8 @@ public class HunterJoystickDriver implements Driver {
         return joystick.getTrigger();
     }
 
+    public boolean getDropKeyPressed() {
+        return false;
+    }
+
 }
