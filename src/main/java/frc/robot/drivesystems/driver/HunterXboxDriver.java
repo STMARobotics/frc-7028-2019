@@ -8,7 +8,6 @@ public class HunterXboxDriver implements Driver {
 
     private XboxController controller;
     private boolean slowMode = false;
-    private boolean autoOverride = false;
 
     public HunterXboxDriver(XboxController controller) {
         this.controller = controller;

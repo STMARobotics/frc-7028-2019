@@ -10,7 +10,6 @@ import frc.robot.drivesystems.operator.Operator;
 public class ClimbSubsystem extends Subsystem {
 
     private Solenoid climbGuides = new Solenoid(0);
-    private boolean climbGuidesDown = false;
     private Spark rack = new Spark(0);
     private Spark climbWheel = new Spark(2);
     private SendableChooser<Operator> operatorChooser;

@@ -10,9 +10,7 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -25,10 +23,8 @@ import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
 import frc.robot.commands.vision.CommandTillVision;
-import frc.robot.drivesystems.driver.BrandonJoystickDriver;
-import frc.robot.drivesystems.driver.BrandonXboxDriver;
 import frc.robot.drivesystems.driver.Driver;
-import frc.robot.drivesystems.driver.HunterXboxDriver;
+import frc.robot.drivesystems.driver.JorgeXboxDriver;
 import frc.robot.drivesystems.operator.HunterOperator;
 import frc.robot.drivesystems.operator.Operator;
 import frc.robot.motion.Path;
@@ -44,13 +40,12 @@ public class Robot extends TimedRobot {
   private Path start2BayOne;
   private Path bayOne2Human;
   private Path human2BayTwo;
-  private CommandGroup pGroup;
+  private CommandGroup autoCommand;
 
   private DriveTrainSubsystem driveTrainSubsystem;
   private ManipulatorsSubsystem manipulatorsSubsystem;
   private ClimbSubsystem climbSubsystem;
   private GyroSubsystem gyroSubsystem;
-  private PowerDistributionPanel pdp = new PowerDistributionPanel();
 
   private SendableChooser<Driver> driverChooser = new SendableChooser<>();
   private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
@@ -65,17 +60,14 @@ public class Robot extends TimedRobot {
 
     Globals.Setup();
 
-    // driverChooser.setDefaultOption("Jorge Xbox Driver", new JorgeXboxDriver(driverController));
-    driverChooser.addOption("Hunter Xbox Driver", new HunterXboxDriver(driverController));
-    driverChooser.addOption("Brandon Xbox Driver", new BrandonXboxDriver(driverController));
-    driverChooser.setDefaultOption("Brandon Joystick Driver", new BrandonJoystickDriver(driverJoystick));
+    driverChooser.setDefaultOption("Jorge Xbox Driver", new JorgeXboxDriver(driverController));
     SmartDashboard.putData("Driver Chooser", driverChooser);
 
     operatorChooser.setDefaultOption("Hunter Operator", new HunterOperator(operatorJoystick));
     SmartDashboard.putData("Operator Chooser", operatorChooser);
 
-    driveTrainSubsystem = new DriveTrainSubsystem(driverChooser);
-    manipulatorsSubsystem = new ManipulatorsSubsystem(pdp, operatorChooser);
+    driveTrainSubsystem = new DriveTrainSubsystem();
+    manipulatorsSubsystem = new ManipulatorsSubsystem();
     climbSubsystem = new ClimbSubsystem(operatorChooser, driverChooser);
     gyroSubsystem = new GyroSubsystem();
 
@@ -91,6 +83,8 @@ public class Robot extends TimedRobot {
     human2BayTwo = Path.loadFromPathWeaver("Human2BayTwo");
 
     generalInit();
+
+    manipulatorsSubsystem.calibratePivotEncoder();
   }
 
   public void generalInit() {
@@ -119,22 +113,21 @@ public class Robot extends TimedRobot {
     Globals.getLimelight().Init();
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
 
-    pGroup = new CommandGroup();
-    pGroup.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
-    pGroup.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    pGroup.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
-    pGroup.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    pGroup.start();
+    autoCommand = new CommandGroup();
+    autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
+    autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
+    autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    autoCommand.start();
   }
 
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
-    if (driverChooser.getSelected().getAutoOverride() && pGroup != null) {
-      pGroup.cancel();
-      pGroup = null;
-      System.out.println("pGroup canceled-----------------------------------");
+    if (driverChooser.getSelected().getAutoOverride() && autoCommand != null) {
+      autoCommand.cancel();
+      autoCommand = null;
     }
   }
 
@@ -142,12 +135,8 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     generalInit();
     Globals.getLimelight().Init();
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (pGroup != null) {
-      pGroup.cancel();
+    if (autoCommand != null) {
+      autoCommand.cancel();
     }
     driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
     driveCommand.start();

@@ -15,7 +15,7 @@ public class HunterOperator implements Operator {
 
     public void operate(ManipulatorsSubsystem manipulatorsSubsystem, ClimbSubsystem climbSubsystem) {
         manipulatorsSubsystem.setIntakeSpeed(getIntakeSpeed());
-        manipulatorsSubsystem.setPivotSpeed(getPivotSpeed());
+        // manipulatorsSubsystem.setPivotSpeed(getPivotSpeed());
         climbSubsystem.setRackSpeed(getRackSpeed());
         climbSubsystem.setClimbWheelSpeed(getClimbWheelSpeed());
         climbSubsystem.dropClimbGuides();
@@ -28,14 +28,10 @@ public class HunterOperator implements Operator {
         } else if (joystick.getRawButtonPressed(4)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.ROCKET_CARGO);
         }
-
-        if (joystick.getRawButtonPressed(11)) {
-            System.out.println("Pivot position: " + manipulatorsSubsystem.getPivotPositon());
-        }
     }
 
     private double getIntakeSpeed() {
-        boolean intake = joystick.getRawButton(10);
+        boolean intake = joystick.getRawButton(2);
         boolean output = joystick.getTrigger();
         if (intake && !output) {
             return .25;
@@ -45,9 +41,9 @@ public class HunterOperator implements Operator {
         return 0;
     }
 
-    private double getPivotSpeed() {
-        return -joystick.getY() * .75;
-    }
+    // private double getPivotSpeed() {
+    //     return -joystick.getY() * .75;
+    // }
 
     private double getRackSpeed() {
         boolean up = joystick.getRawButton(8);

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 public class HunterJoystickDriver implements Driver {
 
     private Joystick joystick;
-    private boolean autoOverride = false;
 
     public HunterJoystickDriver(Joystick joystick) {
         this.joystick = joystick;

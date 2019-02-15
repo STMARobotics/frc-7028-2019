@@ -1,15 +1,13 @@
 package frc.robot.drivesystems.driver;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class BrandonXboxDriver implements Driver {
 
     private XboxController controller;
     private boolean slowMode = false;
-    private boolean autoOverride = false;
 
     public BrandonXboxDriver(XboxController controller) {
         this.controller = controller;

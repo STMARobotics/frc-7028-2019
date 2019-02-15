@@ -8,8 +8,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.drivesystems.driver.Driver;
 
 public class DriveTrainSubsystem extends Subsystem {
 
@@ -23,9 +21,7 @@ public class DriveTrainSubsystem extends Subsystem {
     private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(1); // Victor
     private final DifferentialDrive driveTrain;
 
-    private SendableChooser<Driver> driverChooser;
-
-    public DriveTrainSubsystem(SendableChooser<Driver> driverChooser) {
+    public DriveTrainSubsystem() {
         TalonSRXConfiguration talonConfig = new TalonSRXConfiguration();
         talonConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative;
         talonConfig.neutralDeadband =  0.001;
@@ -52,8 +48,6 @@ public class DriveTrainSubsystem extends Subsystem {
         
         driveTrain = new DifferentialDrive(leftMaster, rightMaster);
         driveTrain.setRightSideInverted(false);
-        
-        this.driverChooser = driverChooser;
     }
 
     public void initDefaultCommand() {
