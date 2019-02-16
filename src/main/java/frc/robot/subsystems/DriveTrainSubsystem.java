@@ -16,9 +16,9 @@ public class DriveTrainSubsystem extends Subsystem {
     private static final double WHEEL_CIRCUMFERENCE_INCHES = WHEEL_DIAMETER_INCHES * Math.PI;
 
     private final WPI_TalonSRX leftMaster = new WPI_TalonSRX(2);
-    private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(0); // Victor
+    private final WPI_VictorSPX leftSlave = new WPI_VictorSPX(0);
     private final WPI_TalonSRX rightMaster = new WPI_TalonSRX(3);
-    private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(1); // Victor
+    private final WPI_VictorSPX rightSlave = new WPI_VictorSPX(1);
     private final DifferentialDrive driveTrain;
 
     public DriveTrainSubsystem() {
@@ -37,6 +37,11 @@ public class DriveTrainSubsystem extends Subsystem {
 
         leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+
+        leftMaster.setNeutralMode(NeutralMode.Brake);
+        leftSlave.setNeutralMode(NeutralMode.Brake);
+        rightMaster.setNeutralMode(NeutralMode.Brake);
+        rightSlave.setNeutralMode(NeutralMode.Brake);
 
         rightMaster.setInverted(true);
         rightSlave.setInverted(true);

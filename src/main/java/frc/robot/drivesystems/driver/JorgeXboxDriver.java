@@ -29,7 +29,7 @@ public class JorgeXboxDriver implements Driver {
     }
 
     private double getRotation() {
-        return controller.getX(Hand.kRight);
+        return controller.getX(Hand.kRight) * .8;
     }
 
     private boolean getSlowMode() {
@@ -44,7 +44,7 @@ public class JorgeXboxDriver implements Driver {
     }
     
     public boolean getDropKeyPressed() {
-        return true;
+        return controller.getXButton();
     }
 
 }
