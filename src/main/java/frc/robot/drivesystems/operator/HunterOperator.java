@@ -22,11 +22,11 @@ public class HunterOperator implements Operator {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.LOCK_HATCH);
         } else if (joystick.getRawButtonPressed(3)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.UNLOCK_HATCH);
-        } else if (joystick.getRawButtonPressed(4)) {
-            manipulatorsSubsystem.setPivotPosition(PivotPosition.SHUTTLE_CARGO);
         } else if (joystick.getRawButtonPressed(6)) {
+            manipulatorsSubsystem.setPivotPosition(PivotPosition.SHUTTLE_CARGO);
+        } else if (joystick.getRawButtonPressed(4)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.ROCKET_CARGO);
-        } else if (joystick.getRawButtonPressed(12)) {
+        } else if (joystick.getRawButtonPressed(7)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.CLIMB);
         }
     }
@@ -45,9 +45,9 @@ public class HunterOperator implements Operator {
     private double getRackSpeed() {
         int speed = joystick.getPOV();
         if (speed == 8 || speed == 0 || speed == 1) {
-            return 1;
-        } else if (speed == 3 || speed == 4 || speed == 5) {
             return -1;
+        } else if (speed == 3 || speed == 4 || speed == 5) {
+            return 1;
         }
         return 0;
     }
@@ -57,7 +57,7 @@ public class HunterOperator implements Operator {
     }
 
     public boolean getDropKeyPressed() {
-        return joystick.getRawButton(11);
+        return joystick.getRawButton(8);
     }
 
 }

@@ -4,7 +4,7 @@ public enum PivotPosition {
     UNLOCK_HATCH(0),
     START(0),
     LOCK_HATCH(700),
-    SHUTTLE_CARGO(500),
+    SHUTTLE_CARGO(700),
     ROCKET_CARGO(400),
     CLIMB(200);
 
