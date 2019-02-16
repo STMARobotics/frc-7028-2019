@@ -37,7 +37,7 @@ public class HunterOperator implements Operator {
         boolean intake = joystick.getRawButton(2);
         boolean output = joystick.getTrigger();
         if (intake && !output) {
-            return .3;
+            return .4;
         } else if (output && !intake) {
             return -1;
         }

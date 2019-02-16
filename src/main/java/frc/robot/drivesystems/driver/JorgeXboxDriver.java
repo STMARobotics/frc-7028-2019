@@ -20,27 +20,19 @@ public class JorgeXboxDriver implements Driver {
         double speed = -getSpeed();
         double rotation = getRotation();
         if (getSlowMode()) {
-            speed = speed * .5;
-            rotation = rotation * .5;
+            speed = speed * .6;
+            rotation = rotation * .8;
         }
         differentialDrive.arcadeDrive(speed, rotation, true);
 
     }
 
     private double getSpeed() {
-        return controller.getY(Hand.kLeft) * .7;
-        // double forward = controller.getTriggerAxis(Hand.kRight);
-        // double backward = controller.getTriggerAxis(Hand.kLeft);
-        // if (forward > backward) {
-        //     return forward;
-        // } else if (backward > forward) {
-        //     return -backward;
-        // }
-        // return 0;
+        return controller.getY(Hand.kLeft);
     }
 
     private double getRotation() {
-        return controller.getX(Hand.kRight) * .8;
+        return controller.getX(Hand.kRight) * .7;
     }
 
     private boolean getSlowMode() {
