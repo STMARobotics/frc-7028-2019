@@ -24,7 +24,7 @@ public class VisionTillTouch extends Command{
 
     @Override
     protected boolean isFinished() {
-        return stick.getRawButton(3);
+        return stick.getYButtonReleased();
     }
 
     @Override

@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("Encoder Position", manipulatorsSubsystem.getPivotPositon());
-    if(driverController.getYButton()){
+    if(driverController.getYButtonPressed()){
       new VisionTillTouch(new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()), driverController).start();
     }
   }
