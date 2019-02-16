@@ -18,14 +18,14 @@ public class JorgeXboxDriver implements Driver {
         double speed = -getSpeed();
         double rotation = getRotation();
         if (getSlowMode()) {
-            speed = speed / 1.5;
-            rotation = rotation / 1.5;
+            speed = speed * .5;
+            rotation = rotation * .5;
         }
         differentialDrive.arcadeDrive(speed, rotation, true);
     }
 
     private double getSpeed() {
-        return controller.getY(Hand.kLeft);
+        return controller.getY(Hand.kLeft) * .7;
     }
 
     private double getRotation() {
@@ -44,7 +44,7 @@ public class JorgeXboxDriver implements Driver {
     }
     
     public boolean getDropKeyPressed() {
-        return false;
+        return true;
     }
 
 }

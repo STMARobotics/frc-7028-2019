@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ManipulatorsSubsystem extends Subsystem {
@@ -17,11 +18,11 @@ public class ManipulatorsSubsystem extends Subsystem {
         TalonSRXConfiguration talonConfig = new TalonSRXConfiguration();
         talonConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative;
         talonConfig.neutralDeadband =  0.001;
-        talonConfig.slot0.kF = 1.5;
-        talonConfig.slot0.kP = .15;
-        talonConfig.slot0.kI = 0.0;
+        talonConfig.slot0.kF = 1;
+        talonConfig.slot0.kP = .5;
+        talonConfig.slot0.kI = .0;
         talonConfig.slot0.kD = 0;
-        talonConfig.slot0.closedLoopPeakOutput = .6;
+        talonConfig.slot0.closedLoopPeakOutput = 1;
 
         pivot.configAllSettings(talonConfig);
 
@@ -45,8 +46,28 @@ public class ManipulatorsSubsystem extends Subsystem {
         pivot.set(speed);
     }
 
+
+    private boolean firstRun = true;
     public void setPivotPosition(PivotPosition position) {
-        pivot.set(ControlMode.Position, position.getPosition());
+        System.out.println("Moving arm to position: " + position.getPosition());
+        // pivot.set(ControlMode.Position, ((45 * position.getPosition()) / 512));
+        switch(position){
+            case START:
+                pivot.set(ControlMode.PercentOutput, 0.0);
+                if(getPivotPositon() < 100){
+                    pivot.set(ControlMode.PercentOutput, 0.2);
+                    System.out.println("DO THTE THBINGSONEIN");
+                } else if (getPivotPositon() < 200){
+                    pivot.set(ControlMode.PercentOutput, 0.1);
+                }
+                break;
+            case UNLOCK_HATCH:
+                pivot.set(ControlMode.PercentOutput, 0.0);
+                break;
+            default:
+                pivot.set(ControlMode.Position, position.getPosition());
+                break;
+        }
     }
 
     public int getPivotPositon() {

@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
@@ -32,6 +33,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
+import frc.robot.subsystems.PivotPosition;
 
 public class Robot extends TimedRobot {
 
@@ -89,10 +91,12 @@ public class Robot extends TimedRobot {
 
   public void generalInit() {
     climbSubsystem.resetClimbGuides();
+    //manipulatorsSubsystem.setPivotPosition(PivotPosition.START);
   }
 
   @Override
   public void robotPeriodic() {
+    SmartDashboard.putNumber("Encoder Position", manipulatorsSubsystem.getPivotPositon());
   }
 
   @Override

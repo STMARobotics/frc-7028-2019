@@ -27,6 +27,8 @@ public class HunterOperator implements Operator {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.SHUTTLE_CARGO);
         } else if (joystick.getRawButtonPressed(4)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.ROCKET_CARGO);
+        } else if (joystick.getRawButtonPressed(12)) {
+            manipulatorsSubsystem.setPivotPosition(PivotPosition.CLIMB);
         }
     }
 
@@ -61,7 +63,7 @@ public class HunterOperator implements Operator {
     }
 
     public boolean getDropKeyPressed() {
-        return joystick.getRawButton(8);
+        return joystick.getRawButton(11);
     }
 
 }
