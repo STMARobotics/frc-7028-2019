@@ -1,5 +1,7 @@
 package frc.robot.commands.vision;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.vision.Limelight;
@@ -24,18 +26,19 @@ public class CombinedTarget extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
+        driveTrain.setNeutralMode(NeutralMode.Brake);
     }
 
     //Tuning Values
     private double KpAim = 0.02;
     private double KpDistanceY = 0.03;
-    private double KpDistanceArea = 0.5;
+    private double KpDistanceArea = 0.2;
 
     //Spin
     double minPower = 0.09; //About the minimum amount of power required to move
 
     //Forewards/Backwards
-    double areaTarget = 1.8; //Percent of screen
+    double areaTarget = 2.0; //Percent of screen
     double yTarget = 0.0; //Degrees from center
 
     boolean finished = false;
@@ -123,6 +126,9 @@ public class CombinedTarget extends Command {
         double distance = limelight.getDistanceApprox();
         System.out.println("We should be about " + distance);
         driveTrain.getDiffDrive().arcadeDrive(0, 0);
+        driveTrain.setNeutralMode(NeutralMode.Coast);
     }
+
+    
 
 }

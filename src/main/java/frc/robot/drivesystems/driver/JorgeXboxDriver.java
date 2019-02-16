@@ -3,6 +3,8 @@ package frc.robot.drivesystems.driver;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.commands.vision.CombinedTarget;
+import frc.robot.commands.vision.VisionTillTouch;
 
 public class JorgeXboxDriver implements Driver {
 
@@ -22,10 +24,19 @@ public class JorgeXboxDriver implements Driver {
             rotation = rotation * .5;
         }
         differentialDrive.arcadeDrive(speed, rotation, true);
+
     }
 
     private double getSpeed() {
         return controller.getY(Hand.kLeft) * .7;
+        // double forward = controller.getTriggerAxis(Hand.kRight);
+        // double backward = controller.getTriggerAxis(Hand.kLeft);
+        // if (forward > backward) {
+        //     return forward;
+        // } else if (backward > forward) {
+        //     return -backward;
+        // }
+        // return 0;
     }
 
     private double getRotation() {
@@ -41,10 +52,6 @@ public class JorgeXboxDriver implements Driver {
 
     public boolean getAutoOverride() {
         return controller.getAButtonPressed();
-    }
-    
-    public boolean getDropKeyPressed() {
-        return controller.getXButton();
     }
 
 }

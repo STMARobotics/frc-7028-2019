@@ -5,5 +5,4 @@ import frc.robot.subsystems.ManipulatorsSubsystem;
 
 public interface Operator {
     public void operate(ManipulatorsSubsystem manipulatorsSubsystem, ClimbSubsystem climbSubsystem);
-    public boolean getDropKeyPressed();
 }

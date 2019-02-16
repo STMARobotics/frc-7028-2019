@@ -17,11 +17,9 @@ public class ClimbSubsystem extends Subsystem {
     private Spark rack = new Spark(0);
     private Spark climbWheel = new Spark(2);
     private SendableChooser<Operator> operatorChooser;
-    private SendableChooser<Driver> driverChooser;
 
-    public ClimbSubsystem(SendableChooser<Operator> operatorChooser, SendableChooser<Driver> driverChooser) {
+    public ClimbSubsystem(SendableChooser<Operator> operatorChooser) {
         this.operatorChooser = operatorChooser;
-        this.driverChooser = driverChooser;
         compressor.setClosedLoopControl(true);
     }
 
@@ -34,10 +32,7 @@ public class ClimbSubsystem extends Subsystem {
     }
 
     public void dropClimbGuides() {
-        if (driverChooser.getSelected().getDropKeyPressed() && operatorChooser.getSelected().getDropKeyPressed()) {
-            climbGuides.set(Value.kForward);
-            System.out.println("ClimbGuidesDropped");
-        }
+        climbGuides.set(Value.kForward);
     }
 
     public void resetClimbGuides() {

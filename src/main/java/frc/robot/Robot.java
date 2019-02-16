@@ -24,6 +24,7 @@ import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
 import frc.robot.commands.vision.CommandTillVision;
+import frc.robot.commands.vision.VisionTillTouch;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.JorgeXboxDriver;
 import frc.robot.drivesystems.operator.HunterOperator;
@@ -70,7 +71,7 @@ public class Robot extends TimedRobot {
 
     driveTrainSubsystem = new DriveTrainSubsystem();
     manipulatorsSubsystem = new ManipulatorsSubsystem();
-    climbSubsystem = new ClimbSubsystem(operatorChooser, driverChooser);
+    climbSubsystem = new ClimbSubsystem(operatorChooser);
     gyroSubsystem = new GyroSubsystem();
 
     driveCommand = new DriveCommand(driveTrainSubsystem, driverChooser);
@@ -97,6 +98,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("Encoder Position", manipulatorsSubsystem.getPivotPositon());
+    if(driverController.getYButton()){
+      new VisionTillTouch(new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()), driverController).start();
+    }
   }
 
   @Override
