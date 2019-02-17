@@ -7,6 +7,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight {
 
+    private int _badFrameThreshold = 5;
+    private int _badFrameCount = 0;
+
     private NetworkTable m_table;
     private String m_tableName;
     private boolean isConnected = false;
@@ -45,6 +48,14 @@ public class Limelight {
 
     private void UpdateValues(NetworkTable table, double latency)
     {
+        if (latency == 0)
+        {
+            if (_badFrameCount++ < _badFrameThreshold)
+            {
+                return; //we haven't hit the threshold yet ignore this frame and hope we reacquire next frame
+            }
+        }
+
         _latency = latency;
         isConnected = latency != 0.0;
         
@@ -56,22 +67,22 @@ public class Limelight {
         //System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
     }
 
-    public double TargetArea()
+    public double getTargetArea()
     {
         return _targetArea;
     }
 
-    public double TargetX()
+    public double getTargetX()
     {
         return _targetX;
     }
 
-    public double TargetY()
+    public double getTargetY()
     {
         return _targetY;
     }
 
-    public boolean isConnected(){
+    public boolean getIsConnected(){
         return isConnected;
     }
 
@@ -79,7 +90,7 @@ public class Limelight {
      * Checks  "tv". Returns true if a target is found.
      * @return TargetFound Boolean
      */
-    public boolean isTargetFound(){
+    public boolean getIsTargetFound(){
         return _targetAcquired;
     }
 

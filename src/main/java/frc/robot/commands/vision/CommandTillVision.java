@@ -76,7 +76,7 @@ public class CommandTillVision extends Command {
 	@Override
 	protected void execute() {
 		//TODO Have xFrames on ShuffleBoard
-		if(limelight.isTargetFound() && frames >= 0){
+		if(limelight.getIsTargetFound() && frames >= 0){
 			frames++;
 		}
 		if(frames > waitFrames && !started){

@@ -49,7 +49,7 @@ public class CombinedTarget extends Command {
     @Override
     protected void execute() {
 
-        if (limelight.isTargetFound()){
+        if (limelight.getIsTargetFound()){
             noFrame = 0;
         } else {
             System.out.println("NO TARGET");
@@ -97,7 +97,7 @@ public class CombinedTarget extends Command {
 
     private double getXAdjust(){
         //Get current degrees from center
-        double xOffDeg = limelight.TargetX();
+        double xOffDeg = limelight.getTargetX();
 
         return KpAim*xOffDeg;
     }
@@ -109,7 +109,7 @@ public class CombinedTarget extends Command {
 
         //Driving Adjust is KpDistance * distanceError (above)
 
-        if( !limelight.isTargetFound()){
+        if( !limelight.getIsTargetFound()){
             return 0d;
         }
         
@@ -128,7 +128,4 @@ public class CombinedTarget extends Command {
         driveTrain.getDiffDrive().arcadeDrive(0, 0);
         driveTrain.setNeutralMode(NeutralMode.Coast);
     }
-
-    
-
 }
