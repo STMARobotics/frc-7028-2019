@@ -10,6 +10,8 @@ public class Limelight {
     private int _badFrameThreshold = 5;
     private int _badFrameCount = 0;
 
+    private boolean _compensateForApproachAngle = false;
+
     private NetworkTable m_table;
     private String m_tableName;
     private boolean isConnected = false;
@@ -20,7 +22,12 @@ public class Limelight {
     private double _targetY = 0.0;
     private boolean _targetAcquired = false;
 
-    public Limelight(){
+    private double[] _cornerX;
+    private double[] _cornerY;
+
+    public Limelight(boolean compensateForApproachAngle){
+        _compensateForApproachAngle = compensateForApproachAngle;
+
         m_tableName = "limelight";
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
         
@@ -63,6 +70,13 @@ public class Limelight {
         _targetX = getValue(Value.xOffDeg);
         _targetY = getValue(Value.yOffDeg);
         _targetAcquired = table.getEntry("tv").getDouble(0.0) != 0.0;
+        _cornerX = table.getEntry("tcornx").getDoubleArray(new double[8]);
+        _cornerY = table.getEntry("tcorny").getDoubleArray(new double[8]);
+
+        if(_compensateForApproachAngle)
+        {
+            _targetX = _targetX - (_cornerY[7] - _cornerY[0]);
+        }
 
         //System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
     }
