@@ -3,8 +3,6 @@ package frc.robot.drivesystems.driver;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.commands.vision.CombinedTarget;
-import frc.robot.commands.vision.VisionTillTouch;
 
 public class JorgeXboxDriver implements Driver {
 
