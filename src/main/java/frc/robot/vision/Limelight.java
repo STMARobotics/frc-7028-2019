@@ -80,15 +80,24 @@ public class Limelight {
         _targetY = getValue(Value.yOffDeg);
         _targetAcquired = targetV != 0.0;
 
+        _badFrameCount = 0;
+        
         if (!_targetAcquired)
             return;
-            
+
         _cornerX = table.getEntry("tcornx").getDoubleArray(new double[8]);
         _cornerY = table.getEntry("tcorny").getDoubleArray(new double[8]);
 
         if(_compensateForApproachAngle)
         {
-            _targetX = getAdjustedX(_targetX, _cornerY[0], _cornerY[7]);
+            if (_cornerY.length < 8)
+            {
+                System.out.println("Only " + _cornerY.length + " corners found");
+            }
+            else
+            {
+                _targetX = getAdjustedX(_targetX, _cornerY[0], _cornerY[7]);
+            }
         }
 
         //System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
