@@ -33,6 +33,9 @@ public class Limelight {
     public Limelight(boolean compensateForApproachAngle, boolean initializeNetworkTables){
         _compensateForApproachAngle = compensateForApproachAngle;
 
+        if (!initializeNetworkTables)
+            return;
+            
         m_tableName = "limelight";
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
         
