@@ -75,10 +75,15 @@ public class Limelight {
 
         if(_compensateForApproachAngle)
         {
-            _targetX = _targetX - (_cornerY[7] - _cornerY[0]);
+            _targetX = getAdjustedX(_targetX, _cornerY[0], _cornerY[7]);
         }
 
         //System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
+    }
+
+    public double getAdjustedX(double inputX, double leftCornerY, double rightCornerY)
+    {
+        return inputX - (rightCornerY - leftCornerY);
     }
 
     public double getTargetArea()
