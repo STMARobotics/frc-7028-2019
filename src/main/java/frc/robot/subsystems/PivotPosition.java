@@ -3,10 +3,10 @@ package frc.robot.subsystems;
 public enum PivotPosition {
     UNLOCK_HATCH(0),
     START(0),
-    LOCK_HATCH(800),
-    SHUTTLE_CARGO(250),
-    ROCKET_CARGO(500),
-    CLIMB(200);
+    LOCK_HATCH(-350),
+    SHUTTLE_CARGO(-900),
+    ROCKET_CARGO(-625),
+    CLIMB(-1000);
 
     private final int position;
 

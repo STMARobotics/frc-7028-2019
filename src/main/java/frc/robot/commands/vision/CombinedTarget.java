@@ -126,7 +126,7 @@ public class CombinedTarget extends Command {
         double distance = limelight.getDistanceApprox();
         System.out.println("We should be about " + distance);
         driveTrain.getDiffDrive().arcadeDrive(0, 0);
-        driveTrain.setNeutralMode(NeutralMode.Coast);
+        driveTrain.setNeutralMode(NeutralMode.Brake);
     }
 
     

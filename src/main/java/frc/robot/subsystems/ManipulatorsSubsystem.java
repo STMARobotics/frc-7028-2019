@@ -23,6 +23,7 @@ public class ManipulatorsSubsystem extends Subsystem {
         talonConfig.slot0.kI = .0;
         talonConfig.slot0.kD = 0;
         talonConfig.slot0.closedLoopPeakOutput = 1;
+        talonConfig.clearPositionOnLimitF = true;
 
         pivot.configAllSettings(talonConfig);
 
@@ -47,8 +48,6 @@ public class ManipulatorsSubsystem extends Subsystem {
         pivot.set(speed);
     }
 
-
-    private boolean firstRun = true;
     public void setPivotPosition(PivotPosition position) {
         System.out.println("Moving arm to position: " + position.getPosition());
         // pivot.set(ControlMode.Position, ((45 * position.getPosition()) / 512));
@@ -77,6 +76,14 @@ public class ManipulatorsSubsystem extends Subsystem {
 
     public void calibratePivotEncoder() {
         pivot.setSelectedSensorPosition(0);
+    }
+
+    public boolean isPivotAtBottomLimit() {
+        return pivot.getSensorCollection().isFwdLimitSwitchClosed();
+    }
+
+    public boolean isPivotAtTopLimit() {
+        return pivot.getSensorCollection().isRevLimitSwitchClosed();
     }
 
     public void initDefaultCommand() {

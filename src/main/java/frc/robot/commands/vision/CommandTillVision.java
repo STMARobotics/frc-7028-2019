@@ -80,7 +80,7 @@ public class CommandTillVision extends Command {
 			frames++;
 		}
 		if(frames > waitFrames && !started){
-			driveTrain.setNeutralMode(NeutralMode.Coast);
+			driveTrain.setNeutralMode(NeutralMode.Brake);
 			childCommand.start();
 			parentCommand.cancel();
 			started = true;

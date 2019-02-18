@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.drivesystems.driver.Driver;
@@ -17,7 +19,7 @@ public class DriveCommand extends Command {
     }
 
     protected void initialize() {
-
+        driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
     }
 
     protected void execute() {

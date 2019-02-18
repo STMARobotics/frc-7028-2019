@@ -31,6 +31,7 @@ public class DriveTrainSubsystem extends Subsystem {
         talonConfig.slot0.kD = 0.0;
         talonConfig.slot0.integralZone = 400;
         talonConfig.slot0.closedLoopPeakOutput = 1.0;
+        talonConfig.openloopRamp = .25;
 
         rightMaster.configAllSettings(talonConfig);
         leftMaster.configAllSettings(talonConfig);

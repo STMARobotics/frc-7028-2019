@@ -9,6 +9,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -19,6 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
+import frc.robot.commands.auto.AutoCommandGroup;
+import frc.robot.commands.auto.CalibratePivotCommand;
 import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
@@ -85,7 +88,10 @@ public class Robot extends TimedRobot {
 
     generalInit();
 
-    manipulatorsSubsystem.calibratePivotEncoder();
+    Thread cameraThread = new Thread(()-> {
+      CameraServer.getInstance().startAutomaticCapture();
+    });
+    cameraThread.run();
   }
 
   public void generalInit() {
@@ -95,7 +101,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Encoder Position", manipulatorsSubsystem.getPivotPositon());
+    SmartDashboard.putNumber("Pivot Position", manipulatorsSubsystem.getPivotPositon());
+    SmartDashboard.putNumber("Right Encoder Position", driveTrainSubsystem.getRightEncoderPosition());
+    SmartDashboard.putNumber("Left Encoder Position", driveTrainSubsystem.getLeftEncoderPosition());
     if(driverController.getYButtonPressed()){
       new VisionTillTouch(new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()), driverController).start();
     }
@@ -104,7 +112,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     driveCommand.cancel();
-    driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
+    // driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
 
     Globals.getLimelight().Disable();
   }
@@ -119,7 +127,8 @@ public class Robot extends TimedRobot {
     Globals.getLimelight().Init();
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
 
-    autoCommand = new CommandGroup();
+    autoCommand = new AutoCommandGroup(manipulatorsSubsystem, climbSubsystem, driveTrainSubsystem);
+    autoCommand.addParallel(new CalibratePivotCommand(manipulatorsSubsystem));
     autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
     autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
     autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
@@ -136,7 +145,7 @@ public class Robot extends TimedRobot {
       autoCommand = null;
     }
   }
-
+  
   @Override
   public void teleopInit() {
     generalInit();
@@ -144,7 +153,7 @@ public class Robot extends TimedRobot {
     if (autoCommand != null) {
       autoCommand.cancel();
     }
-    driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
+    driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
     driveCommand.start();
     operateCommand.start();
   }
