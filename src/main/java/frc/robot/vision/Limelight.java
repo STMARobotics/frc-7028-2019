@@ -35,7 +35,7 @@ public class Limelight {
 
         if (!initializeNetworkTables)
             return;
-            
+
         m_tableName = "limelight";
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
         
@@ -63,7 +63,8 @@ public class Limelight {
 
     private void UpdateValues(NetworkTable table, double latency)
     {
-        if (latency == 0)
+        var targetV = table.getEntry("tv").getDouble(0.0);
+        if (targetV == 0.0)
         {
             if (_badFrameCount++ < _badFrameThreshold)
             {
@@ -72,12 +73,16 @@ public class Limelight {
         }
 
         _latency = latency;
-        isConnected = latency != 0.0;
+        isConnected = targetV != 0.0;
         
         _targetArea = getValue(Value.areaPercent);
         _targetX = getValue(Value.xOffDeg);
         _targetY = getValue(Value.yOffDeg);
-        _targetAcquired = table.getEntry("tv").getDouble(0.0) != 0.0;
+        _targetAcquired = targetV != 0.0;
+
+        if (!_targetAcquired)
+            return;
+            
         _cornerX = table.getEntry("tcornx").getDoubleArray(new double[8]);
         _cornerY = table.getEntry("tcorny").getDoubleArray(new double[8]);
 
