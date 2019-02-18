@@ -9,6 +9,10 @@ import org.junit.Test;
  */
 public class LimelightTests {
 
+    private Limelight GetLimelight()
+    {
+        return new Limelight(true, false);
+    }
     @Test
     public void testGetAdjustX_LeftSide() {
         //arrange
@@ -16,7 +20,7 @@ public class LimelightTests {
         double rightCornerY = 65.0;
         double inputX = 0;
 
-        var limeLight = new Limelight(true);
+        var limeLight = GetLimelight();
 
         //act
         var actual = limeLight.getAdjustedX(inputX, leftCornerY, rightCornerY);
@@ -31,7 +35,7 @@ public class LimelightTests {
         double rightCornerY = 73.5;
         double inputX = 0;
 
-        var limeLight = new Limelight(true);
+        var limeLight = GetLimelight();
 
         //act
         var actual = limeLight.getAdjustedX(inputX, leftCornerY, rightCornerY);

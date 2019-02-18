@@ -25,7 +25,12 @@ public class Limelight {
     private double[] _cornerX;
     private double[] _cornerY;
 
-    public Limelight(boolean compensateForApproachAngle){
+    public Limelight(boolean compensateForApproachAngle)
+    {
+        this(compensateForApproachAngle, true);
+    }
+
+    public Limelight(boolean compensateForApproachAngle, boolean initializeNetworkTables){
         _compensateForApproachAngle = compensateForApproachAngle;
 
         m_tableName = "limelight";
