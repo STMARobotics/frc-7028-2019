@@ -46,8 +46,8 @@ public class DriveTrainSubsystem extends Subsystem {
 
         rightMaster.setInverted(true);
         rightSlave.setInverted(true);
-        rightMaster.setSensorPhase(true);
-        leftMaster.setSensorPhase(true);
+        rightMaster.setSensorPhase(false);
+        leftMaster.setSensorPhase(false);
 
         leftSlave.follow(leftMaster);
         rightSlave.follow(rightMaster);
@@ -77,6 +77,11 @@ public class DriveTrainSubsystem extends Subsystem {
 
     public int getRightEncoderPosition() {
         return rightMaster.getSelectedSensorPosition(0);
+    }
+
+    public void zeroDriveTrainEncoders() {
+        rightMaster.setSelectedSensorPosition(0);
+        leftMaster.setSelectedSensorPosition(0);
     }
 
     public void setUseDifferentialDrive(boolean useDifferentialDrive) {

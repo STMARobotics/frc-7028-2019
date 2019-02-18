@@ -22,6 +22,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.AutoCommandGroup;
 import frc.robot.commands.auto.CalibratePivotCommand;
+import frc.robot.commands.auto.DriveForwardCommand;
 import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
@@ -129,11 +130,11 @@ public class Robot extends TimedRobot {
 
     autoCommand = new AutoCommandGroup(manipulatorsSubsystem, climbSubsystem, driveTrainSubsystem);
     autoCommand.addParallel(new CalibratePivotCommand(manipulatorsSubsystem));
-    autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
-    autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
-    autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    // autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    // autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
+    // autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+    // autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
+    // autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
     autoCommand.start();
   }
 
