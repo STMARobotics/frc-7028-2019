@@ -10,7 +10,7 @@ public class Globals{
     private static boolean isUnitTesting = false;
     
     public static void Setup() {
-        limelight = new Limelight();
+        limelight = new Limelight(true);
     }
 
     public static void StartUnitTest(){

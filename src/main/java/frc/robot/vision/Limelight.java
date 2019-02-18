@@ -7,6 +7,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight {
 
+    private int _badFrameThreshold = 5;
+    private int _badFrameCount = 0;
+
+    private boolean _compensateForApproachAngle = false;
+
     private NetworkTable m_table;
     private String m_tableName;
     private boolean isConnected = false;
@@ -17,7 +22,20 @@ public class Limelight {
     private double _targetY = 0.0;
     private boolean _targetAcquired = false;
 
-    public Limelight(){
+    private double[] _cornerX;
+    private double[] _cornerY;
+
+    public Limelight(boolean compensateForApproachAngle)
+    {
+        this(compensateForApproachAngle, true);
+    }
+
+    public Limelight(boolean compensateForApproachAngle, boolean initializeNetworkTables){
+        _compensateForApproachAngle = compensateForApproachAngle;
+
+        if (!initializeNetworkTables)
+            return;
+
         m_tableName = "limelight";
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
         
@@ -45,33 +63,98 @@ public class Limelight {
 
     private void UpdateValues(NetworkTable table, double latency)
     {
+        var targetV = table.getEntry("tv").getDouble(0.0);
+        if (targetV == 0.0)
+        {
+            if (_badFrameCount++ < _badFrameThreshold)
+            {
+                return; //we haven't hit the threshold yet ignore this frame and hope we reacquire next frame
+            }
+        }
+
         _latency = latency;
-        isConnected = latency != 0.0;
+        isConnected = targetV != 0.0;
         
         _targetArea = getValue(Value.areaPercent);
         _targetX = getValue(Value.xOffDeg);
         _targetY = getValue(Value.yOffDeg);
-        _targetAcquired = table.getEntry("tv").getDouble(0.0) != 0.0;
+        _targetAcquired = targetV != 0.0;
+
+        _badFrameCount = 0;
+
+        if (!_targetAcquired)
+            return;
+
+        _cornerX = table.getEntry("tcornx").getDoubleArray(new double[8]);
+        _cornerY = table.getEntry("tcorny").getDoubleArray(new double[8]);
+
+        if(_compensateForApproachAngle)
+        {
+            if (_cornerY.length < 8)
+            {
+                System.out.println("Only " + _cornerY.length + " corners found");
+            }
+            else
+            {
+                _targetX = getAdjustedX(_targetX, _cornerX, _cornerY);
+            }
+        }
 
         //System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
     }
 
-    public double TargetArea()
+    public double getAdjustedX(double inputX, double[] xValues, double[] yValues)
+    {
+        //trusty the arrays to be the same length from NT, if not lets get out of here
+        if (xValues.length != yValues.length)
+            return inputX;
+
+        double leftY = 0.0, rightY = 0.0;
+
+        for(int i=0; i < yValues.length; i++)
+        {
+            if (xValues[i] < inputX) //left side of center
+            {
+                if (leftY < yValues[i]) //if cur value is larger set it as the max
+                {
+                    leftY = yValues[i];
+                }
+            }
+            else //right side of center
+            {
+                if (rightY < yValues[i]) //if cur value is larger set it as the max
+                {
+                    rightY = yValues[i];
+                }
+            }
+        }
+
+        //if we didn't match both left and right get out of here
+        if (leftY <= 0 || rightY <= 0)
+        {
+            return inputX;
+        }
+
+        //apply a linear adjustment pixels to degrees, could add a multiplier here to soften or make more aggressive
+        return inputX - (rightY - leftY);
+    }
+
+    public double getTargetArea()
     {
         return _targetArea;
     }
 
-    public double TargetX()
+    public double getTargetX()
     {
         return _targetX;
     }
 
-    public double TargetY()
+    public double getTargetY()
     {
         return _targetY;
     }
 
-    public boolean isConnected(){
+    public boolean getIsConnected(){
         return isConnected;
     }
 
@@ -79,7 +162,7 @@ public class Limelight {
      * Checks  "tv". Returns true if a target is found.
      * @return TargetFound Boolean
      */
-    public boolean isTargetFound(){
+    public boolean getIsTargetFound(){
         return _targetAcquired;
     }
 

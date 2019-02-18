@@ -26,6 +26,6 @@ public class LocateTarget extends Command {
 
     @Override
     protected boolean isFinished() {
-        return limelight.isTargetFound();
+        return limelight.getIsTargetFound();
     }
 }
