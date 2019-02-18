@@ -81,7 +81,7 @@ public class Limelight {
         _targetAcquired = targetV != 0.0;
 
         _badFrameCount = 0;
-        
+
         if (!_targetAcquired)
             return;
 
@@ -96,16 +96,47 @@ public class Limelight {
             }
             else
             {
-                _targetX = getAdjustedX(_targetX, _cornerY[0], _cornerY[7]);
+                _targetX = getAdjustedX(_targetX, _cornerX, _cornerY);
             }
         }
 
         //System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
     }
 
-    public double getAdjustedX(double inputX, double leftCornerY, double rightCornerY)
+    public double getAdjustedX(double inputX, double[] xValues, double[] yValues)
     {
-        return inputX - (rightCornerY - leftCornerY);
+        //trusty the arrays to be the same length from NT, if not lets get out of here
+        if (xValues.length != yValues.length)
+            return inputX;
+
+        double leftY = 0.0, rightY = 0.0;
+
+        for(int i=0; i < yValues.length; i++)
+        {
+            if (xValues[i] < inputX) //left side of center
+            {
+                if (leftY < yValues[i]) //if cur value is larger set it as the max
+                {
+                    leftY = yValues[i];
+                }
+            }
+            else //right side of center
+            {
+                if (rightY < yValues[i]) //if cur value is larger set it as the max
+                {
+                    rightY = yValues[i];
+                }
+            }
+        }
+
+        //if we didn't match both left and right get out of here
+        if (leftY <= 0 || rightY <= 0)
+        {
+            return inputX;
+        }
+
+        //apply a linear adjustment pixels to degrees, could add a multiplier here to soften or make more aggressive
+        return inputX - (rightY - leftY);
     }
 
     public double getTargetArea()

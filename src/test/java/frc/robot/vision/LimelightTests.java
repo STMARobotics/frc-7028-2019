@@ -16,14 +16,14 @@ public class LimelightTests {
     @Test
     public void testGetAdjustX_LeftSide() {
         //arrange
-        double leftCornerY = 70.0;
-        double rightCornerY = 65.0;
+        double[] cornerX = { -5, 5 };
+        double[] cornerY = { 70, 65 };
         double inputX = 0;
 
         var limeLight = GetLimelight();
 
         //act
-        var actual = limeLight.getAdjustedX(inputX, leftCornerY, rightCornerY);
+        var actual = limeLight.getAdjustedX(inputX, cornerX, cornerY);
 
         assertEquals(5.0, actual, 0.0);
     }
@@ -31,14 +31,14 @@ public class LimelightTests {
     @Test
     public void testGetAdjustX_RightSide() {
         //arrange
-        double leftCornerY = 70.0;
-        double rightCornerY = 73.5;
+        double[] cornerX = { -5, 5 };
+        double[] cornerY = { 70, 73.5 };
         double inputX = 0;
 
         var limeLight = GetLimelight();
 
         //act
-        var actual = limeLight.getAdjustedX(inputX, leftCornerY, rightCornerY);
+        var actual = limeLight.getAdjustedX(inputX, cornerX, cornerY);
 
         assertEquals(-3.5, actual, 0.0);
     }
