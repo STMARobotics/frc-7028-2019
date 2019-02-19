@@ -22,11 +22,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.AutoCommandGroup;
 import frc.robot.commands.auto.CalibratePivotCommand;
-import frc.robot.commands.auto.DriveForwardCommand;
-import frc.robot.commands.auto.PathCommand;
-import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
-import frc.robot.commands.vision.CommandTillVision;
 import frc.robot.commands.vision.VisionTillTouch;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.JorgeXboxDriver;
@@ -37,6 +33,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
+import frc.robot.subsystems.PivotPosition;
 
 public class Robot extends TimedRobot {
 
@@ -113,8 +110,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     driveCommand.cancel();
-    // driveTrainSubsystem.setNeutralMode(NeutralMode.Coast);
 
+    manipulatorsSubsystem.setPivotPosition(PivotPosition.UNLOCK_HATCH);
     Globals.getLimelight().Disable();
   }
   @Override

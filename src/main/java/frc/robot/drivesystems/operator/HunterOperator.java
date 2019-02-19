@@ -17,18 +17,18 @@ public class HunterOperator implements Operator {
         manipulatorsSubsystem.setIntakeSpeed(getIntakeSpeed());
         climbSubsystem.setRackSpeed(getRackSpeed());
         climbSubsystem.setClimbWheelSpeed(getClimbWheelSpeed());
-        if (joystick.getRawButtonPressed(8)) {
+        if (joystick.getRawButton(8)) {
             climbSubsystem.dropClimbGuides();
         }
-        if (joystick.getRawButtonPressed(5)) {
+        if (joystick.getRawButton(5)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.LOCK_HATCH);
-        } else if (joystick.getRawButtonPressed(3)) {
+        } else if (joystick.getRawButton(3)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.UNLOCK_HATCH);
-        } else if (joystick.getRawButtonPressed(6)) {
+        } else if (joystick.getRawButton(6)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.SHUTTLE_CARGO);
-        } else if (joystick.getRawButtonPressed(4)) {
+        } else if (joystick.getRawButton(4)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.ROCKET_CARGO);
-        } else if (joystick.getRawButtonPressed(7)) {
+        } else if (joystick.getRawButton(7)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.CLIMB);
         }
     }

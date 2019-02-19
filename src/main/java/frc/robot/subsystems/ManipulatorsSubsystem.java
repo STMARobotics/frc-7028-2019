@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ManipulatorsSubsystem extends Subsystem {
 
@@ -49,8 +50,7 @@ public class ManipulatorsSubsystem extends Subsystem {
     }
 
     public void setPivotPosition(PivotPosition position) {
-        System.out.println("Moving arm to position: " + position.getPosition());
-        // pivot.set(ControlMode.Position, ((45 * position.getPosition()) / 512));
+        SmartDashboard.putString("Arm position", position.name());
         switch(position){
             case START:
                 pivot.set(ControlMode.PercentOutput, 0.0);
