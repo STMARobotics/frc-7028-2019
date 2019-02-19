@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
@@ -39,20 +40,18 @@ public class DriveTrainSubsystem extends Subsystem {
         leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
         rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 
-        leftMaster.setNeutralMode(NeutralMode.Brake);
-        leftSlave.setNeutralMode(NeutralMode.Brake);
-        rightMaster.setNeutralMode(NeutralMode.Brake);
-        rightSlave.setNeutralMode(NeutralMode.Brake);
+        setNeutralMode(NeutralMode.Brake);
 
         rightMaster.setInverted(true);
         rightSlave.setInverted(true);
-        rightMaster.setSensorPhase(false);
-        leftMaster.setSensorPhase(false);
+        rightMaster.setSensorPhase(true);
+        leftMaster.setSensorPhase(true);
 
         leftSlave.follow(leftMaster);
         rightSlave.follow(rightMaster);
         
-        driveTrain = new DifferentialDrive(leftMaster, rightMaster);
+        driveTrain = new DifferentialDrive(
+            new SpeedControllerGroup(leftMaster, leftSlave), new SpeedControllerGroup(rightMaster, rightSlave));
         driveTrain.setRightSideInverted(false);
     }
 

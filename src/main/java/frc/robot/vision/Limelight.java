@@ -92,7 +92,7 @@ public class Limelight {
         {
             if (_cornerY.length < 8)
             {
-                System.out.println("Only " + _cornerY.length + " corners found");
+                //System.out.println("Only " + _cornerY.length + " corners found");
             }
             else
             {
