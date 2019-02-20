@@ -113,7 +113,7 @@ public class CombinedTarget extends Command {
             return 0d;
         }
         
-        return (KpDistanceArea* (areaTarget - limelight.getValue(Value.areaPercent)));
+        return (KpDistanceArea* (areaTarget - limelight.getValue(Value.AREA_PERCENT)));
     }
 
     @Override

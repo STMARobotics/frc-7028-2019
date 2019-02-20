@@ -9,11 +9,11 @@ public class Globals{
 
     private static boolean isUnitTesting = false;
     
-    public static void Setup() {
+    public static void setup() {
         limelight = new Limelight(true);
     }
 
-    public static void StartUnitTest(){
+    public static void startUnitTest(){
         isUnitTesting = true;
     }
 

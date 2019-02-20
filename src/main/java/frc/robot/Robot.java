@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    Globals.Setup();
+    Globals.setup();
 
     driverChooser.setDefaultOption("Jorge Xbox Driver", new JorgeXboxDriver(driverController));
     driverChooser.addOption("Solo", new SoloDriver(driverController));
@@ -113,7 +113,7 @@ public class Robot extends TimedRobot {
     driveCommand.cancel();
 
     manipulatorsSubsystem.setPivotPosition(PivotPosition.UNLOCK_HATCH);
-    Globals.getLimelight().Disable();
+    Globals.getLimelight().disable();
   }
   @Override
   public void disabledPeriodic() {
@@ -123,7 +123,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     generalInit();
-    Globals.getLimelight().Init();
+    Globals.getLimelight().init();
     driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
 
     autoCommand = new AutoCommandGroup(manipulatorsSubsystem, climbSubsystem, driveTrainSubsystem);
@@ -148,7 +148,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     generalInit();
-    Globals.getLimelight().Init();
+    Globals.getLimelight().init();
     if (autoCommand != null) {
       autoCommand.cancel();
     }

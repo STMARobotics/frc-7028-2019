@@ -7,192 +7,197 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Limelight {
 
-    private int _badFrameThreshold = 5;
-    private int _badFrameCount = 0;
+    private static final String LED_MODE = "ledMode";
+    private static final String CAM_MODE = "camMode";
 
-    private boolean _compensateForApproachAngle = false;
+    private int badFrameThreshold = 5;
+    private int badFrameCount = 0;
 
-    private NetworkTable m_table;
-    private String m_tableName;
+    private boolean compensateForApproachAngle = false;
+
+    private NetworkTable table;
+    private String tableName;
     private boolean isConnected = false;
-    
-    private double _latency = 0.0;
-    private double _targetArea = 0.0;
-    private double _targetX = 0.0;
-    private double _targetY = 0.0;
-    private boolean _targetAcquired = false;
 
-    private double[] _cornerX;
-    private double[] _cornerY;
+    private double latency = 0.0;
+    private double targetArea = 0.0;
+    private double targetX = 0.0;
+    private double targetY = 0.0;
+    private boolean targetAcquired = false;
 
-    public Limelight(boolean compensateForApproachAngle)
-    {
+    private double[] cornerX;
+    private double[] cornerY;
+
+    // TODO SHUFFLE add distance kFactors to shuffleboard
+    private double kFactorPercent = 0.0;
+    private double kFactorDistance = 0.0;
+
+    public Limelight(boolean compensateForApproachAngle) {
         this(compensateForApproachAngle, true);
     }
 
-    public Limelight(boolean compensateForApproachAngle, boolean initializeNetworkTables){
-        _compensateForApproachAngle = compensateForApproachAngle;
+    public Limelight(boolean compensateForApproachAngle, boolean initializeNetworkTables) {
+        this.compensateForApproachAngle = compensateForApproachAngle;
 
-        if (!initializeNetworkTables)
-            return;
-
-        m_tableName = "limelight";
-        m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
-        
-        //add an event listener on the latency value, every time that gets changed we'll update our values
-        m_table.addEntryListener("tl", (table, key, entry, value, flags) -> {
-            UpdateValues(table, value.getDouble());
-            //System.out.println("Latency Updated: " + _latency);
-        } , EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        if (initializeNetworkTables) {
+            initializeNetworkTables();
+        }
     }
 
-    private static final String _ledMode = "ledMode";
-    private static final String _camMode = "camMode";
+    private void initializeNetworkTables() {
+        tableName = "limelight";
+        table = NetworkTableInstance.getDefault().getTable(tableName);
 
-    public void Init()
-    {
-        m_table.getEntry(_ledMode).setDouble(0.0); //set to current pipeline mode
-        m_table.getEntry(_camMode).setDouble(0.0); //set to vision mode
+        // add an event listener on the latency value, every time that gets changed
+        // we'll update our values
+        table.addEntryListener("tl", (table, key, entry, value, flags) -> {
+            updateValues(table, value.getDouble());
+            // System.out.println("Latency Updated: " + _latency);
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
     }
 
-    public void Disable()
-    {
-        m_table.getEntry(_ledMode).setDouble(1.0); //force off
-        m_table.getEntry(_camMode).setDouble(1.0); //driver camera (stops vision processing)
+    public void init() {
+        table.getEntry(LED_MODE).setDouble(0.0); // set to current pipeline mode
+        table.getEntry(CAM_MODE).setDouble(0.0); // set to vision mode
     }
 
-    private void UpdateValues(NetworkTable table, double latency)
-    {
+    public void disable() {
+        table.getEntry(LED_MODE).setDouble(1.0); // force off
+        table.getEntry(CAM_MODE).setDouble(1.0); // driver camera (stops vision processing)
+    }
+
+    private void updateValues(NetworkTable table, double latency) {
         var targetV = table.getEntry("tv").getDouble(0.0);
-        if (targetV == 0.0)
-        {
-            if (_badFrameCount++ < _badFrameThreshold)
-            {
-                return; //we haven't hit the threshold yet ignore this frame and hope we reacquire next frame
-            }
+        if ((targetV == 0.0) && (badFrameCount++ < badFrameThreshold)) {
+            // we haven't hit the threshold yet ignore this frame and hope we reacquire next
+            // frame
+            return;
         }
 
-        _latency = latency;
+        this.latency = latency;
         isConnected = targetV != 0.0;
-        
-        _targetArea = getValue(Value.areaPercent);
-        _targetX = getValue(Value.xOffDeg);
-        _targetY = getValue(Value.yOffDeg);
-        _targetAcquired = targetV != 0.0;
 
-        _badFrameCount = 0;
+        targetArea = getValue(Value.AREA_PERCENT);
+        targetX = getValue(Value.X_OFF_DEG);
+        targetY = getValue(Value.Y_OFF_DEG);
+        targetAcquired = targetV != 0.0;
 
-        if (!_targetAcquired)
+        badFrameCount = 0;
+
+        if (!targetAcquired)
             return;
 
-        _cornerX = table.getEntry("tcornx").getDoubleArray(new double[8]);
-        _cornerY = table.getEntry("tcorny").getDoubleArray(new double[8]);
+        cornerX = table.getEntry("tcornx").getDoubleArray(new double[8]);
+        cornerY = table.getEntry("tcorny").getDoubleArray(new double[8]);
 
-        if(_compensateForApproachAngle)
-        {
-            _targetX = getAdjustedX(_targetX, _cornerX, _cornerY);
+        if (compensateForApproachAngle) {
+            targetX = getAdjustedX(targetX, cornerX, cornerY);
         }
-
-        //System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
     }
 
-    public double getAdjustedX(double inputX, double[] xValues, double[] yValues)
-    {
-        //trust the arrays to be the same length from NT, if not lets get out of here
+    public double getAdjustedX(double inputX, double[] xValues, double[] yValues) {
+        // trust the arrays to be the same length from NT, if not lets get out of here
         if (xValues.length != yValues.length)
             return inputX;
 
-        double leftY = 0.0, rightY = 0.0;
+        double leftY = 0.0;
+        double rightY = 0.0;
 
-        for(int i=0; i < yValues.length; i++)
-        {
-            if (xValues[i] < inputX) //left side of center
-            {
-                if (leftY < yValues[i]) //if cur value is larger set it as the max
-                {
+        for (int i = 0; i < yValues.length; i++) {
+            if (xValues[i] < inputX) {
+                // left side of center
+                if (leftY < yValues[i]) {
+                    // if cur value is larger set it as the max
                     leftY = yValues[i];
                 }
-            }
-            else //right side of center
-            {
-                if (rightY < yValues[i]) //if cur value is larger set it as the max
-                {
+            } else {
+                // right side of center
+                if (rightY < yValues[i]) {
+                    // if cur value is larger set it as the max
                     rightY = yValues[i];
                 }
             }
         }
 
-        //if we didn't match both left and right get out of here
-        if (leftY <= 0 || rightY <= 0)
-        {
+        // if we didn't match both left and right get out of here
+        if (leftY <= 0 || rightY <= 0) {
             return inputX;
         }
 
-        //apply a linear adjustment pixels to degrees, could add a multiplier here to soften or make more aggressive
+        // apply a linear adjustment pixels to degrees, could add a multiplier here to
+        // soften or make more aggressive
         return inputX - (rightY - leftY);
     }
 
-    public double getTargetArea()
-    {
-        return _targetArea;
+    public double getTargetArea() {
+        return targetArea;
     }
 
-    public double getTargetX()
-    {
-        return _targetX;
+    public double getTargetX() {
+        return targetX;
     }
 
-    public double getTargetY()
-    {
-        return _targetY;
+    public double getTargetY() {
+        return targetY;
     }
 
-    public boolean getIsConnected(){
+    public boolean getIsConnected() {
         return isConnected;
     }
 
     /**
-     * Checks  "tv". Returns true if a target is found.
+     * Checks "tv". Returns true if a target is found.
+     * 
      * @return TargetFound Boolean
      */
-    public boolean getIsTargetFound(){
-        return _targetAcquired;
+    public boolean getIsTargetFound() {
+        return targetAcquired;
     }
 
     public enum Value {
-        xOffDeg("tx"), yOffDeg("ty"), areaPercent("ta"), skew("ts"), targetFound("tv");
+        X_OFF_DEG("tx"),
+        Y_OFF_DEG("ty"),
+        AREA_PERCENT("ta"),
+        SKEW("ts"),
+        TARGET_FOUND("tv");
 
         private String begin;
-        private Value(String begin){
+
+        private Value(String begin) {
             this.begin = begin;
         }
-        public String getBegin(){
+
+        public String getBegin() {
             return begin;
         }
     }
-    public enum Target {
 
-        target(""), target0("0"), target1("1"), target2("2");
+    private enum Target {
+        TARGET(""), TARGET_O("0"), TARGET_1("1"), TARGET_2("2");
 
         private String end;
-        private Target(String end){
+
+        private Target(String end) {
             this.end = end;
         }
-        public String getEnd(){
+
+        public String getEnd() {
             return end;
         }
     }
-    
+
     /**
      * Gets a value of a target from the network table
-     * @param target Looking target. Usually target, if you want a specific channel use target0-2
+     * 
+     * @param target Looking target. Usually target, if you want a specific channel
+     *               use target0-2
      */
-    public double getValue(Value value, Target target){
-        try{
-        NetworkTableEntry entry = m_table.getEntry(value.getBegin()+target.getEnd());
-        double Entryvalue = entry.getDouble(0.0);
-        return Entryvalue;
-        } catch(Exception e){
+    public double getValue(Value value, Target target) {
+        try {
+            NetworkTableEntry entry = table.getEntry(value.getBegin() + target.getEnd());
+            double Entryvalue = entry.getDouble(0.0);
+            return Entryvalue;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
@@ -200,34 +205,33 @@ public class Limelight {
 
     /**
      * Gets a value of the current found target from the network table
+     * 
      * @param value Type of value you want
      * @see Value
      */
-    public double getValue(Value value){
-        try{
-        NetworkTableEntry entry = m_table.getEntry(value.getBegin());
-        double Entryvalue = entry.getDouble(0.0);
-        return Entryvalue;
-        } catch(Exception e){
+    public double getValue(Value value) {
+        try {
+            NetworkTableEntry entry = table.getEntry(value.getBegin());
+            double Entryvalue = entry.getDouble(0.0);
+            return Entryvalue;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
     }
 
-    public double getPipelinelatency(){
-        NetworkTableEntry tl = m_table.getEntry("tl");
+    public double getPipelinelatency() {
+        NetworkTableEntry tl = table.getEntry("tl");
         double l = tl.getDouble(0.0);
         return l;
     }
 
-    private void resetPilelineLatency(){
-        m_table.getEntry("tl").setValue(0.0);
+    private void resetPilelineLatency() {
+        table.getEntry("tl").setValue(0.0);
     }
 
-    //TODO SHUFFLE add distance kFactors to shuffleboard
-    private double kFactorPercent = 0.0, KFactorDistance = 0.0;
-    public double getDistanceApprox(){
-        return kFactorPercent * KFactorDistance / getValue(Value.areaPercent);
+    public double getDistanceApprox() {
+        return kFactorPercent * kFactorDistance / getValue(Value.AREA_PERCENT);
     }
 
 }
