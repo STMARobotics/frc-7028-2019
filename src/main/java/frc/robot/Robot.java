@@ -36,140 +36,151 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
 import frc.robot.subsystems.PivotPosition;
+import frc.robot.vision.Limelight;
 
 public class Robot extends TimedRobot {
 
-  private Command driveCommand;
-  private Command operateCommand;
-  private Path start2BayOne;
-  private Path bayOne2Human;
-  private Path human2BayTwo;
-  private CommandGroup autoCommand;
+    private Command driveCommand;
+    private Command operateCommand;
+    private Path start2BayOne;
+    private Path bayOne2Human;
+    private Path human2BayTwo;
+    private CommandGroup autoCommand;
 
-  private DriveTrainSubsystem driveTrainSubsystem;
-  private ManipulatorsSubsystem manipulatorsSubsystem;
-  private ClimbSubsystem climbSubsystem;
-  private GyroSubsystem gyroSubsystem;
+    private DriveTrainSubsystem driveTrainSubsystem;
+    private ManipulatorsSubsystem manipulatorsSubsystem;
+    private ClimbSubsystem climbSubsystem;
+    private GyroSubsystem gyroSubsystem;
+    private Limelight limelight;
 
-  private SendableChooser<Driver> driverChooser = new SendableChooser<>();
-  private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
+    private SendableChooser<Driver> driverChooser = new SendableChooser<>();
+    private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
 
-  private Joystick driverJoystick = new Joystick(0);
-  private Joystick operatorJoystick = new Joystick(2);
-  private XboxController driverController = new XboxController(0);
-  private XboxController operatorController = new XboxController(2);
+    private Joystick driverJoystick = new Joystick(0);
+    private Joystick operatorJoystick = new Joystick(2);
+    private XboxController driverController = new XboxController(0);
+    private XboxController operatorController = new XboxController(2);
 
-  @Override
-  public void robotInit() {
+    @Override
+    public void robotInit() {
 
-    Globals.setup();
+        limelight = new Limelight(true);
 
-    driverChooser.setDefaultOption("Jorge Xbox Driver", new JorgeXboxDriver(driverController));
-    driverChooser.addOption("Solo", new SoloDriver(driverController));
-    SmartDashboard.putData("Driver Chooser", driverChooser);
+        driverChooser.setDefaultOption("Jorge Xbox Driver", new JorgeXboxDriver(driverController));
+        driverChooser.addOption("Solo", new SoloDriver(driverController));
+        SmartDashboard.putData("Driver Chooser", driverChooser);
 
-    operatorChooser.setDefaultOption("Hunter Operator", new HunterOperator(operatorJoystick));
-    operatorChooser.addOption("Solo Operator", new SoloOperator(driverController));
-    SmartDashboard.putData("Operator Chooser", operatorChooser);
+        operatorChooser.setDefaultOption("Hunter Operator", new HunterOperator(operatorJoystick));
+        operatorChooser.addOption("Solo Operator", new SoloOperator(driverController));
+        SmartDashboard.putData("Operator Chooser", operatorChooser);
 
-    driveTrainSubsystem = new DriveTrainSubsystem();
-    manipulatorsSubsystem = new ManipulatorsSubsystem();
-    climbSubsystem = new ClimbSubsystem(operatorChooser);
-    gyroSubsystem = new GyroSubsystem();
+        driveTrainSubsystem = new DriveTrainSubsystem();
+        manipulatorsSubsystem = new ManipulatorsSubsystem();
+        climbSubsystem = new ClimbSubsystem(operatorChooser);
+        gyroSubsystem = new GyroSubsystem();
 
-    driveCommand = new DriveCommand(driveTrainSubsystem, driverChooser);
-    operateCommand = new OperateCommand(manipulatorsSubsystem, climbSubsystem, operatorChooser);
+        driveCommand = new DriveCommand(driveTrainSubsystem, driverChooser);
+        operateCommand = new OperateCommand(manipulatorsSubsystem, climbSubsystem, operatorChooser);
 
-    driveTrainSubsystem.setDefaultCommand(driveCommand);
-    manipulatorsSubsystem.setDefaultCommand(operateCommand);
-    climbSubsystem.setDefaultCommand(operateCommand);
+        driveTrainSubsystem.setDefaultCommand(driveCommand);
+        manipulatorsSubsystem.setDefaultCommand(operateCommand);
+        climbSubsystem.setDefaultCommand(operateCommand);
 
-    start2BayOne = Path.loadFromPathWeaver("Start2BayOne");
-    bayOne2Human = Path.loadFromPathWeaver("BayOne2Human");
-    human2BayTwo = Path.loadFromPathWeaver("Human2BayTwo");
+        start2BayOne = Path.loadFromPathWeaver("Start2BayOne");
+        bayOne2Human = Path.loadFromPathWeaver("BayOne2Human");
+        human2BayTwo = Path.loadFromPathWeaver("Human2BayTwo");
 
-    generalInit();
+        generalInit();
 
-    Thread cameraThread = new Thread(()-> {
-      CameraServer.getInstance().startAutomaticCapture();
-    });
-    cameraThread.run();
-  }
-
-  public void generalInit() {
-    climbSubsystem.resetClimbGuides();
-    //manipulatorsSubsystem.setPivotPosition(PivotPosition.START);
-  }
-
-  @Override
-  public void robotPeriodic() {
-    if(driverController.getYButton()){
-      new VisionTillTouch(new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()), driverController).start();
+        Thread cameraThread = new Thread(() -> {
+            CameraServer.getInstance().startAutomaticCapture();
+        });
+        cameraThread.run();
     }
-  }
 
-  @Override
-  public void disabledInit() {
-    driveCommand.cancel();
-
-    manipulatorsSubsystem.setPivotPosition(PivotPosition.UNLOCK_HATCH);
-    Globals.getLimelight().disable();
-  }
-  @Override
-  public void disabledPeriodic() {
-    Scheduler.getInstance().run();
-  }
-
-  @Override
-  public void autonomousInit() {
-    generalInit();
-    Globals.getLimelight().init();
-    driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
-
-    autoCommand = new AutoCommandGroup(manipulatorsSubsystem, climbSubsystem, driveTrainSubsystem);
-    autoCommand.addParallel(new CalibratePivotCommand(manipulatorsSubsystem));
-    // autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    // autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
-    // autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    // autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
-    // autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-    autoCommand.start();
-  }
-
-  @Override
-  public void autonomousPeriodic() {
-    Scheduler.getInstance().run();
-    if (driverChooser.getSelected().getAutoOverride() && autoCommand != null) {
-      autoCommand.cancel();
-      autoCommand = null;
+    public void generalInit() {
+        climbSubsystem.resetClimbGuides();
+        // manipulatorsSubsystem.setPivotPosition(PivotPosition.START);
     }
-  }
-  
-  @Override
-  public void teleopInit() {
-    generalInit();
-    Globals.getLimelight().init();
-    if (autoCommand != null) {
-      autoCommand.cancel();
+
+    @Override
+    public void robotPeriodic() {
+        if (driverController.getYButton()) {
+            new VisionTillTouch(new CombinedTarget(driveTrainSubsystem, limelight), driverController).start();
+        }
     }
-    driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
-    driveCommand.start();
-    operateCommand.start();
-  }
 
-  @Override
-  public void teleopPeriodic() {
-    Scheduler.getInstance().run();
-  }
+    @Override
+    public void disabledInit() {
+        driveCommand.cancel();
 
-  @Override
-  public void testInit() {
-    teleopInit();
-  }
+        manipulatorsSubsystem.setPivotPosition(PivotPosition.UNLOCK_HATCH);
+        limelight.disable();
+    }
 
-  @Override
-  public void testPeriodic() {
-    teleopPeriodic();
-  }
+    @Override
+    public void disabledPeriodic() {
+        Scheduler.getInstance().run();
+    }
+
+    @Override
+    public void autonomousInit() {
+        generalInit();
+        limelight.init();
+        driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
+
+        autoCommand = new AutoCommandGroup(manipulatorsSubsystem, climbSubsystem, driveTrainSubsystem);
+        autoCommand.addParallel(new CalibratePivotCommand(manipulatorsSubsystem));
+        // autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne,
+        // driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem,
+        // Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+        // autoCommand.addSequential(new PointCommand(driveTrainSubsystem,
+        // gyroSubsystem, -90));
+        // autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human,
+        // driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem,
+        // Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+        // autoCommand.addSequential(new PointCommand(driveTrainSubsystem,
+        // gyroSubsystem, 180));
+        // autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwo,
+        // driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem,
+        // Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+        autoCommand.start();
+    }
+
+    @Override
+    public void autonomousPeriodic() {
+        Scheduler.getInstance().run();
+        if (driverChooser.getSelected().getAutoOverride() && autoCommand != null) {
+            autoCommand.cancel();
+            autoCommand = null;
+        }
+    }
+
+    @Override
+    public void teleopInit() {
+        generalInit();
+        limelight.init();
+        if (autoCommand != null) {
+            autoCommand.cancel();
+        }
+        driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
+        driveCommand.start();
+        operateCommand.start();
+    }
+
+    @Override
+    public void teleopPeriodic() {
+        Scheduler.getInstance().run();
+    }
+
+    @Override
+    public void testInit() {
+        teleopInit();
+    }
+
+    @Override
+    public void testPeriodic() {
+        teleopPeriodic();
+    }
 
 }

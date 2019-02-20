@@ -3,7 +3,6 @@ package frc.robot.commands.vision;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.Globals;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.Limelight.Value;
@@ -40,18 +39,7 @@ public class CommandTillVision extends Command {
 		this.limelight = limelight;
 		this.driveTrain = driveTrain;
 	}
-
-	/**
-	 * Will run commmand(arg0) till Vision target is found for xFrames then will run
-	 * visionCommand(arg1)
-	 * 
-	 * @param command       Initial running command
-	 * @param visionCommand Take over command
-	 */
-	public CommandTillVision(Command command, Command visionCommand, DriveTrainSubsystem driveTrainSubsystem) {
-		this(command, visionCommand, Globals.getLimelight(), driveTrainSubsystem);
-	}
-
+	
 	/**
 	 * Sets the amount of frames target must be aquired before vision takes over
 	 * 

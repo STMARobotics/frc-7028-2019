@@ -11,5 +11,9 @@
     ".project": true
   },
   "wpilib.online": true,
-  "editor.rulers": [120]
+"editor.rulers": [
+    120
+],
+"editor.insertSpaces": true,
+"editor.tabSize": 4
 }
