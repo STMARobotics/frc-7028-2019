@@ -131,19 +131,14 @@ public class Robot extends TimedRobot {
 
         autoCommand = new AutoCommandGroup(manipulatorsSubsystem, climbSubsystem, driveTrainSubsystem);
         autoCommand.addParallel(new CalibratePivotCommand(manipulatorsSubsystem));
-        // autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne,
-        // driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem,
-        // Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-        // autoCommand.addSequential(new PointCommand(driveTrainSubsystem,
-        // gyroSubsystem, -90));
-        // autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human,
-        // driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem,
-        // Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
-        // autoCommand.addSequential(new PointCommand(driveTrainSubsystem,
-        // gyroSubsystem, 180));
-        // autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwo,
-        // driveTrainSubsystem), new CombinedTarget(driveTrainSubsystem,
-        // Globals.getLimelight()).setTarget(1.2), driveTrainSubsystem));
+        // autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem),
+        //         new CombinedTarget(driveTrainSubsystem, limelight).setTarget(1.2), limelight, driveTrainSubsystem));
+        // autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
+        // autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem),
+        //         new CombinedTarget(driveTrainSubsystem, limelight).setTarget(1.2), limelight, driveTrainSubsystem));
+        // autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
+        // autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem),
+        //         new CombinedTarget(driveTrainSubsystem, limelight).setTarget(1.2), limelight, driveTrainSubsystem));
         autoCommand.start();
     }
 
