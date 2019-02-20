@@ -90,14 +90,7 @@ public class Limelight {
 
         if(_compensateForApproachAngle)
         {
-            if (_cornerY.length < 8)
-            {
-                //System.out.println("Only " + _cornerY.length + " corners found");
-            }
-            else
-            {
-                _targetX = getAdjustedX(_targetX, _cornerX, _cornerY);
-            }
+            _targetX = getAdjustedX(_targetX, _cornerX, _cornerY);
         }
 
         //System.out.println("Target x,y area:" + _targetX + "," + _targetY + " " + _targetArea);
@@ -105,7 +98,7 @@ public class Limelight {
 
     public double getAdjustedX(double inputX, double[] xValues, double[] yValues)
     {
-        //trusty the arrays to be the same length from NT, if not lets get out of here
+        //trust the arrays to be the same length from NT, if not lets get out of here
         if (xValues.length != yValues.length)
             return inputX;
 

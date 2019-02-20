@@ -26,8 +26,10 @@ import frc.robot.commands.vision.CombinedTarget;
 import frc.robot.commands.vision.VisionTillTouch;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.JorgeXboxDriver;
+import frc.robot.drivesystems.driver.SoloDriver;
 import frc.robot.drivesystems.operator.HunterOperator;
 import frc.robot.drivesystems.operator.Operator;
+import frc.robot.drivesystems.operator.SoloOperator;
 import frc.robot.motion.Path;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -63,9 +65,11 @@ public class Robot extends TimedRobot {
     Globals.Setup();
 
     driverChooser.setDefaultOption("Jorge Xbox Driver", new JorgeXboxDriver(driverController));
+    driverChooser.addOption("Solo", new SoloDriver(driverController));
     SmartDashboard.putData("Driver Chooser", driverChooser);
 
     operatorChooser.setDefaultOption("Hunter Operator", new HunterOperator(operatorJoystick));
+    operatorChooser.addOption("Solo Operator", new SoloOperator(driverController));
     SmartDashboard.putData("Operator Chooser", operatorChooser);
 
     driveTrainSubsystem = new DriveTrainSubsystem();
@@ -99,9 +103,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Pivot Position", manipulatorsSubsystem.getPivotPositon());
-    SmartDashboard.putNumber("Right Encoder Position", driveTrainSubsystem.getRightEncoderPosition());
-    SmartDashboard.putNumber("Left Encoder Position", driveTrainSubsystem.getLeftEncoderPosition());
     if(driverController.getYButtonPressed()){
       new VisionTillTouch(new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()), driverController).start();
     }
