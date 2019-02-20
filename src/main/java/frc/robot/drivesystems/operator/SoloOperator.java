@@ -12,7 +12,7 @@ public class SoloOperator implements Operator {
     private XboxController controller;
     private boolean isShuttlePos = false;
     private boolean isClimbing = false;
-    
+
     public SoloOperator(XboxController controller) {
         this.controller = controller;
     }
@@ -21,30 +21,29 @@ public class SoloOperator implements Operator {
         manipulatorsSubsystem.setIntakeSpeed(getIntakeSpeed());
         climbSubsystem.setRackSpeed(getRackSpeed());
         climbSubsystem.setClimbWheelSpeed(getClimbWheelSpeed());
-        if (controller.getBackButtonPressed() && controller.getStartButtonPressed()) {
+        if (controller.getBackButton() && controller.getStartButton()) {
             climbSubsystem.dropClimbGuides();
             isClimbing = true;
         }
 
         PivotPosition targetPosition = null;
-        if (controller.getXButtonPressed())
-        {
+        if (controller.getXButton()) {
             targetPosition = isShuttlePos ? PivotPosition.ROCKET_CARGO : PivotPosition.SHUTTLE_CARGO;
             isShuttlePos = !isShuttlePos;
-        } 
-        else
-        {
+        } else {
             isShuttlePos = false;
-            if (controller.getBButton())
+            if (controller.getBButton()) {
                 targetPosition = PivotPosition.LOCK_HATCH;
-            else if (controller.getAButtonPressed())
+            } else if (controller.getAButton()) {
                 targetPosition = PivotPosition.UNLOCK_HATCH;
-            else if (controller.getBackButtonPressed())
+            } else if (controller.getBackButton()) {
                 targetPosition = PivotPosition.CLIMB;
+            }
         }
 
-        if (targetPosition != null)
+        if (targetPosition != null) {
             manipulatorsSubsystem.setPivotPosition(targetPosition);
+        }
     }
 
     private double getIntakeSpeed() {
@@ -52,36 +51,34 @@ public class SoloOperator implements Operator {
         double output = controller.getTriggerAxis(Hand.kRight);
         if (intake > minTriggerToIntake) {
             return .4;
-        } else if (output > minTriggerToIntake) {
+        }
+        if (output > minTriggerToIntake) {
             return -1;
         }
         return 0;
     }
 
-   private double getRackSpeed() {
-
-    if (isClimbing){
-
-        boolean up = controller.getBumper(Hand.kRight);
-        boolean down = controller.getBumper(Hand.kLeft);
-        if (up && !down) {
-            return -1;
-        } else if (down && !up) {
-            return 1;
+    private double getRackSpeed() {
+        if (isClimbing) {
+            boolean up = controller.getBumper(Hand.kRight);
+            boolean down = controller.getBumper(Hand.kLeft);
+            if (up && !down) {
+                return -1;
+            }
+            if (down && !up) {
+                return 1;
+            }
         }
         return 0;
     }
-    return 0;
-    }
-    
 
-   private double getClimbWheelSpeed() {
-    if (isClimbing){
-        return controller.getY();
-    } 
-    
-    return 0;
-    
+    private double getClimbWheelSpeed() {
+        if (isClimbing) {
+            return controller.getY();
+        }
+
+        return 0;
+
     }
 
 }

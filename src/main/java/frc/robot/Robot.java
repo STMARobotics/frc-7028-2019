@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    if(driverController.getYButtonPressed()){
+    if(driverController.getYButton()){
       new VisionTillTouch(new CombinedTarget(driveTrainSubsystem, Globals.getLimelight()), driverController).start();
     }
   }

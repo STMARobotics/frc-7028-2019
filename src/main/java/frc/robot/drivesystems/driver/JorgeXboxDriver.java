@@ -34,14 +34,14 @@ public class JorgeXboxDriver implements Driver {
     }
 
     private boolean getSlowMode() {
-        if (controller.getBButtonPressed()) {
+        if (controller.getBButton()) {
             slowMode = !slowMode;
         }
         return slowMode;
     }
 
     public boolean getAutoOverride() {
-        return controller.getAButtonPressed();
+        return controller.getAButton();
     }
 
 }
