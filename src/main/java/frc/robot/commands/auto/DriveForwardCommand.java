@@ -17,11 +17,13 @@ public class DriveForwardCommand extends PIDCommand {
     private double timeout;
     private Timer timer = new Timer();
 
-    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance, GyroSubsystem gyroSubsystem) {
+    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance,
+            GyroSubsystem gyroSubsystem) {
         this(driveTrainSubsystem, speed, distance, gyroSubsystem, 0.0);
     }
 
-    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance, GyroSubsystem gyroSubsystem, double timeout) {
+    public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance,
+            GyroSubsystem gyroSubsystem, double timeout) {
         super(0.04, 0, 0);
         this.driveTrainSubsystem = driveTrainSubsystem;
         this.distance = distance;
@@ -42,12 +44,11 @@ public class DriveForwardCommand extends PIDCommand {
     }
 
     protected boolean isFinished() {
-        if (timeout > 0) {
-            if (timer.get() >= timeout) {
-                return true;
-            }
+        if ((timeout > 0) && (timer.get() >= timeout)) {
+            return true;
         }
-        return driveTrainSubsystem.getLeftEncoderPosition() >= leftTarget && driveTrainSubsystem.getRightEncoderPosition() >= rightTarget;
+        return driveTrainSubsystem.getLeftEncoderPosition() >= leftTarget
+                && driveTrainSubsystem.getRightEncoderPosition() >= rightTarget;
     }
 
     protected void end() {
