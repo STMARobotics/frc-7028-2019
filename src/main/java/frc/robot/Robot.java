@@ -26,6 +26,7 @@ import frc.robot.commands.vision.CombinedTarget;
 import frc.robot.commands.vision.VisionTillTouch;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.JorgeXboxDriver;
+import frc.robot.drivesystems.driver.SlowDriver;
 import frc.robot.drivesystems.driver.SoloDriver;
 import frc.robot.drivesystems.operator.HunterOperator;
 import frc.robot.drivesystems.operator.Operator;
@@ -68,6 +69,7 @@ public class Robot extends TimedRobot {
 
         driverChooser.setDefaultOption("Jorge Xbox Driver", new JorgeXboxDriver(driverController));
         driverChooser.addOption("Solo", new SoloDriver(driverController));
+        driverChooser.addOption("Slow", new SlowDriver(driverController));
         SmartDashboard.putData("Driver Chooser", driverChooser);
 
         operatorChooser.setDefaultOption("Hunter Operator", new HunterOperator(operatorJoystick));
