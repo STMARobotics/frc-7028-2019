@@ -20,10 +20,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
-import frc.robot.commands.auto.AutoCommandGroup;
-import frc.robot.commands.auto.CalibratePivotCommand;
-import frc.robot.commands.vision.CombinedTarget;
-import frc.robot.commands.vision.VisionTillTouch;
+import frc.robot.commands.auto.*;
+import frc.robot.commands.vision.*;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.JorgeXboxDriver;
 import frc.robot.drivesystems.driver.SlowDriver;
@@ -133,14 +131,13 @@ public class Robot extends TimedRobot {
 
         autoCommand = new AutoCommandGroup(manipulatorsSubsystem, climbSubsystem, driveTrainSubsystem);
         autoCommand.addParallel(new CalibratePivotCommand(manipulatorsSubsystem));
-        // autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem),
-        //         new CombinedTarget(driveTrainSubsystem, limelight).setTarget(1.2), limelight, driveTrainSubsystem));
-        // autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, -90));
-        // autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem),
-        //         new CombinedTarget(driveTrainSubsystem, limelight).setTarget(1.2), limelight, driveTrainSubsystem));
-        // autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem, 180));
-        // autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem),
-        //         new CombinedTarget(driveTrainSubsystem, limelight).setTarget(1.2), limelight, driveTrainSubsystem));
+
+        autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem),
+                new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, -90), limelight, driveTrainSubsystem));
+        autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem),
+                 new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 180), limelight, driveTrainSubsystem));
+        autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem),
+                 new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 90), limelight, driveTrainSubsystem));
         autoCommand.start();
     }
 
