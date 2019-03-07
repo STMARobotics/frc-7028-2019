@@ -5,7 +5,8 @@ public enum PivotPosition {
     LOCK_HATCH(-350),
     SHUTTLE_CARGO(-850),
     ROCKET_CARGO(-625),
-    CLIMB(-1000);
+    CLIMB(-1000),
+    REST(0);
 
     private final int position;
 

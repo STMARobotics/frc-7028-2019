@@ -55,7 +55,7 @@ public class ManipulatorsSubsystem extends Subsystem {
         SmartDashboard.putString("Arm position", position.name());
         lastPosition = position;
         switch(position){
-            case UNLOCK_HATCH:
+            case REST:
                 pivot.set(ControlMode.PercentOutput, 0.0);
                 break;
             default:

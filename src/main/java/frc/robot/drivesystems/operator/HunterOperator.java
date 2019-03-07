@@ -30,6 +30,8 @@ public class HunterOperator implements Operator {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.ROCKET_CARGO);
         } else if (joystick.getRawButton(7)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.CLIMB);
+        } else if (joystick.getRawButton(9)){
+            //manipulatorsSubsystem.setPivotPosition(PivotPosition.REST);
         }
     }
 
