@@ -29,6 +29,7 @@ import frc.robot.drivesystems.driver.SoloDriver;
 import frc.robot.drivesystems.operator.HunterOperator;
 import frc.robot.drivesystems.operator.Operator;
 import frc.robot.drivesystems.operator.SoloOperator;
+import frc.robot.handlerFU.pointiness;
 import frc.robot.motion.Path;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -100,6 +101,7 @@ public class Robot extends TimedRobot {
 
     public void generalInit() {
         climbSubsystem.resetClimbGuides();
+        pointiness.setup(driveTrainSubsystem, gyroSubsystem);
         // manipulatorsSubsystem.setPivotPosition(PivotPosition.START);
     }
 
@@ -176,5 +178,6 @@ public class Robot extends TimedRobot {
     public void testPeriodic() {
         teleopPeriodic();
     }
+
 
 }
