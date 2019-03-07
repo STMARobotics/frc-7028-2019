@@ -7,8 +7,18 @@ import frc.robot.subsystems.PivotPosition;
 
 public class SetPivot extends Command{
 
+    private PivotPosition position;
+    private ManipulatorsSubsystem manipulatorSubsystem;
     public SetPivot(ManipulatorsSubsystem manipulatorSubsystem, PivotPosition position){
-        manipulatorSubsystem.setPivotPosition(position);    
+        this.position = position;
+        this.manipulatorSubsystem = manipulatorSubsystem;
+        requires(manipulatorSubsystem);
+        System.out.println("STOP");
+    }
+
+    @Override
+    protected void initialize() {
+        manipulatorSubsystem.setPivotPosition(position);
     }
 
 

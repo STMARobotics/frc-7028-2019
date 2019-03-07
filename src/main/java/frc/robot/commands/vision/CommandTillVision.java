@@ -77,13 +77,11 @@ public class CommandTillVision extends Command {
 			System.out.println("Target Found");
 		}
 		if (frames > waitFrames && !started) {
-			driveTrain.setNeutralMode(NeutralMode.Brake);
 			childCommand.start();
 			parentCommand.cancel();
 			started = true;
 		} else if (frames != -1 && frames > waitFrames + 20 && started
 				&& limelight.getValue(Value.AREA_PERCENT) > minArea) {
-			driveTrain.setNeutralMode(NeutralMode.Brake);
 			frames = -1;
 		}
 	}

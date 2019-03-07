@@ -30,6 +30,7 @@ public class DriveBackwardCommand extends PIDCommand {
         this.speed = speed;
         this.timeout = timeout;
         this.gyroSubsystem = gyroSubsystem;
+        requires(driveTrainSubsystem);
     }
 
     protected void initialize() {

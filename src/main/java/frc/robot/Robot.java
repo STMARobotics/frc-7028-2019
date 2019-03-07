@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
 
         driveTrainSubsystem.setDefaultCommand(driveCommand);
         manipulatorsSubsystem.setDefaultCommand(operateCommand);
-        climbSubsystem.setDefaultCommand(operateCommand);
+        //climbSubsystem.setDefaultCommand(operateCommand);
 
         start2BayOneLeft = Path.loadFromPathWeaver("Start2BayOneLeft");
         bayOne2HumanLeft = Path.loadFromPathWeaver("BayOne2HumanLeft");
@@ -128,9 +128,9 @@ public class Robot extends TimedRobot {
         generalInit();
         limelight.init();
         driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
-
-        autoCommand = new AutoCommandGroup(manipulatorsSubsystem, climbSubsystem, driveTrainSubsystem);
-        //autoCommand.addSequential(new CalibratePivotCommand(manipulatorsSubsystem));
+        
+        autoCommand = new CommandGroup();
+        autoCommand.addSequential(new CalibratePivotCommand(manipulatorsSubsystem));
 
         //Front left Hatch
         autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOneLeft, driveTrainSubsystem),
@@ -144,14 +144,19 @@ public class Robot extends TimedRobot {
         
         //autoCommand.addSequential(new CombinedTarget(driveTrainSubsystem, limelight));
         autoCommand.start();
+
+        
     }
 
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+
+
         if (driverChooser.getSelected().getAutoOverride() && autoCommand != null) {
             autoCommand.cancel();
             autoCommand = null;
+            System.out.println("Stopping Auto");
         }
     }
 
