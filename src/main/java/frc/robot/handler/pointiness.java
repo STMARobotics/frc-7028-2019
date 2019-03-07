@@ -16,18 +16,8 @@ public class pointiness {
         currentCommand.start();
     }
 
-
-
-
-
-
-
     static DriveTrainSubsystem dT;
     static GyroSubsystem g;
-
-    static{
-
-    }
 
     public static void setup(DriveTrainSubsystem dT, GyroSubsystem g) {
         pointiness.dT = dT;

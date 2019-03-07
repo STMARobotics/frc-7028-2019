@@ -21,8 +21,11 @@ public class DepositHatch extends CommandGroup{
         addSequential(new SetPivot(manipSubsys, PivotPosition.UNLOCK_HATCH), commandDelay);
         addSequential(new DriveBackwardCommand(dT, 0.2, 6, gyro, commandDelay));
         addSequential(new PointCommand(dT, gyro, endTurn));
+    }
 
-
+    @Override
+    protected void initialize() {
+        System.out.println("Starting Deposit");
     }
 
     

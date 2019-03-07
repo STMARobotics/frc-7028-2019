@@ -71,8 +71,10 @@ public class CommandTillVision extends Command {
 	@Override
 	protected void execute() {
 		// TODO Have xFrames on ShuffleBoard
+		System.out.print(limelight.getIsTargetFound());
 		if (limelight.getIsTargetFound() && frames >= 0) {
 			frames++;
+			System.out.println("Target Found");
 		}
 		if (frames > waitFrames && !started) {
 			driveTrain.setNeutralMode(NeutralMode.Brake);
@@ -89,6 +91,8 @@ public class CommandTillVision extends Command {
 	@Override
 	protected void interrupted() {
 		childCommand.cancel();
+		parentCommand.cancel();
+		System.out.println("Stopping");
 	}
 
 	@Override

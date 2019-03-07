@@ -14,13 +14,14 @@ public class CombinedTarget extends Command {
 
     // Tuning Values
     private static final double KP_AIM = 0.02;
+    //private static final double KP_DISTANCE_HEIGHT = 0.2;
     private static final double KP_DISTANCE_AREA = 0.2;
 
     // Spin
     private double MIN_POWER = 0.09; // About the minimum amount of power required to move
 
     // Forewards/Backwards
-    private double areaTarget = 2.3; // Percent of screen
+    private double areaTarget = 2.5; // Percent of screen
 
     private boolean finished = false;
 

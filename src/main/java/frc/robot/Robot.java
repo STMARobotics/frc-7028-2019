@@ -86,8 +86,8 @@ public class Robot extends TimedRobot {
         human2BayTwoLeft = Path.loadFromPathWeaver("Human2BayTwoLeft");
 
         start2BayOneRight = Path.loadFromPathWeaver("Start2BayOneRight");
-        bayOne2HumanRight = Path.loadFromPathWeaver("bayOne2HumanRight");
-        human2BayTwoRight = Path.loadFromPathWeaver("human2BayTwoRight");
+        bayOne2HumanRight = Path.loadFromPathWeaver("BayOne2HumanRight");
+        human2BayTwoRight = Path.loadFromPathWeaver("Human2BayTwoRight");
 
         generalInit();
 
@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        if (driverController.getYButton()) {
+        if (driverController.getYButtonPressed()) {
             new VisionTillTouch(new CombinedTarget(driveTrainSubsystem, limelight), driverController).start();
         }
     }
@@ -130,17 +130,19 @@ public class Robot extends TimedRobot {
         driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
 
         autoCommand = new AutoCommandGroup(manipulatorsSubsystem, climbSubsystem, driveTrainSubsystem);
-        autoCommand.addParallel(new CalibratePivotCommand(manipulatorsSubsystem));
+        //autoCommand.addSequential(new CalibratePivotCommand(manipulatorsSubsystem));
 
         //Front left Hatch
         autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOneLeft, driveTrainSubsystem),
                 new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, -90), limelight, driveTrainSubsystem));
         //Left Hatch Player Depsit
-        autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2HumanLeft, driveTrainSubsystem),
-                 new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 180), limelight, driveTrainSubsystem));
+        //autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2HumanLeft, driveTrainSubsystem),
+                 //new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 180), limelight, driveTrainSubsystem));
         //Side right hatch
-        autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwoLeft, driveTrainSubsystem),
-                 new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 90), limelight, driveTrainSubsystem));
+        //autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwoLeft, driveTrainSubsystem),
+                 //new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 90), limelight, driveTrainSubsystem));
+        
+        //autoCommand.addSequential(new CombinedTarget(driveTrainSubsystem, limelight));
         autoCommand.start();
     }
 
