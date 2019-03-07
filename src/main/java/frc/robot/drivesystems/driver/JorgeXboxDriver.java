@@ -4,9 +4,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.Robot;
-import frc.robot.commands.auto.PointCommand;
-import frc.robot.handlerFU.pointiness;
+import frc.robot.handler.pointiness;
 
 public class JorgeXboxDriver implements Driver {
 
@@ -35,7 +33,7 @@ public class JorgeXboxDriver implements Driver {
 
 
 
-    public enum RotatePosition{
+    /**public enum RotatePosition{
         
         LEFT(270), RIGHT(90), FORWARD(0), BACK(180);
 
@@ -47,7 +45,7 @@ public class JorgeXboxDriver implements Driver {
         RotatePosition(double Position) {
             this.angle = Position;
         }
-    }
+    }*/
 
     private double getSpeed() {
         return controller.getY(Hand.kLeft);

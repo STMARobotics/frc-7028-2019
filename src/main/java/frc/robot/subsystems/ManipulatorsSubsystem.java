@@ -15,6 +15,8 @@ public class ManipulatorsSubsystem extends Subsystem {
     private Spark intake = new Spark(1);
     private WPI_TalonSRX pivot = new WPI_TalonSRX(4);
 
+    private PivotPosition lastPosition = null;
+
     public ManipulatorsSubsystem() {
         TalonSRXConfiguration talonConfig = new TalonSRXConfiguration();
         talonConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative;
@@ -51,16 +53,8 @@ public class ManipulatorsSubsystem extends Subsystem {
 
     public void setPivotPosition(PivotPosition position) {
         SmartDashboard.putString("Arm position", position.name());
+        lastPosition = position;
         switch(position){
-            case START:
-                pivot.set(ControlMode.PercentOutput, 0.0);
-                if(getPivotPositon() < 100){
-                    pivot.set(ControlMode.PercentOutput, 0.2);
-                    System.out.println("DO THTE THBINGSONEIN");
-                } else if (getPivotPositon() < 200){
-                    pivot.set(ControlMode.PercentOutput, 0.1);
-                }
-                break;
             case UNLOCK_HATCH:
                 pivot.set(ControlMode.PercentOutput, 0.0);
                 break;
@@ -90,4 +84,12 @@ public class ManipulatorsSubsystem extends Subsystem {
         
     }
 
+    @Override
+    public void periodic() {
+        if(lastPosition == PivotPosition.UNLOCK_HATCH){
+            if(pivot.getSelectedSensorPosition() >= PivotPosition.UNLOCK_HATCH.getPosition()){
+                pivot.set(ControlMode.PercentOutput, 0d);
+            }
+        }
+    }
 }

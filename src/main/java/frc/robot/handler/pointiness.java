@@ -1,4 +1,4 @@
-package frc.robot.handlerFU;
+package frc.robot.handler;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.commands.auto.PointCommand;

@@ -22,20 +22,11 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.*;
 import frc.robot.commands.vision.*;
-import frc.robot.drivesystems.driver.Driver;
-import frc.robot.drivesystems.driver.JorgeXboxDriver;
-import frc.robot.drivesystems.driver.SlowDriver;
-import frc.robot.drivesystems.driver.SoloDriver;
-import frc.robot.drivesystems.operator.HunterOperator;
-import frc.robot.drivesystems.operator.Operator;
-import frc.robot.drivesystems.operator.SoloOperator;
-import frc.robot.handlerFU.pointiness;
+import frc.robot.drivesystems.driver.*;
+import frc.robot.drivesystems.operator.*;
+import frc.robot.handler.pointiness;
 import frc.robot.motion.Path;
-import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.subsystems.GyroSubsystem;
-import frc.robot.subsystems.ManipulatorsSubsystem;
-import frc.robot.subsystems.PivotPosition;
+import frc.robot.subsystems.*;
 import frc.robot.vision.Limelight;
 
 public class Robot extends TimedRobot {
@@ -134,10 +125,13 @@ public class Robot extends TimedRobot {
         autoCommand = new AutoCommandGroup(manipulatorsSubsystem, climbSubsystem, driveTrainSubsystem);
         autoCommand.addParallel(new CalibratePivotCommand(manipulatorsSubsystem));
 
+        //Front left Hatch
         autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOne, driveTrainSubsystem),
                 new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, -90), limelight, driveTrainSubsystem));
+        //Left Hatch Player Depsit
         autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2Human, driveTrainSubsystem),
                  new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 180), limelight, driveTrainSubsystem));
+        //Side right hatch
         autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwo, driveTrainSubsystem),
                  new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 90), limelight, driveTrainSubsystem));
         autoCommand.start();

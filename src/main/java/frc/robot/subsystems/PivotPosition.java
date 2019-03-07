@@ -1,8 +1,7 @@
 package frc.robot.subsystems;
 
 public enum PivotPosition {
-    UNLOCK_HATCH(0),
-    START(0),
+    UNLOCK_HATCH(-350),
     LOCK_HATCH(-350),
     SHUTTLE_CARGO(-850),
     ROCKET_CARGO(-625),
