@@ -28,7 +28,7 @@ public class CalibratePivotCommand extends Command {
 
     @Override
     protected void end() {
-        manipulatorsSubsystem.setPivotSpeed(0);
+        manipulatorsSubsystem.setPivotOutputPercent(0);
         System.out.println("Arm Calibrated");
     }
 
