@@ -152,7 +152,6 @@ public class Robot extends TimedRobot {
             new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem), 
             limelight, 
             driveTrainSubsystem));
-            autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem).setTarget(-90));
         //Left Hatch Player Depsit
         //autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2HumanLeft, driveTrainSubsystem),
                  //new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 180), limelight, driveTrainSubsystem));
