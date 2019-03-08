@@ -127,15 +127,15 @@ public class Limelight {
         }
 
         // apply a linear adjustment pixels to degrees, could add a multiplier here to
-        var adjustment = xCompensationFactor * (rightY - leftY);
+        var adjustment = xCompensationFactor * (leftY - rightY);
 
-        //if right is > left it is closer to us, so we need to aim left of target
+        //if left is > right it is closer to us, so we need to aim right of target
         //i.e. right Y is 2px higher than left Y, adjust X by -2 degrees (+/- compensation factor)
 
         System.out.printf("Adjusting X by {0} degrees for left Y {1} and right Y {2}\n", adjustment, leftY, rightY);
         
         //since we're subtracting from right value we subtract from X here (if value is positive right Y is closer we want to aim further left)
-        return inputX - adjustment;
+        return inputX + adjustment;
     }
 
     public double getTargetArea() {
