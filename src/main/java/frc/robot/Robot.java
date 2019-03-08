@@ -20,13 +20,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
-import frc.robot.commands.auto.*;
-import frc.robot.commands.vision.*;
-import frc.robot.drivesystems.driver.*;
-import frc.robot.drivesystems.operator.*;
-import frc.robot.handler.pointiness;
+import frc.robot.commands.auto.CalibratePivotCommand;
+import frc.robot.commands.auto.DepositHatch;
+import frc.robot.commands.auto.PathCommand;
+import frc.robot.commands.auto.PointCommand;
+import frc.robot.commands.vision.CombinedTarget;
+import frc.robot.commands.vision.CommandTillVision;
+import frc.robot.commands.vision.VisionTillTouch;
+import frc.robot.drivesystems.driver.Driver;
+import frc.robot.drivesystems.driver.JorgeXboxDriver;
+import frc.robot.drivesystems.driver.SlowDriver;
+import frc.robot.drivesystems.driver.SoloDriver;
+import frc.robot.drivesystems.operator.HunterOperator;
+import frc.robot.drivesystems.operator.Operator;
+import frc.robot.drivesystems.operator.SoloOperator;
 import frc.robot.motion.Path;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.GyroSubsystem;
+import frc.robot.subsystems.ManipulatorsSubsystem;
+import frc.robot.subsystems.PivotPosition;
 import frc.robot.vision.Limelight;
 
 public class Robot extends TimedRobot {
@@ -60,7 +73,8 @@ public class Robot extends TimedRobot {
 
         limelight = new Limelight(true);
 
-        driverChooser.setDefaultOption("Jorge Xbox Driver", new JorgeXboxDriver(driverController));
+        driverChooser.setDefaultOption("Jorge Xbox Driver", 
+            new JorgeXboxDriver(driverController, new PointCommand(driveTrainSubsystem, gyroSubsystem)));
         driverChooser.addOption("Solo", new SoloDriver(driverController));
         driverChooser.addOption("Slow", new SlowDriver(driverController));
         SmartDashboard.putData("Driver Chooser", driverChooser);
@@ -95,12 +109,11 @@ public class Robot extends TimedRobot {
             CameraServer.getInstance().startAutomaticCapture();
         });
         cameraThread.run();
+        gyroSubsystem.reset();
     }
 
     public void generalInit() {
         climbSubsystem.resetClimbGuides();
-        pointiness.setup(driveTrainSubsystem, gyroSubsystem);
-        // manipulatorsSubsystem.setPivotPosition(PivotPosition.START);
     }
 
     @Override
@@ -126,6 +139,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         generalInit();
+        gyroSubsystem.reset();
         limelight.init();
         driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
         
@@ -133,8 +147,12 @@ public class Robot extends TimedRobot {
         autoCommand.addSequential(new CalibratePivotCommand(manipulatorsSubsystem));
 
         //Front left Hatch
-        autoCommand.addSequential(new CommandTillVision(new PathCommand(start2BayOneLeft, driveTrainSubsystem),
-                new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, -90), limelight, driveTrainSubsystem));
+        autoCommand.addSequential(new CommandTillVision(
+            new PathCommand(start2BayOneLeft, driveTrainSubsystem),
+            new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem), 
+            limelight, 
+            driveTrainSubsystem));
+            autoCommand.addSequential(new PointCommand(driveTrainSubsystem, gyroSubsystem).setTarget(-90));
         //Left Hatch Player Depsit
         //autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2HumanLeft, driveTrainSubsystem),
                  //new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 180), limelight, driveTrainSubsystem));
