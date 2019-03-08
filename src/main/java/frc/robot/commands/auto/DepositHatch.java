@@ -10,18 +10,14 @@ import frc.robot.vision.Limelight;
 
 public class DepositHatch extends CommandGroup{
 
-
-    //Delays for after hitting the wall and droping the arm
-    private double commandDelay = 250;
-
-    public DepositHatch(DriveTrainSubsystem dT, GyroSubsystem gyro, Limelight limelight, ManipulatorsSubsystem manipSubsys, double endTurn){
+    public DepositHatch(DriveTrainSubsystem dT, GyroSubsystem gyro, Limelight limelight, ManipulatorsSubsystem manipSubsys){
         addSequential(new SetPivot(manipSubsys, PivotPosition.LOCK_HATCH));
         addSequential(new CombinedTarget(dT, limelight));
         //addSequential(new HitWall(dT, gyro, limelight, 0.2), commandDelay);
         addSequential(new DriveForwardCommand(dT, 0.5, 6, gyro, 1));
-        addSequential(new SetPivot(manipSubsys, PivotPosition.UNLOCK_HATCH), commandDelay);
+        addSequential(new SetPivot(manipSubsys, PivotPosition.UNLOCK_HATCH));
+        addSequential(new WaitCommand(.25d));
         addSequential(new DriveBackwardCommand(dT, 0.5, 6, gyro));
-        addSequential(new PointCommand(dT, gyro, endTurn));
     }
 
     @Override

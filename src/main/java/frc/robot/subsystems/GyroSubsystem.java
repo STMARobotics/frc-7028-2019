@@ -19,7 +19,11 @@ public class GyroSubsystem extends Subsystem {
         return gyro.getYaw();
     }
 
-    public void stopThing(){
+    /**
+     * Resets the gyro Z. This is used to orient the gyro to the field.
+     * THIS SHOULD ONLY BE CALLED WHEN THE ROBOT IS KNOWN TO BE POINTING DOWN FIELD.
+     */
+    public void reset(){
         gyro.reset();
     }
 
