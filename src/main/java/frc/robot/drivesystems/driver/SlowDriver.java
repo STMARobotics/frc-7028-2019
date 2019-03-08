@@ -1,51 +1,29 @@
 package frc.robot.drivesystems.driver;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.handler.pointiness;
 
-public class JorgeXboxDriver implements Driver {
+public class SlowDriver implements Driver {
 
     private XboxController controller;
     private boolean slowMode = false;
 
-    public JorgeXboxDriver(XboxController controller) {
+    public SlowDriver(XboxController controller) {
         this.controller = controller;
     }
 
     @Override
     public void drive(DifferentialDrive differentialDrive) {
-        double speed = -getSpeed();
-        double rotation = getRotation();
+        double speed = -getSpeed()*.6;
+        double rotation = getRotation()*.8;
         if (getSlowMode()) {
-            speed = speed * .6;
-            rotation = rotation * .8;
+            speed = speed * .3;
+            rotation = rotation * .4;
         }
         differentialDrive.arcadeDrive(speed, rotation, true);
 
-        if(controller.getPOV() != -1){
-            pointiness.queueCommand(controller.getPOV());
-        }
-
     }
-
-
-
-    /**public enum RotatePosition{
-        
-        LEFT(270), RIGHT(90), FORWARD(0), BACK(180);
-
-        public double getAngle(){
-            return angle;
-        }
-
-        double angle;
-        RotatePosition(double Position) {
-            this.angle = Position;
-        }
-    }*/
 
     private double getSpeed() {
         return controller.getY(Hand.kLeft);

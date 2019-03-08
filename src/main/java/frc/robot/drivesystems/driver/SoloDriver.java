@@ -41,7 +41,7 @@ public class SoloDriver implements Driver {
     }
 
     public boolean getAutoOverride() {
-        return controller.getAButtonPressed();
+        return controller.getAButton();
     }
 
 }

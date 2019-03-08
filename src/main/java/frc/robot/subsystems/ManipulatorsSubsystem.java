@@ -52,16 +52,11 @@ public class ManipulatorsSubsystem extends Subsystem {
     public void setPivotPosition(PivotPosition position) {
         SmartDashboard.putString("Arm position", position.name());
         switch(position){
-            case START:
+            case REST:
                 pivot.set(ControlMode.PercentOutput, 0.0);
-                if(getPivotPositon() < 100){
-                    pivot.set(ControlMode.PercentOutput, 0.2);
-                    System.out.println("DO THTE THBINGSONEIN");
-                } else if (getPivotPositon() < 200){
-                    pivot.set(ControlMode.PercentOutput, 0.1);
-                }
                 break;
             case UNLOCK_HATCH:
+                System.out.println("Dropping");
                 pivot.set(ControlMode.PercentOutput, 0.0);
                 break;
             default:
@@ -72,10 +67,6 @@ public class ManipulatorsSubsystem extends Subsystem {
 
     public int getPivotPositon() {
         return pivot.getSelectedSensorPosition();
-    }
-
-    public void calibratePivotEncoder() {
-        pivot.setSelectedSensorPosition(0);
     }
 
     public boolean isPivotAtBottomLimit() {
@@ -89,5 +80,4 @@ public class ManipulatorsSubsystem extends Subsystem {
     public void initDefaultCommand() {
         
     }
-
 }

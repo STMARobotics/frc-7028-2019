@@ -9,16 +9,32 @@ import frc.robot.vision.Limelight.Value;
 
 public class CombinedTarget extends Command {
 
-    private DriveTrainSubsystem driveTrain;
-    private Limelight limelight;
+    private final DriveTrainSubsystem driveTrain;
+    private final Limelight limelight;
 
-    public CombinedTarget(DriveTrainSubsystem driveTrain, Limelight limelight){
+    // Tuning Values
+    private static final double KP_AIM = 0.02;
+    //private static final double KP_DISTANCE_HEIGHT = 0.2;
+    private static final double KP_DISTANCE_AREA = 0.2;
+
+    // Spin
+    private double MIN_POWER = 0.09; // About the minimum amount of power required to move
+
+    // Forewards/Backwards
+    private double areaTarget = 2.5; // Percent of screen
+
+    private boolean finished = false;
+
+    private int noFrame = 0;
+    private int maxNoFrames = 20;
+
+    public CombinedTarget(DriveTrainSubsystem driveTrain, Limelight limelight) {
         this.driveTrain = driveTrain;
         this.limelight = limelight;
         requires(driveTrain);
     }
 
-    public CombinedTarget setTarget(double targetArea){
+    public CombinedTarget setTarget(double targetArea) {
         this.areaTarget = targetArea;
         return this;
     }
@@ -29,91 +45,69 @@ public class CombinedTarget extends Command {
         driveTrain.setNeutralMode(NeutralMode.Brake);
     }
 
-    //Tuning Values
-    private double KpAim = 0.02;
-    private double KpDistanceY = 0.03;
-    private double KpDistanceArea = 0.2;
-
-    //Spin
-    double minPower = 0.09; //About the minimum amount of power required to move
-
-    //Forewards/Backwards
-    double areaTarget = 2.3; //Percent of screen
-    double yTarget = 0.0; //Degrees from center
-
-    boolean finished = false;
-
-
-    int noFrame = 0;
-    int maxNoFrames = 20;
     @Override
     protected void execute() {
 
-        if (limelight.getIsTargetFound()){
+        if (limelight.getIsTargetFound()) {
             noFrame = 0;
         } else {
             System.out.println("NO TARGET");
-            if(noFrame++ > maxNoFrames){
+            if (noFrame++ > maxNoFrames) {
                 finished = true;
             }
             driveTrain.getDiffDrive().arcadeDrive(0, 0);
             return;
         }
-        
+
         double turnAdjust = getXAdjust();
         double foreAdjust = getYAdjustArea();
 
-        if(Math.abs(turnAdjust) < 0.05){
+        if (Math.abs(turnAdjust) < 0.05) {
             turnAdjust = 0.0;
         } else {
-            turnAdjust += Math.signum(turnAdjust)*minPower;
+            turnAdjust += Math.signum(turnAdjust) * MIN_POWER;
         }
 
-        if(Math.abs(foreAdjust) < 0.05){
+        if (Math.abs(foreAdjust) < 0.05) {
             foreAdjust = 0.0;
         } else {
-            foreAdjust += Math.signum(foreAdjust)*minPower;
+            foreAdjust += Math.signum(foreAdjust) * MIN_POWER;
         }
         finished = turnAdjust == 0 && foreAdjust == 0;
-        
+
         /**
-         *    ^  ^   ^  |  Drive Straight and turn right
-         *    |  |   |  v  ++ +-
+         * ^ ^ ^ | Drive Straight and turn right | | | v ++ +-
          * 
-         *    ^  ^   |  ^  Drive Straight and turn left
-         *    |  |   v  |  ++ -+
+         * ^ ^ | ^ Drive Straight and turn left | | v | ++ -+
          * 
-         *    |  |   ^  |  Drive Back and turn right
-         *    v  v   |  v  -- +-
+         * | | ^ | Drive Back and turn right v v | v -- +-
          * 
-         *    |  |   |  ^  Drive back and turn left
-         *    v  v   v  |  -- -+
+         * | | | ^ Drive back and turn left v v v | -- -+
          */
 
         driveTrain.getDiffDrive().arcadeDrive(foreAdjust, turnAdjust, false);
 
-
     }
 
-    private double getXAdjust(){
-        //Get current degrees from center
+    private double getXAdjust() {
+        // Get current degrees from center
         double xOffDeg = limelight.getTargetX();
 
-        return KpAim*xOffDeg;
+        return KP_AIM * xOffDeg;
     }
 
-    private double getYAdjustArea(){
+    private double getYAdjustArea() {
 
-        //(areaTarget - Robot...areaPercent) is distanceError
+        // (areaTarget - Robot...areaPercent) is distanceError
         // above is desiredDistance(areaTarget) - currentDistance(Robot...areaPercent)
 
-        //Driving Adjust is KpDistance * distanceError (above)
+        // Driving Adjust is KpDistance * distanceError (above)
 
-        if( !limelight.getIsTargetFound()){
+        if (!limelight.getIsTargetFound()) {
             return 0d;
         }
-        
-        return (KpDistanceArea* (areaTarget - limelight.getValue(Value.areaPercent)));
+
+        return (KP_DISTANCE_AREA * (areaTarget - limelight.getValue(Value.AREA_PERCENT)));
     }
 
     @Override
@@ -122,7 +116,7 @@ public class CombinedTarget extends Command {
     }
 
     @Override
-    protected void end() { 
+    protected void end() {
         double distance = limelight.getDistanceApprox();
         System.out.println("We should be about " + distance);
         driveTrain.getDiffDrive().arcadeDrive(0, 0);
