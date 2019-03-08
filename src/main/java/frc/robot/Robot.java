@@ -22,7 +22,6 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.CalibratePivotCommand;
 import frc.robot.commands.auto.DepositHatch;
-import frc.robot.commands.auto.DriveBackwardCommand;
 import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;

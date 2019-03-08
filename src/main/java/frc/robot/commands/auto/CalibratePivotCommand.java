@@ -23,7 +23,7 @@ public class CalibratePivotCommand extends Command {
 
     @Override
     protected void execute() {
-        manipulatorsSubsystem.setPivotSpeed(.2);
+        manipulatorsSubsystem.setVelocity(110);;
     }
 
     @Override

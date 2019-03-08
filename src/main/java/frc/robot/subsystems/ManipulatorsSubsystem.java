@@ -24,6 +24,8 @@ public class ManipulatorsSubsystem extends Subsystem {
         talonConfig.slot0.kI = .0;
         talonConfig.slot0.kD = 0;
         talonConfig.slot0.closedLoopPeakOutput = 1;
+        talonConfig.nominalOutputForward = .3;
+        talonConfig.nominalOutputReverse = .3;
         talonConfig.clearPositionOnLimitF = true;
 
         pivot.configAllSettings(talonConfig);
@@ -42,11 +44,15 @@ public class ManipulatorsSubsystem extends Subsystem {
     }
 
     /**
-     * sets pivot speed
+     * sets pivot power output percent
      * @param speed - is up + is down
      */
-    public void setPivotSpeed(double speed) {
+    public void setPivotOutputPercent(double speed) {
         pivot.set(speed);
+    }
+
+    public void setVelocity(double speed) {
+        pivot.set(ControlMode.Velocity, speed);
     }
 
     public void setPivotPosition(PivotPosition position) {
