@@ -22,6 +22,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.CalibratePivotCommand;
 import frc.robot.commands.auto.DepositHatch;
+import frc.robot.commands.auto.DriveBackwardCommand;
 import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
@@ -73,6 +74,11 @@ public class Robot extends TimedRobot {
 
         limelight = new Limelight(true);
 
+        driveTrainSubsystem = new DriveTrainSubsystem();
+        manipulatorsSubsystem = new ManipulatorsSubsystem();
+        climbSubsystem = new ClimbSubsystem(operatorChooser);
+        gyroSubsystem = new GyroSubsystem();
+
         driverChooser.setDefaultOption("Jorge Xbox Driver", 
             new JorgeXboxDriver(driverController, new PointCommand(driveTrainSubsystem, gyroSubsystem)));
         driverChooser.addOption("Solo", new SoloDriver(driverController));
@@ -82,11 +88,6 @@ public class Robot extends TimedRobot {
         operatorChooser.setDefaultOption("Hunter Operator", new HunterOperator(operatorJoystick));
         operatorChooser.addOption("Solo Operator", new SoloOperator(driverController));
         SmartDashboard.putData("Operator Chooser", operatorChooser);
-
-        driveTrainSubsystem = new DriveTrainSubsystem();
-        manipulatorsSubsystem = new ManipulatorsSubsystem();
-        climbSubsystem = new ClimbSubsystem(operatorChooser);
-        gyroSubsystem = new GyroSubsystem();
 
         driveCommand = new DriveCommand(driveTrainSubsystem, driverChooser);
         operateCommand = new OperateCommand(manipulatorsSubsystem, climbSubsystem, operatorChooser);

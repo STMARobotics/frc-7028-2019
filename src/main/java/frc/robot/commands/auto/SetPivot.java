@@ -1,7 +1,6 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
 import frc.robot.subsystems.PivotPosition;
 
@@ -13,7 +12,6 @@ public class SetPivot extends Command{
         this.position = position;
         this.manipulatorSubsystem = manipulatorSubsystem;
         requires(manipulatorSubsystem);
-        System.out.println("STOP");
     }
 
     @Override
