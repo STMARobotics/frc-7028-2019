@@ -20,7 +20,7 @@ public class PointCommand extends Command {
     @Override
     protected void execute() {
         double off = degrees - gyro.getGyroPosition();
-        double speed = Math.abs((2 / (1 + Math.pow(1.1, off))) - 1);
+        double speed = Math.abs((2 / (1 + Math.pow(1.1, off))) - 1) * 2;
         // Google abs(​2/​(1+​1.1^​x)-​1) for the graph
         driveTrain.getDiffDrive().arcadeDrive(0, speed, false);
     }

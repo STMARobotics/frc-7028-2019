@@ -18,9 +18,9 @@ public class DepositHatch extends CommandGroup{
         addSequential(new SetPivot(manipSubsys, PivotPosition.LOCK_HATCH));
         addSequential(new CombinedTarget(dT, limelight));
         //addSequential(new HitWall(dT, gyro, limelight, 0.2), commandDelay);
-        addSequential(new DriveForwardCommand(dT, .2, 6, gyro, 1000));
+        addSequential(new DriveForwardCommand(dT, 0.5, 6, gyro, 1));
         addSequential(new SetPivot(manipSubsys, PivotPosition.UNLOCK_HATCH), commandDelay);
-        addSequential(new DriveBackwardCommand(dT, 0.2, 6, gyro));
+        addSequential(new DriveBackwardCommand(dT, 0.5, 6, gyro));
         addSequential(new PointCommand(dT, gyro, endTurn));
     }
 

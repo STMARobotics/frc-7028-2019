@@ -22,6 +22,13 @@ public class DriveForwardCommand extends PIDCommand {
         this(driveTrainSubsystem, speed, distance, gyroSubsystem, 0.0);
     }
 
+    /**
+     * Constructs a drive forward command
+     * @param driveTrainSubsystem drive train subsystem
+     * @param speed speed to drive
+     * @param gyroSubSystem gyro sub system
+     * @param timeout timeout in seconds
+     */
     public DriveForwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance,
             GyroSubsystem gyroSubsystem, double timeout) {
         super(0.04, 0, 0);

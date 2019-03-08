@@ -21,13 +21,19 @@ public class DriveBackwardCommand extends PIDCommand {
             GyroSubsystem gyroSubsystem) {
         this(driveTrainSubsystem, speed, distance, gyroSubsystem, 0.0);
     }
-
+    /**
+     * Constructs a drive forward command
+     * @param driveTrainSubsystem drive train subsystem
+     * @param speed speed to drive (NOT negative)
+     * @param gyroSubSystem gyro sub system
+     * @param timeout timeout in seconds
+     */
     public DriveBackwardCommand(DriveTrainSubsystem driveTrainSubsystem, double speed, double distance,
             GyroSubsystem gyroSubsystem, double timeout) {
         super(0.04, 0, 0);
         this.driveTrainSubsystem = driveTrainSubsystem;
         this.distance = distance;
-        this.speed = speed;
+        this.speed = -speed;
         this.timeout = timeout;
         this.gyroSubsystem = gyroSubsystem;
         requires(driveTrainSubsystem);
