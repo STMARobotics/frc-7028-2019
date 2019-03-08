@@ -4,14 +4,15 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.handler.pointiness;
+import frc.robot.commands.auto.PointCommand;
 
 public class JorgeXboxDriver implements Driver {
 
     private XboxController controller;
     private boolean slowMode = false;
+    private PointCommand pointCommand;
 
-    public JorgeXboxDriver(XboxController controller) {
+    public JorgeXboxDriver(XboxController controller, PointCommand pointCommand) {
         this.controller = controller;
     }
 
@@ -26,7 +27,8 @@ public class JorgeXboxDriver implements Driver {
         differentialDrive.arcadeDrive(speed, rotation, true);
 
         if(controller.getPOV() != -1){
-            pointiness.queueCommand(controller.getPOV());
+            pointCommand.setTarget(controller.getPOV());
+            pointCommand.start();
         }
 
     }
