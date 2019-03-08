@@ -97,6 +97,9 @@ public class Limelight {
         }
     }
 
+    private int outputAdjustmentFrequency = 10;
+    private int outputAdjustmentCounter = 0;
+
     public double getAdjustedX(double inputX, double[] xValues, double[] yValues) {
         // trust the arrays to be the same length from NT, if not lets get out of here
         if (xValues.length != yValues.length)
@@ -132,7 +135,11 @@ public class Limelight {
         //if left is > right it is closer to us, so we need to aim right of target
         //i.e. right Y is 2px higher than left Y, adjust X by -2 degrees (+/- compensation factor)
 
-        System.out.printf("Adjusting X by {0} degrees for left Y {1} and right Y {2}\n", adjustment, leftY, rightY);
+        if(++outputAdjustmentCounter == outputAdjustmentFrequency)
+        {
+            System.out.printf("Adjusting X by {0} degrees for left Y {1} and right Y {2}\n", adjustment, leftY, rightY);
+            outputAdjustmentCounter = 0;
+        }
         
         //since we're subtracting from right value we subtract from X here (if value is positive right Y is closer we want to aim further left)
         return inputX + adjustment;
