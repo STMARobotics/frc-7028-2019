@@ -21,7 +21,7 @@ public class CombinedTarget extends Command {
     private double MIN_POWER = 0.09; // About the minimum amount of power required to move
 
     // Forewards/Backwards
-    private double areaTarget = 2.5; // Percent of screen
+    private double areaTarget = 2.7; // Percent of screen
 
     private boolean finished = false;
 
