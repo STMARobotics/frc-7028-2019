@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
+import frc.robot.commands.auto.AutoCommandGroup;
 import frc.robot.commands.auto.CalibratePivotCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
@@ -140,8 +141,8 @@ public class Robot extends TimedRobot {
         limelight.init();
         driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
         
-        autoCommand = new CommandGroup();
-        autoCommand.addSequential(new CalibratePivotCommand(manipulatorsSubsystem));
+        autoCommand = new AutoCommandGroup(driveTrainSubsystem);
+        autoCommand.addSequential(new CalibratePivotCommand(manipulatorsSubsystem), 5);
 
         //Front left Hatch
         // autoCommand.addSequential(new CommandTillVision(
