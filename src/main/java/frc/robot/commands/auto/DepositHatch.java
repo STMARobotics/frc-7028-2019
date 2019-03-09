@@ -25,5 +25,11 @@ public class DepositHatch extends CommandGroup{
         System.out.println("Starting Deposit");
     }
 
+    @Override
+    protected void interrupted() {
+        System.out.println("Interupting Deposit Hatch");
+        super.interrupted();
+    }
+
     
 }

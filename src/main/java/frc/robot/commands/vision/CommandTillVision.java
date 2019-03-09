@@ -90,7 +90,7 @@ public class CommandTillVision extends Command {
 	protected void interrupted() {
 		childCommand.cancel();
 		parentCommand.cancel();
-		System.out.println("Stopping");
+		System.out.println("CommandTillVision interrupted");
 	}
 
 	@Override

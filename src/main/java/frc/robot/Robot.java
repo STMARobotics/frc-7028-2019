@@ -170,9 +170,8 @@ public class Robot extends TimedRobot {
         Scheduler.getInstance().run();
 
 
-        if (driverChooser.getSelected().getAutoOverride() && autoCommand != null) {
-            autoCommand.cancel();
-            autoCommand = null;
+        if (driverChooser.getSelected().getAutoOverride() && autoCommand != null && autoCommand.isCompleted()) {
+            teleopInit();
             System.out.println("Stopping Auto");
         }
     }

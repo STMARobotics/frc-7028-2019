@@ -107,6 +107,7 @@ public class PathCommand extends Command {
 
     @Override
     protected void interrupted() {
+        System.err.println("Interupting path");
         driveTrainSubsystem.getLeftTalonSRX().set(0);
         driveTrainSubsystem.getRightTalonSRX().set(0);
     }

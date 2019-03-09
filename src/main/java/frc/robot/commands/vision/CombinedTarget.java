@@ -116,6 +116,11 @@ public class CombinedTarget extends Command {
     }
 
     @Override
+    protected void interrupted() {
+        System.out.println("Combined Target interrupted");
+    }
+
+    @Override
     protected void end() {
         double distance = limelight.getDistanceApprox();
         System.out.println("We should be about " + distance);
