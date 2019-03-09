@@ -33,6 +33,9 @@ public class HunterOperator implements Operator {
         } else if (joystick.getRawButton(9)){
             //manipulatorsSubsystem.setPivotPosition(PivotPosition.REST);
         }
+        if(joystick.getRawButton(9) && joystick.getRawButton(10)) {
+            manipulatorsSubsystem.zeroArmPosition();
+        }
     }
 
     private double getIntakeSpeed() {

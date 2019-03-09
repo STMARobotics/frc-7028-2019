@@ -83,6 +83,14 @@ public class ManipulatorsSubsystem extends Subsystem {
         return pivot.getSensorCollection().isRevLimitSwitchClosed();
     }
 
+    /**
+     * Sets the current arm position as zero. Zero is the bottom-must position of the arm.
+     */
+    public void zeroArmPosition() {
+        System.out.println("Arm manually zero'ed");
+        pivot.setSelectedSensorPosition(0);
+    }
+
     public void initDefaultCommand() {
         
     }
