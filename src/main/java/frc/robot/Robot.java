@@ -21,11 +21,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.CalibratePivotCommand;
-import frc.robot.commands.auto.DepositHatch;
-import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
-import frc.robot.commands.vision.CommandTillVision;
 import frc.robot.commands.vision.VisionTillTouch;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.JorgeXboxDriver;
@@ -147,21 +144,12 @@ public class Robot extends TimedRobot {
         autoCommand.addSequential(new CalibratePivotCommand(manipulatorsSubsystem));
 
         //Front left Hatch
-        autoCommand.addSequential(new CommandTillVision(
-            new PathCommand(start2BayOneLeft, driveTrainSubsystem),
-            new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem), 
-            limelight, 
-            driveTrainSubsystem));
-        //Left Hatch Player Depsit
-        //autoCommand.addSequential(new CommandTillVision(new PathCommand(bayOne2HumanLeft, driveTrainSubsystem),
-                 //new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 180), limelight, driveTrainSubsystem));
-        //Side right hatch
-        //autoCommand.addSequential(new CommandTillVision(new PathCommand(human2BayTwoLeft, driveTrainSubsystem),
-                 //new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem, 90), limelight, driveTrainSubsystem));
-        
-        //autoCommand.addSequential(new CombinedTarget(driveTrainSubsystem, limelight));
+        // autoCommand.addSequential(new CommandTillVision(
+        //     new PathCommand(start2BayOneLeft, driveTrainSubsystem),
+        //     new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem), 
+        //     limelight, 
+        //     driveTrainSubsystem));
         autoCommand.start();
-
         
     }
 
