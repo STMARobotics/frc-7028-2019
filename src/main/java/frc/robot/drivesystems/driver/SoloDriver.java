@@ -40,8 +40,18 @@ public class SoloDriver implements Driver {
         return slowMode;
     }
 
+    @Override
     public boolean getAutoOverride() {
         return controller.getAButton();
     }
 
+    @Override
+    public boolean getVisionPressed() {
+        return controller.getYButtonPressed();
+    }
+
+    @Override
+    public boolean getVisionReleased() {
+        return controller.getYButtonReleased();
+    }
 }

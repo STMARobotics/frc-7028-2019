@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
@@ -24,7 +25,7 @@ import frc.robot.commands.auto.AutoCommandGroup;
 import frc.robot.commands.auto.CalibratePivotCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
-import frc.robot.commands.vision.VisionTillTouch;
+import frc.robot.drivesystems.driver.CommandTillVisionReleased;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.JorgeXboxDriver;
 import frc.robot.drivesystems.driver.SlowDriver;
@@ -73,7 +74,7 @@ public class Robot extends TimedRobot {
 
         driveTrainSubsystem = new DriveTrainSubsystem();
         manipulatorsSubsystem = new ManipulatorsSubsystem();
-        climbSubsystem = new ClimbSubsystem(operatorChooser);
+        climbSubsystem = new ClimbSubsystem();
         gyroSubsystem = new GyroSubsystem();
 
         driverChooser.setDefaultOption("Jorge Xbox Driver", 
@@ -116,8 +117,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotPeriodic() {
-        if (driverController.getYButtonPressed()) {
-            new VisionTillTouch(new CombinedTarget(driveTrainSubsystem, limelight), driverController).start();
+        Driver currentDriver = driverChooser.getSelected();
+        if (currentDriver.getVisionPressed()) {
+            new CommandTillVisionReleased(new CombinedTarget(driveTrainSubsystem, limelight), currentDriver).start();
         }
     }
 

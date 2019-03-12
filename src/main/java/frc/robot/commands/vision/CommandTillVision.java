@@ -1,9 +1,6 @@
 package frc.robot.commands.vision;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.vision.Limelight;
 import frc.robot.vision.Limelight.Value;
 
@@ -11,7 +8,6 @@ public class CommandTillVision extends Command {
 
 	// Subsystems
 	private Limelight limelight;
-	private DriveTrainSubsystem driveTrain;
 
 	// System variables
 	private Command parentCommand;
@@ -32,12 +28,10 @@ public class CommandTillVision extends Command {
 	 * @param visionCommand Take over command
 	 * @param limelight     Custom limelight Subsytem
 	 */
-	public CommandTillVision(Command command, Command visionCommand, Limelight limelight,
-			DriveTrainSubsystem driveTrain) {
+	public CommandTillVision(Command command, Command visionCommand, Limelight limelight) {
 		this.parentCommand = command;
 		this.childCommand = visionCommand;
 		this.limelight = limelight;
-		this.driveTrain = driveTrain;
 	}
 	
 	/**

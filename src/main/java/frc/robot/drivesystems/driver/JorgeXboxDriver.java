@@ -33,22 +33,6 @@ public class JorgeXboxDriver implements Driver {
 
     }
 
-
-
-    /**public enum RotatePosition{
-        
-        LEFT(270), RIGHT(90), FORWARD(0), BACK(180);
-
-        public double getAngle(){
-            return angle;
-        }
-
-        double angle;
-        RotatePosition(double Position) {
-            this.angle = Position;
-        }
-    }*/
-
     private double getSpeed() {
         return controller.getY(Hand.kLeft);
     }
@@ -58,14 +42,25 @@ public class JorgeXboxDriver implements Driver {
     }
 
     private boolean getSlowMode() {
-        if (controller.getBButton()) {
+        if (controller.getBButtonPressed()) {
             slowMode = !slowMode;
         }
         return slowMode;
     }
 
+    @Override
     public boolean getAutoOverride() {
         return controller.getAButton();
+    }
+
+    @Override
+    public boolean getVisionPressed() {
+        return controller.getYButtonPressed();
+    }
+
+    @Override
+    public boolean getVisionReleased() {
+        return controller.getYButtonReleased();
     }
 
 }

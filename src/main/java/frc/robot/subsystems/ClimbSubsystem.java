@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.drivesystems.operator.Operator;
 
 public class ClimbSubsystem extends Subsystem {
 
@@ -14,10 +12,8 @@ public class ClimbSubsystem extends Subsystem {
     private Compressor compressor = new Compressor(0);
     private Spark rack = new Spark(0);
     private Spark climbWheel = new Spark(2);
-    private SendableChooser<Operator> operatorChooser;
 
-    public ClimbSubsystem(SendableChooser<Operator> operatorChooser) {
-        this.operatorChooser = operatorChooser;
+    public ClimbSubsystem() {
         compressor.setClosedLoopControl(true);
     }
 
