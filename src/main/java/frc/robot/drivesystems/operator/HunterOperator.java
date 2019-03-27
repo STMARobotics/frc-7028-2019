@@ -1,46 +1,41 @@
 package frc.robot.drivesystems.operator;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
 import frc.robot.subsystems.PivotPosition;
 
 public class HunterOperator implements Operator {
 
-    private Joystick joystick;
+    private XboxController controlPanel;
 
-    public HunterOperator(Joystick joystick) {
-        this.joystick = joystick;
+    public HunterOperator(XboxController controlPanel) {
+        this.controlPanel = controlPanel;
     }
 
     public void operate(ManipulatorsSubsystem manipulatorsSubsystem, ClimbSubsystem climbSubsystem) {
         manipulatorsSubsystem.setIntakeSpeed(getIntakeSpeed());
         climbSubsystem.setRackSpeed(getRackSpeed());
         climbSubsystem.setClimbWheelSpeed(getClimbWheelSpeed());
-        if (joystick.getRawButton(8)) {
+        if (controlPanel.getRawButton(10)) {
             climbSubsystem.dropClimbGuides();
         }
-        if (joystick.getRawButton(5)) {
+        if (controlPanel.getRawButton(11) || controlPanel.getRawButton(2)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.LOCK_HATCH);
-        } else if (joystick.getRawButton(3)) {
+        } else if (controlPanel.getRawButton(12)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.UNLOCK_HATCH);
-        } else if (joystick.getRawButton(6)) {
+        } else if (controlPanel.getRawButton(5)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.SHUTTLE_CARGO);
-        } else if (joystick.getRawButton(4)) {
+        } else if (controlPanel.getRawButton(13)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.ROCKET_CARGO);
-        } else if (joystick.getRawButton(7)) {
+        } else if (controlPanel.getRawButton(3)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.CLIMB);
-        } else if (joystick.getRawButton(9)){
-            //manipulatorsSubsystem.setPivotPosition(PivotPosition.REST);
-        }
-        if(joystick.getRawButton(9) && joystick.getRawButton(10)) {
-            manipulatorsSubsystem.zeroArmPosition();
         }
     }
 
     private double getIntakeSpeed() {
-        boolean intake = joystick.getRawButton(2);
-        boolean output = joystick.getTrigger();
+        boolean intake = controlPanel.getRawButton(8);
+        boolean output = controlPanel.getRawButton(6);
         if (intake && !output) {
             return .4;
         } else if (output && !intake) {
@@ -50,19 +45,26 @@ public class HunterOperator implements Operator {
     }
 
     private double getRackSpeed() {
-        boolean up = joystick.getRawButton(12);
-        boolean down = joystick.getRawButton(11);
+        boolean up = controlPanel.getRawButton(9);
+        boolean down = controlPanel.getRawButton(7);
         if (up && !down) {
             return -1;
         } else if (down && !up) {
             return 1;
         }
         return 0;
-        //return (joystick.getRawButton(12) ? 1 : 0) - (joystick.getRawButton(11) ? -1 : 0);
+        //return (controlPanel.getRawButton(12) ? 1 : 0) - (controlPanel.getRawButton(11) ? -1 : 0);
     }
 
     private double getClimbWheelSpeed() {
-        return -joystick.getY();
+        boolean forward = controlPanel.getRawButton(1);
+        boolean backward = controlPanel.getRawButton(4);
+        if (forward && !backward) {
+            return 1;
+        } else if (backward && !forward) {
+            return -1;
+        }
+        return 0;
     }
 
 }

@@ -62,10 +62,8 @@ public class Robot extends TimedRobot {
     private SendableChooser<Driver> driverChooser = new SendableChooser<>();
     private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
 
-    private Joystick driverJoystick = new Joystick(0);
-    private Joystick operatorJoystick = new Joystick(2);
     private XboxController driverController = new XboxController(0);
-    private XboxController operatorController = new XboxController(2);
+    private XboxController operatorPanel = new XboxController(2);
 
     @Override
     public void robotInit() {
@@ -83,7 +81,7 @@ public class Robot extends TimedRobot {
         driverChooser.addOption("Slow", new SlowDriver(driverController));
         SmartDashboard.putData("Driver Chooser", driverChooser);
 
-        operatorChooser.setDefaultOption("Hunter Operator", new HunterOperator(operatorJoystick));
+        operatorChooser.setDefaultOption("Hunter Operator", new HunterOperator(operatorPanel));
         operatorChooser.addOption("Solo Operator", new SoloOperator(driverController));
         SmartDashboard.putData("Operator Chooser", operatorChooser);
 
