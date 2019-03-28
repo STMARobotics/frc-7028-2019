@@ -3,6 +3,7 @@ package frc.robot.commands.auto;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.ManipulatorsSubsystem;
+import frc.robot.subsystems.PivotPosition;
 
 /**
  * Drops the arm and retracts the rack to calibrate them.
@@ -33,7 +34,7 @@ public class CalibratePivotAndArmCommand extends Command {
 
     @Override
     protected void end() {
-        manipulatorsSubsystem.setPivotOutputPercent(0);
+        manipulatorsSubsystem.setPivotPosition(PivotPosition.LOCK_HATCH);
         System.out.println("Arm and Rack Calibrated");
     }
 
