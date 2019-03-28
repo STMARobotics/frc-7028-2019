@@ -22,6 +22,7 @@ import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.AutoCommandGroup;
 import frc.robot.commands.auto.CalibratePivotAndArmCommand;
 import frc.robot.commands.auto.DepositHatch;
+import frc.robot.commands.auto.DriveForwardCommand;
 import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
@@ -113,16 +114,19 @@ public class Robot extends TimedRobot {
         var basicAutoCommand = new AutoCommandGroup(driveTrainSubsystem);
         basicAutoCommand.addSequential(new CalibratePivotAndArmCommand(manipulatorsSubsystem, climbSubsystem), 5);
 
+        var justStraightAutoCommand = new AutoCommandGroup(driveTrainSubsystem);
+        justStraightAutoCommand.addSequential(new CalibratePivotAndArmCommand(manipulatorsSubsystem, climbSubsystem), 5);
+        justStraightAutoCommand.addSequential(new DriveForwardCommand(driveTrainSubsystem, .7, 6, gyroSubsystem));
+
         var deliverHatchAutoCommand = new AutoCommandGroup(driveTrainSubsystem);
         deliverHatchAutoCommand.addSequential(new CalibratePivotAndArmCommand(manipulatorsSubsystem, climbSubsystem), 5);
-
-        //Front left Hatch
         deliverHatchAutoCommand.addSequential(new CommandTillVision(
             new PathCommand(start2BayOneLeft, driveTrainSubsystem),
             new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem), 
             limelight));
 
         autoCommandChooser.setDefaultOption("No auto", basicAutoCommand);
+        autoCommandChooser.addOption("Drive straight", justStraightAutoCommand);
         autoCommandChooser.addOption("Deliver Hatch Auto", deliverHatchAutoCommand);
         SmartDashboard.putData("Auto chooser", autoCommandChooser);
     }
