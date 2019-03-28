@@ -20,8 +20,10 @@ public class HunterOperator implements Operator {
         if (controlPanel.getRawButton(11)) {
             climbSubsystem.dropClimbGuides();
         }
-        if (controlPanel.getRawButton(12) || controlPanel.getRawButton(3)) {
+        if (controlPanel.getRawButton(12)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.LOCK_HATCH);
+        } else if (controlPanel.getRawButton(3)) {
+            manipulatorsSubsystem.setVelocity(110);
         } else if (controlPanel.getRawButton(13)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.UNLOCK_HATCH);
         } else if (controlPanel.getRawButton(6)) {
