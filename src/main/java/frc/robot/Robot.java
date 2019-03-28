@@ -21,12 +21,8 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.AutoCommandGroup;
 import frc.robot.commands.auto.CalibratePivotAndArmCommand;
-import frc.robot.commands.auto.DepositHatch;
-import frc.robot.commands.auto.DriveForwardCommand;
-import frc.robot.commands.auto.PathCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
-import frc.robot.commands.vision.CommandTillVision;
 import frc.robot.drivesystems.driver.CommandTillVisionReleased;
 import frc.robot.drivesystems.driver.Driver;
 import frc.robot.drivesystems.driver.JorgeXboxDriver;
@@ -63,7 +59,6 @@ public class Robot extends TimedRobot {
 
     private SendableChooser<Driver> driverChooser = new SendableChooser<>();
     private SendableChooser<Operator> operatorChooser = new SendableChooser<>();
-    private SendableChooser<AutoCommandGroup> autoCommandChooser = new SendableChooser<>();
 
     private XboxController driverController = new XboxController(0);
     private XboxController operatorPanel = new XboxController(2);
@@ -111,24 +106,8 @@ public class Robot extends TimedRobot {
         cameraThread.run();
         gyroSubsystem.reset();
 
-        var basicAutoCommand = new AutoCommandGroup(driveTrainSubsystem);
-        basicAutoCommand.addSequential(new CalibratePivotAndArmCommand(manipulatorsSubsystem, climbSubsystem), 5);
-
-        var justStraightAutoCommand = new AutoCommandGroup(driveTrainSubsystem);
-        justStraightAutoCommand.addSequential(new CalibratePivotAndArmCommand(manipulatorsSubsystem, climbSubsystem), 5);
-        justStraightAutoCommand.addSequential(new DriveForwardCommand(driveTrainSubsystem, .7, 6, gyroSubsystem));
-
-        var deliverHatchAutoCommand = new AutoCommandGroup(driveTrainSubsystem);
-        deliverHatchAutoCommand.addSequential(new CalibratePivotAndArmCommand(manipulatorsSubsystem, climbSubsystem), 5);
-        deliverHatchAutoCommand.addSequential(new CommandTillVision(
-            new PathCommand(start2BayOneLeft, driveTrainSubsystem),
-            new DepositHatch(driveTrainSubsystem, gyroSubsystem, limelight, manipulatorsSubsystem), 
-            limelight));
-
-        autoCommandChooser.setDefaultOption("No auto", basicAutoCommand);
-        autoCommandChooser.addOption("Drive straight", justStraightAutoCommand);
-        autoCommandChooser.addOption("Deliver Hatch Auto", deliverHatchAutoCommand);
-        SmartDashboard.putData("Auto chooser", autoCommandChooser);
+        autoCommand = new AutoCommandGroup(driveTrainSubsystem);
+        autoCommand.addSequential(new CalibratePivotAndArmCommand(manipulatorsSubsystem, climbSubsystem), 5);
     }
 
     public void generalInit() {
@@ -164,7 +143,6 @@ public class Robot extends TimedRobot {
         limelight.init();
         driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
         
-        autoCommand = autoCommandChooser.getSelected();
         if (autoCommand != null) {
             autoCommand.start();
         }
