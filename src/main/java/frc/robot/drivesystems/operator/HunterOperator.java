@@ -17,25 +17,25 @@ public class HunterOperator implements Operator {
         manipulatorsSubsystem.setIntakeSpeed(getIntakeSpeed());
         climbSubsystem.setRackSpeed(getRackSpeed());
         climbSubsystem.setClimbWheelSpeed(getClimbWheelSpeed());
-        if (controlPanel.getRawButton(10)) {
+        if (controlPanel.getRawButton(11)) {
             climbSubsystem.dropClimbGuides();
         }
-        if (controlPanel.getRawButton(11) || controlPanel.getRawButton(2)) {
+        if (controlPanel.getRawButton(12) || controlPanel.getRawButton(3)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.LOCK_HATCH);
-        } else if (controlPanel.getRawButton(12)) {
-            manipulatorsSubsystem.setPivotPosition(PivotPosition.UNLOCK_HATCH);
-        } else if (controlPanel.getRawButton(5)) {
-            manipulatorsSubsystem.setPivotPosition(PivotPosition.SHUTTLE_CARGO);
         } else if (controlPanel.getRawButton(13)) {
+            manipulatorsSubsystem.setPivotPosition(PivotPosition.UNLOCK_HATCH);
+        } else if (controlPanel.getRawButton(6)) {
+            manipulatorsSubsystem.setPivotPosition(PivotPosition.SHUTTLE_CARGO);
+        } else if (controlPanel.getRawButton(14)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.ROCKET_CARGO);
-        } else if (controlPanel.getRawButton(3)) {
+        } else if (controlPanel.getRawButton(4)) {
             manipulatorsSubsystem.setPivotPosition(PivotPosition.CLIMB);
         }
     }
 
     private double getIntakeSpeed() {
-        boolean intake = controlPanel.getRawButton(8);
-        boolean output = controlPanel.getRawButton(6);
+        boolean intake = controlPanel.getRawButton(9);
+        boolean output = controlPanel.getRawButton(7);
         if (intake && !output) {
             return .4;
         } else if (output && !intake) {
@@ -45,8 +45,8 @@ public class HunterOperator implements Operator {
     }
 
     private double getRackSpeed() {
-        boolean up = controlPanel.getRawButton(9);
-        boolean down = controlPanel.getRawButton(7);
+        boolean up = controlPanel.getRawButton(10);
+        boolean down = controlPanel.getRawButton(8);
         if (up && !down) {
             return -1;
         } else if (down && !up) {
@@ -57,8 +57,8 @@ public class HunterOperator implements Operator {
     }
 
     private double getClimbWheelSpeed() {
-        boolean forward = controlPanel.getRawButton(1);
-        boolean backward = controlPanel.getRawButton(4);
+        boolean forward = controlPanel.getRawButton(2);
+        boolean backward = controlPanel.getRawButton(5);
         if (forward && !backward) {
             return 1;
         } else if (backward && !forward) {

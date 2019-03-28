@@ -118,6 +118,7 @@ public class Robot extends TimedRobot {
             new CommandTillVisionReleased(new CombinedTarget(driveTrainSubsystem, limelight), currentDriver).start();
         }
         SmartDashboard.putNumber("Rack position", climbSubsystem.getRackPosition());
+        SmartDashboard.putBoolean("Rack retracted", climbSubsystem.isRackRetracted());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -12,6 +13,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class ClimbSubsystem extends Subsystem {
 
+    private static final int RACK_FWD_SOFT_LIMIT = 900000;
+
     private DoubleSolenoid climbGuides = new DoubleSolenoid(0, 1);
     private Compressor compressor = new Compressor(0);
     private WPI_TalonSRX rack = new WPI_TalonSRX(5);
@@ -22,11 +25,9 @@ public class ClimbSubsystem extends Subsystem {
         talonConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative;
         talonConfig.neutralDeadband =  0.001;
 
-        // TODO make sure reverse is retracted
         talonConfig.clearPositionOnLimitR = true;
         talonConfig.forwardSoftLimitEnable = true;
-        // TODO what is the correct soft limit value?
-        talonConfig.forwardSoftLimitThreshold = 1000000;
+        talonConfig.forwardSoftLimitThreshold = RACK_FWD_SOFT_LIMIT;
 
         rack.configAllSettings(talonConfig);
         compressor.setClosedLoopControl(true);
