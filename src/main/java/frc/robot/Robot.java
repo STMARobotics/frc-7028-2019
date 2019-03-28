@@ -120,7 +120,6 @@ public class Robot extends TimedRobot {
         if (currentDriver.getVisionPressed()) {
             new CommandTillVisionReleased(new CombinedTarget(driveTrainSubsystem, limelight), currentDriver).start();
         }
-        SmartDashboard.putNumber("Rack position", climbSubsystem.getRackPosition());
     }
 
     @Override
