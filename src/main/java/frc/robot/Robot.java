@@ -10,19 +10,17 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.OperateCommand;
 import frc.robot.commands.auto.AutoCommandGroup;
-import frc.robot.commands.auto.CalibratePivotCommand;
+import frc.robot.commands.auto.CalibratePivotAndArmCommand;
 import frc.robot.commands.auto.PointCommand;
 import frc.robot.commands.vision.CombinedTarget;
 import frc.robot.drivesystems.driver.CommandTillVisionReleased;
@@ -119,6 +117,7 @@ public class Robot extends TimedRobot {
         if (currentDriver.getVisionPressed()) {
             new CommandTillVisionReleased(new CombinedTarget(driveTrainSubsystem, limelight), currentDriver).start();
         }
+        SmartDashboard.putNumber("Rack position", climbSubsystem.getRackPosition());
     }
 
     @Override
@@ -142,7 +141,7 @@ public class Robot extends TimedRobot {
         driveTrainSubsystem.setNeutralMode(NeutralMode.Brake);
         
         autoCommand = new AutoCommandGroup(driveTrainSubsystem);
-        autoCommand.addSequential(new CalibratePivotCommand(manipulatorsSubsystem), 5);
+        autoCommand.addSequential(new CalibratePivotAndArmCommand(manipulatorsSubsystem, climbSubsystem), 5);
 
         //Front left Hatch
         // autoCommand.addSequential(new CommandTillVision(
