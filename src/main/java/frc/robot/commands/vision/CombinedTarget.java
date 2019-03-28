@@ -62,7 +62,7 @@ public class CombinedTarget extends Command {
         double turnAdjust = getXAdjust();
         double foreAdjust = getYAdjustArea();
 
-        if (Math.abs(turnAdjust) < 0.05) {
+        if (Math.abs(turnAdjust) < 0.03) {
             turnAdjust = 0.0;
         } else {
             turnAdjust += Math.signum(turnAdjust) * MIN_POWER;
