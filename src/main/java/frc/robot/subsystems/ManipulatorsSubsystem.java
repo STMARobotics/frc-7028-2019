@@ -62,7 +62,6 @@ public class ManipulatorsSubsystem extends Subsystem {
                 pivot.set(ControlMode.PercentOutput, 0.0);
                 break;
             case UNLOCK_HATCH:
-                System.out.println("Dropping");
                 pivot.set(ControlMode.PercentOutput, 0.0);
                 break;
             case CLIMB:
