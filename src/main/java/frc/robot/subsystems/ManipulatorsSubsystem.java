@@ -19,8 +19,8 @@ public class ManipulatorsSubsystem extends Subsystem {
         TalonSRXConfiguration talonConfig = new TalonSRXConfiguration();
         talonConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.CTRE_MagEncoder_Relative;
         talonConfig.neutralDeadband =  0.001;
-        talonConfig.slot0.kF = 1;
-        talonConfig.slot0.kP = .5;
+        talonConfig.slot0.kF = 1.5;
+        talonConfig.slot0.kP = 1.0;
         talonConfig.slot0.kI = .0;
         talonConfig.slot0.kD = 0;
         talonConfig.slot0.closedLoopPeakOutput = 1;
@@ -64,6 +64,9 @@ public class ManipulatorsSubsystem extends Subsystem {
             case UNLOCK_HATCH:
                 System.out.println("Dropping");
                 pivot.set(ControlMode.PercentOutput, 0.0);
+                break;
+            case CLIMB:
+                setVelocity(-400);
                 break;
             default:
                 pivot.set(ControlMode.Position, position.getPosition());
