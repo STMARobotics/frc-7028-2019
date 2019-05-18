@@ -38,7 +38,7 @@ public class JorgeXboxDriver implements Driver {
     }
 
     private double getRotation() {
-        return controller.getX(Hand.kRight) * .7;
+        return controller.getX(Hand.kRight) * .78;
     }
 
     private boolean getSlowMode() {
