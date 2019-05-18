@@ -10,7 +10,6 @@ public class JorgeXboxDriver implements Driver {
 
     private XboxController controller;
     private boolean slowMode = false;
-    private PointCommand pointCommand;
 
     public JorgeXboxDriver(XboxController controller, PointCommand pointCommand) {
         this.controller = controller;
@@ -25,11 +24,6 @@ public class JorgeXboxDriver implements Driver {
             rotation = rotation * .8;
         }
         differentialDrive.arcadeDrive(speed, rotation, true);
-
-        if(controller.getPOV() != -1){
-            pointCommand.setTarget(controller.getPOV());
-            pointCommand.start();
-        }
 
     }
 
