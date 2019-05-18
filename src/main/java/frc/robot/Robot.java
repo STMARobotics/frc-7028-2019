@@ -101,7 +101,9 @@ public class Robot extends TimedRobot {
         generalInit();
 
         Thread cameraThread = new Thread(() -> {
-            CameraServer.getInstance().startAutomaticCapture();
+            var camera = CameraServer.getInstance().startAutomaticCapture();
+            camera.setFPS(15);
+            camera.setResolution(320, 240);
         });
         cameraThread.run();
         gyroSubsystem.reset();
