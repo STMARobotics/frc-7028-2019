@@ -21,7 +21,7 @@ public class JorgeXboxDriver implements Driver {
         double rotation = getRotation();
         if (getSlowMode()) {
             speed = speed * .6;
-            rotation = rotation * .8;
+            rotation = rotation * .9;
         }
         differentialDrive.arcadeDrive(speed, rotation, true);
 
