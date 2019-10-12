@@ -35,6 +35,7 @@ public class CalibratePivotAndArmCommand extends Command {
     @Override
     protected void end() {
         manipulatorsSubsystem.setPivotPosition(PivotPosition.LOCK_HATCH);
+        climbSubsystem.setRackSpeed(0);
         System.out.println("Arm and Rack Calibrated");
     }
 
